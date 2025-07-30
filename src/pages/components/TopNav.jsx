@@ -17,7 +17,7 @@
 //                  the user has authenticated.
 // params.userImage The fully-qualfied path and file name of the
 //                  picture of the user that is stored in the
-//                  public/userImages directory of the site.
+//                  public/userImages directory of the site. TEST
 //
 // Revision History
 // ================
