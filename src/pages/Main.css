@@ -1,0 +1,13 @@
+/*
+// MAIN CASCADING STYLE SHEET
+// ==========================
+// This is the main, and only, Cascading Style Sheet (CSS) used in this
+// application. All pages and components can import it when required.
+//
+// Revision History
+// ================
+// 01.01.2025 BRD Original version for Strength Research Online.
+*/
+@tailwind base;
+@tailwind components;
+@tailwind utilities;

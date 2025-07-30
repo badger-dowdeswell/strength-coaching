@@ -1,0 +1,17 @@
+
+
+onFocus={() => editFormat("DateOfBirth", params.DateOfBirth)}  
+
+onBlur={e => {
+                            if (validateDate("DDMMYYYY", e.target.value)) {
+                               params.setDateOfBirth(cleanUpDate(e.target.value) + " ");
+                               console.log("editing date of birth " + {DateOfBirth});
+                               //params.setEditDateOfBirth(formatDate("DD MMMM YYYY", cleanUpDate(e.target.value)));
+                               params.errors.DateOfBirth = "";
+                            } else {                               
+                               params.errors.DateOfBirth = "Invalid date entered";
+                            }                            
+                         }}
+                         
+                         
+                         params.setIsChanged(true);

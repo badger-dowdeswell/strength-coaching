@@ -1,0 +1,10 @@
+[Desktop Entry]
+Name=health tracking
+Encoding=UTF-8
+Version=1.0
+Type=Application
+Terminal=false
+Categories=Office;Spreadsheet;
+MimeType=application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;
+Exec=desktopeditors -f /home/badger/Dropbox/null/health/Blood_Pressure_2025.xlsx
+Icon=/home/badger/Dropbox/null/configuration/icons/2001/HAL-9000 DMG Display.ico
