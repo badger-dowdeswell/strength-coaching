@@ -1,6 +1,6 @@
-# Strength Research Online
+# Strength Coaching Online
 
-Strength Research Online provides interactive personal fitness and strength training to clients. The applications help them manage their training programs and track their progress.
+Strength Coaching Online provides interactive personal fitness and strength training to clients. The applications help them manage their training programs and track their progress.
 
 ## Architecture and development environment
 The front-end web application is written in React 19 using Tailwind CSS, managed by the Vite framework. The mobile version is written in React Native using the Expo framework.
