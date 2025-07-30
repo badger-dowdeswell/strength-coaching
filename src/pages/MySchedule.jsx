@@ -6,6 +6,7 @@
 // Revision History
 // ================
 // 25.02.2024 BRD Original version.
+// 30.07.2025 BRD Cloned Strength Coaching from the Strength Research application.
 //
 import './Main.css';
 

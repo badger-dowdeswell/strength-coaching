@@ -25,7 +25,7 @@ import todaysSchedule from "./componentImages/todaysSchedule.png"
 import messages from "./componentImages/messages.png";
 import signOut from "./componentImages/signOut.png";
 
-import StrengthResearchLogo from "./componentImages/Logo_text5.png";
+import StrengthCoachingLogo from "./componentImages/Strength_Coaching_Logo.png";
 //
 // SideNav
 // =======
@@ -40,7 +40,7 @@ const SideNav = (params) => {
                        bg-gray-900 text-white shadow-lg">
             <div>
                 <div className="relative flex items-center justify-center mt-3">
-                    <img src={StrengthResearchLogo} alt="/" draggable={false} 
+                    <img src={StrengthCoachingLogo} alt="/" draggable={false} 
                          height={95} width={247}  />
                 </div>
 

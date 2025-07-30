@@ -11,6 +11,7 @@
 // 02.02.2025 BRD Completed version 1 release. 
 // 19.07.2025 BRD Changed the default user_authority of new users to be U for
 //                regular clients.
+// 30.07.2025 BRD Cloned Strength Coaching from the Strength Research application.
 //
 import "./Main.css";
 
@@ -303,7 +304,7 @@ export default function Registration() {
         <div>
             <section>
                 <SideNav page="Registration" />
-                <TopNav title="Create and register a new profile on Strength Research Online" userName="" userRole="" />
+                <TopNav title="Create and register a new profile on Strength Coaching Online" userName="" userRole="" />
 
                 <div className="flex absolute top-24 bottom-0
                         items-center justify-center

@@ -64,7 +64,7 @@ function TopNav(params) {
                       bg-gray-900 text-white">
 
          <div className="absolute left-5 top-11 w-auto 
-                         text-white font-bold text-2xl">
+                         text-white font-bold text-xl">
             <p>{params.title}</p>
          </div>
 

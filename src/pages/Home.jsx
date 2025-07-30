@@ -1,13 +1,13 @@
 //
 // HOME PAGE
 // =========
-// This is the Strength Research Online home page. It can
-// only be accessed by users who have signed in and been
-// authenticated.
+// This is the Strength Coaching Online home page. It can only be accessed by users
+// who have signed in and been authenticated.
 //
 // Revision History
 // ================
 // 13.01.2024 BRD Original version.
+// 30.07.2025 BRD Cloned Strength Coaching from the Strength Research application.
 //
 import './Main.css';
 

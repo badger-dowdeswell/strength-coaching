@@ -1,7 +1,7 @@
 //
 // LANDING PAGE
 // ============
-// This is the Strength Research Online public landing page
+// This is the Strength Coaching Online public landing page
 // where users can read information about the site. They
 // cannot proceed further without logging in and authenticating
 // their identity or registering.
@@ -9,6 +9,7 @@
 // Revision History
 // ================
 // 31.12.2024 BRD Original version.
+// 30.07.2025 BRD Cloned Strength Coaching from the Strength Research application.
 //
 import './Main.css';
 import SideNav from "./components/SideNav";
@@ -27,7 +28,7 @@ function Landing() {
         <div>
             <section>
                 <SideNav page="Landing" />
-                <TopNav title="Welcome to Strength Research Online"
+                <TopNav title="Welcome to Strength Coaching Online"
                     userName="" userRole="" />
 
                 <div className="flex flex-col absolute top-24 bottom-0
