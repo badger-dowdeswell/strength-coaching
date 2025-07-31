@@ -53,6 +53,7 @@ export const editingStates = {
     VALIDATING_STAGE_1: 16,
     VALIDATING_STAGE_2: 17,  
     VALIDATING_STAGE_3: 18,
+    REGISTER: 25,
     ERROR: 500
 }
 

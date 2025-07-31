@@ -38,11 +38,11 @@ const SideNav = (params) => {
         <div className="fixed h-screen flex flex-col
                        top-0 left-0 w-auto m-0
                        bg-gray-900 text-white shadow-lg">
-            <div>
+            <div>                
                 <div className="relative flex items-center justify-center mt-3">
                     <img src={StrengthCoachingLogo} alt="/" draggable={false} 
-                         height={95} width={247}  />
-                </div>
+                         height={95} width={147} />                    
+                </div>                
 
                 <div>
                     {(params.page == "Landing" && (

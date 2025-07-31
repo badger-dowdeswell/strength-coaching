@@ -1,7 +1,7 @@
 //
 // SIGN IN
 // =======
-// This is the Strength Research Online Sign In page where registered
+// This is the Strength Coaching Online Sign In page where registered
 // users can enter their credentials to authenticate so they can access
 // the rest of the site. They cannot proceed further without signing in
 // The page also contains a link to the registration page for new users
@@ -10,6 +10,8 @@
 // Revision History
 // ================
 // 09.01.2025 BRD Original version.
+// 01.08.2025 BRD Converted the Strength Research component to now work 
+//                with Strength Coaching.
 //
 import "./Main.css";
 
@@ -25,7 +27,7 @@ const baseURL = getBaseURL();
 
 import SideNav from "./components/SideNav";
 import TopNav from "./components/TopNav";
-import Sign_In_People from "./images/Sign_In_People.png";
+import Sign_In_Michaela from "./images/Sign_In_Michaela.png";
 import eye from "./images/password_eye.png";
 //
 // m: SignIn
@@ -128,8 +130,12 @@ function SignIn() {
         case editingStates.FORGOT_PASSWORD:
             // The user is requesting help since they have forgotten their
             // password. RA_BRD Not implemented yet.
-            return navigate("/ResetPassword");            
-
+            return navigate("/ResetPassword");    
+            
+        case editingStates.REGISTER:
+            // The user is requesting to register a new account.
+            return navigate("/Registration");    
+            
         case editingStates.ERROR:
             //swal("Signing in",
             //   "This program has encountered a problem.\n\n" +
@@ -187,18 +193,17 @@ function SignIn() {
     // =======
     return (        
         <div>
-            <section>
-                <SideNav page="SignIn" />
-                <TopNav title="Sign In" userName="" userRole="" />
+            <section>                
+                <TopNav title="" userName="" userRole="" />
 
                 <div className="flex absolute top-24 bottom-0
                                 items-center justify-center
-                                left-[247px] right-0 bg-gray-800 overflow-hidden">
+                                left-0 right-0 bg-gray-800 overflow-hidden">
                     <div className="flex flex-col box-border border-2 rounded-lg
-                                    h-96 w-80" >
+                                    h-82 w-80" >
                         <p className="text-white text-center text-xl mt-5">Sign In</p>
 
-                        <p className=" ml-5 mb-1 mt-5 text-white text-left">
+                        <p className=" ml-5 mb-1 mt-3 text-white text-left">
                             Your email address or alias
                         </p>
 
@@ -265,24 +270,30 @@ function SignIn() {
                             }}>
                             Sign In
                         </button>
-                        <p className=" ml-5 mb-1 mt-2 text-cyan-300 text-left text-sm">
+                        <p className=" ml-5 mb-0 mt-0 text-cyan-300 text-left text-sm">
                             {SignInError}&nbsp;
                         </p>
 
-                        <p className=" ml-5 mb-1 mt-0 text-cyan-300 text-left text-sm"
+                        <p className=" ml-5 mb-0 mt-0 text-cyan-300 text-left text-sm"
                                 onClick={() => {setEditingState(editingStates.FORGOT_PASSWORD)}
                             }>
-                            Forgot your password? Click here to reset it.
+                            Forgot your password? Click here to reset it...
+                        </p>
+
+                        <p className=" ml-5 mb-1 mt-0 text-cyan-300 text-left text-sm"
+                                onClick={() => {setEditingState(editingStates.REGISTER)}
+                            }>
+                            Not registered? Click here to register...
                         </p>
                     </div>
-
-                    <div className="relative flex items-center justify-center mt-0 ml-3">
+r
+                    <div className="relative flex items-center justify-center mt-0 ml-3
+                                    h-82 w-80">
                         <img className="rounded"
-                            src={Sign_In_People}
+                            src={Sign_In_Michaela}
                             alt="/"
-                            draggable={false}
-                            height={110}
-                            width={255}
+                            draggable={false}                            
+                            width={285}
                         />
                     </div>
                 </div>

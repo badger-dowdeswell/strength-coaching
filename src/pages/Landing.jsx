@@ -13,6 +13,7 @@
 //                Online site (www.strengthcoaching.online).
 //
 import './Main.css';
+import { useNavigate } from "react-router-dom";
 import TopNav from "./components/TopNav";
 import Sign_In_People from "./images/Sign_In_People.png";
 //
@@ -26,6 +27,8 @@ function Landing() {
     sessionStorage.setItem("LastName", "");
     sessionStorage.setItem("UserAuthority", "");
     sessionStorage.setItem("JWT", ""); 
+
+    let navigate = useNavigate();
 
     return (        
         <div>                         
@@ -62,8 +65,7 @@ function Landing() {
                                                                         mt-2 ml-5"                                    
                                     id="Sign_In"
                                     style={{ width: "125px" }}
-                                    onClick={() => {                                                            
-                                    }}>
+                                    onClick={() => navigate("/SignIn")}>
                                     Sign in
                                 </button>
                             </div>
