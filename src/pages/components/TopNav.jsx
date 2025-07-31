@@ -29,6 +29,7 @@
 //                defined in the database.
 //
 import '../Main.css';
+import StrengthCoachingLogo from "./componentImages/Strength_Coaching_Logo.png";
 
 function TopNav(params) { 
    var userID = sessionStorage.getItem("userID");  
@@ -60,40 +61,45 @@ function TopNav(params) {
    return (
       <div className="fixed w-full h-24
                       flex flex-row
-                      top-0 left-[247px] m-0 
+                      top-0 left-0 m-0 
                       bg-gray-900 text-white">
 
-         <div className="absolute left-5 top-11 w-auto 
-                         text-white font-bold text-xl">
-            <p>{params.title}</p>
-         </div>
-
-         <div className="absolute top-0 right-64
-                        text-white">
-            <div className="flex flex-row-reverse">
-
-               <div>
-                  <p className="font-bold text-lg ml-3 mt-7">{userName}</p>
-                  <p className="font-bold text-sm ml-3">{userRole}</p>
-               </div>
-
-               <div>
-                  {params.userName !="" && (
-                     <img className="mt-6"
-                        src={userImage}
-                        alt="/"
-                        draggable={false}
-                        height={57}
-                        width={57}
-                        onError={({ currentTarget }) => {
-                           currentTarget.onerror = null; // prevents looping
-                           currentTarget.src="./userImages/template.png";
-                         }}
-                     />
-                  )}
-               </div>
+            <div className="relative flex items-center justify-center mt-1">
+                <img src={StrengthCoachingLogo} alt="/" draggable={false} 
+                                                 height={95} width={247}  />
             </div>
-         </div>
+
+            <div className="absolute left-64 top-10 w-auto 
+                         text-white font-bold text-xl">
+                <p>{params.title}</p>
+            </div>
+
+            <div className="absolute top-0 right-64
+                            text-white">
+                <div className="flex flex-row-reverse">
+
+                    <div>
+                        <p className="font-bold text-lg ml-3 mt-7">{userName}</p>
+                        <p className="font-bold text-sm ml-3">{userRole}</p>
+                    </div>
+
+                    <div>
+                        {params.userName !="" && (
+                            <img className="mt-6"
+                                src={userImage}
+                                alt="/"
+                                draggable={false}
+                                height={57}
+                                width={57}
+                                onError={({ currentTarget }) => {
+                                currentTarget.onerror = null; // prevents looping
+                                currentTarget.src="./userImages/template.png";
+                                }}
+                            />
+                        )}
+                    </div>
+                </div>
+            </div>
       </div>
    )
 };

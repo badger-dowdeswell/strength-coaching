@@ -278,11 +278,11 @@ function SignIn() {
 
                     <div className="relative flex items-center justify-center mt-0 ml-3">
                         <img className="rounded"
-                             src={Sign_In_People}
-                             alt="/"
-                             draggable={false}
-                             height={110}
-                             width={255}
+                            src={Sign_In_People}
+                            alt="/"
+                            draggable={false}
+                            height={110}
+                            width={255}
                         />
                     </div>
                 </div>

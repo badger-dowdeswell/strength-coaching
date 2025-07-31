@@ -12,8 +12,8 @@
 // 30.07.2025 BRD Cloned Strength Coaching from the Strength Research application.
 //
 import './Main.css';
-import SideNav from "./components/SideNav";
 import TopNav from "./components/TopNav";
+import Sign_In_People from "./images/Sign_In_People.png";
 //
 // Landing
 // =======
@@ -27,59 +27,68 @@ function Landing() {
     return (        
         <div>
             <section>
-                <SideNav page="Landing" />
-                <TopNav title="Welcome to Strength Coaching Online"
+                {/* <SideNav page="Landing" />  */}
+                <TopNav title=""
                     userName="" userRole="" />
 
-                <div className="flex flex-col absolute top-24 bottom-0
+                <div className="flex flex-row absolute top-24 bottom-0
                                 items-center justify-center
-                                left-[247px] right-0
+                                left-0 right-0
                                 bg-gray-800 overflow-hidden">
 
-                    <p className="ml-5 mt-3 text-white">This is the main landing page</p>
-                    <br></br>h
+                    <div className="flex flex-col">                                                               
+                        <p className="ml-5 mr-5 text-white text-6xl">
+                                Access to top                        
+                            </p>
+                            <br></br>
+                            <p className="ml-5 mr-5 text-cyan-300 text-6xl font-bold">
+                                Strength                      
+                            </p>
+                            <p className="ml-5 mr-5 text-cyan-300 text-6xl font-bold">
+                                Coaching                      
+                            </p>
+                            <br></br>
+                            <p className="ml-5 mr-5 text-white text-4xl">
+                                No matter where                     
+                            </p>
+                            <p className="ml-5 mr-5 text-white text-4xl">
+                                you are !                      
+                            </p>
+                            <br></br>
 
-                    <p className="ml-5 mr-5 text-white">
-                        Content pages go in here ... and here
-                        Content pages go in here ... and here
-                        Content pages go in here ... and here
-                        Content pages go in here ... and here
-                        Content pages go in here ... and here
-                        Content pages go in here ... and here
-                        Content pages go in here ... and here
-                        Content pages go in here ... and here
-                        Content pages go in here ... and here
-                        Content pages go in here ... and here
-                    </p>
+                            <div className="flex flex-row">                                
+                                <div> 
+                                    <button className="bg-cyan-600 text-white font-bold text-sm py-2 px-2 rounded
+                                                                            mt-2 ml-5"                                    
+                                        id="Sign_In"
+                                        style={{ width: "125px" }}
+                                        onClick={() => {                                                            
+                                        }}>
+                                        Sign in
+                                    </button>
+                                </div>
+                                <div>  
+                                    <button className="bg-cyan-600 text-white font-bold text-sm py-2 px-2 rounded
+                                                                            mt-2 ml-5"
+                                            id="Tell_me_more"
+                                            style={{ width: "125px" }}
+                                            onClick={() => {                                                            
+                                            }}>
+                                        Tell me more ..
+                                    </button>  
+                                </div> 
+                            </div> 
+                        </div>                    
 
-                    <br></br>
-
-                    <p className="ml-5 mr-5 text-white">
-                        Content pages go in here ... and here
-                        Content pages go in here ... and here
-                        Content pages go in here ... and here
-                        Content pages go in here ... and here
-                        Content pages go in here ... and here
-                        Content pages go in here ... and here
-                        Content pages go in here ... and here
-                        Content pages go in here ... and here
-                        Content pages go in here ... and here
-                        Content pages go in here ... and here
-                    </p>
-
-                    <br></br>
-                    <p className="ml-5 mr-5 text-white">
-                        Content pages go in here ... and here
-                        Content pages go in here ... and here
-                        Content pages go in here ... and here
-                        Content pages go in here ... and here
-                        Content pages go in here ... and here
-                        Content pages go in here ... and here
-                        Content pages go in here ... and here
-                        Content pages go in here ... and here
-                        Content pages go in here ... and here
-                        Content pages go in here ... and here - THE END !!!!
-                    </p>
+                        <div className="relative flex items-center justify-center mt-0 ml-3">
+                            <img className="rounded"
+                                src={Sign_In_People}
+                                alt="/"
+                                draggable={false}
+                                height={110}
+                                width={255}
+                            />
+                        </div>                    
                 </div>
             </section>
         </div>      
