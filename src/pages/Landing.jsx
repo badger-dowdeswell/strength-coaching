@@ -41,25 +41,25 @@ function Landing() {
 
                 <div className="flex flex-col">                                                               
                     <p className="ml-5 mr-5 text-white text-6xl">
-                            Access to top                        
-                        </p>
-                        <br></br>
-                        <p className="ml-5 mr-5 text-cyan-300 text-6xl font-bold">
-                            Strength                      
-                        </p>
-                        <p className="ml-5 mr-5 text-cyan-300 text-6xl font-bold">
-                            Coaching                      
-                        </p>
-                        <br></br>
-                        <p className="ml-5 mr-5 text-white text-4xl">
-                            No matter where                     
-                        </p>
-                        <p className="ml-5 mr-5 text-white text-4xl">
-                            you are !                      
-                        </p>
-                        <br></br>
+                        Access to top                        
+                    </p>
+                    <br></br>
+                    <p className="ml-5 mr-5 text-cyan-300 text-6xl font-bold">
+                        Strength                      
+                    </p>
+                    <p className="ml-5 mr-5 text-cyan-300 text-6xl font-bold">
+                        Coaching                      
+                    </p>
+                    <br></br>
+                    <p className="ml-5 mr-5 text-white text-4xl">
+                        No matter where                     
+                    </p>
+                    <p className="ml-5 mr-5 text-white text-4xl">
+                        you are !                      
+                    </p>
+                    <br></br>
 
-                        <div className="flex flex-row">                                
+                    <div className="flex flex-row">                                
                             <div> 
                                 <button className="bg-cyan-600 text-white font-bold text-sm py-2 px-2 rounded
                                                                         mt-2 ml-5"                                    

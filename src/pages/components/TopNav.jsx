@@ -29,6 +29,7 @@
 //                defined in the database.
 //
 import '../Main.css';
+import { useNavigate } from "react-router-dom";
 import StrengthCoachingLogo from "./componentImages/Strength_Coaching_Logo.png";
 
 function TopNav(params) { 
@@ -36,6 +37,8 @@ function TopNav(params) {
    let userName = sessionStorage.getItem("FirstName") + " " + sessionStorage.getItem("LastName");  
    var userImage = "./userImages/" + userID + ".png";
    var userRole = ""; 
+
+   let navigate = useNavigate();
 
    switch (sessionStorage.getItem("UserAuthority")) {
    case "A":
@@ -65,8 +68,10 @@ function TopNav(params) {
                       bg-gray-900 text-white">
 
             <div className="relative flex items-center justify-center mt-1">
-                <img src={StrengthCoachingLogo} alt="/" draggable={false} 
-                                                 height={95} width={247}  />
+                <img src={StrengthCoachingLogo}
+                     alt="/" draggable={false} 
+                     height={95} width={247}
+                     onClick={() => navigate("/")}/>
             </div>
 
             <div className="absolute left-64 top-10 w-auto 
@@ -77,7 +82,6 @@ function TopNav(params) {
             <div className="absolute top-0 right-64
                             text-white">
                 <div className="flex flex-row-reverse">
-
                     <div>
                         <p className="font-bold text-lg ml-3 mt-7">{userName}</p>
                         <p className="font-bold text-sm ml-3">{userRole}</p>

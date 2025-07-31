@@ -25,7 +25,6 @@ const axios = Axios;
 
 const baseURL = getBaseURL();
 
-import SideNav from "./components/SideNav";
 import TopNav from "./components/TopNav";
 import Sign_In_Michaela from "./images/Sign_In_Michaela.png";
 import eye from "./images/password_eye.png";
@@ -192,112 +191,111 @@ function SignIn() {
     // SIGN-IN
     // =======
     return (        
-        <div>
-            <section>                
-                <TopNav title="" userName="" userRole="" />
+        <div>                           
+            <TopNav title="" userName="" userRole="" />
 
-                <div className="flex absolute top-24 bottom-0
-                                items-center justify-center
-                                left-0 right-0 bg-gray-800 overflow-hidden">
-                    <div className="flex flex-col box-border border-2 rounded-lg
-                                    h-82 w-80" >
-                        <p className="text-white text-center text-xl mt-5">Sign In</p>
+            <div className="flex absolute top-24 bottom-0
+                            items-center justify-center
+                            left-0 right-0 bg-gray-800 overflow-hidden">
+                                            
+                <div className="flex flex-col box-border border-2 rounded-lg
+                                h-82 w-80" >
+                    <p className="text-white text-center text-xl mt-5">Sign In</p>
 
-                        <p className=" ml-5 mb-1 mt-3 text-white text-left">
-                            Your email address or alias
-                        </p>
+                    <p className=" ml-5 mb-1 mt-3 text-white text-left">
+                        Your email address or alias
+                    </p>
 
-                        <input className="ml-5 mr-5 mt-1 pl-1"
-                            id="UserID"
-                            type="text"
-                            placeholder="nnnn or email address"
+                    <input className="ml-5 mr-5 mt-1 pl-1"
+                        id="UserID"
+                        type="text"
+                        placeholder="nnnn or email address"
+                        autoComplete="new-password"
+                        value={UserID}
+                        onChange={(e) => setUserID(e.target.value)}
+                    />
+                    <p className=" ml-5 mb-1 mt-2 text-cyan-300 text-left text-sm">
+                        {UserIDError}&nbsp;
+                    </p>
+
+                    <p className="ml-5 mb-1 mt-2 text-white text-left">
+                        Your password{" "}
+                    </p>
+
+                    
+                    <div className="flex flex-row">
+                        <input className="ml-5 mt-1 w-72 pl-1"
+                            id="Password"
+                            type={PasswordVisibility}
+                            placeholder="********"
                             autoComplete="new-password"
-                            value={UserID}
-                            onChange={(e) => setUserID(e.target.value)}
+                            value={Password}
+                            onChange={(e) => setPassword(e.target.value)}
                         />
-                        <p className=" ml-5 mb-1 mt-2 text-cyan-300 text-left text-sm">
-                            {UserIDError}&nbsp;
-                        </p>
-
-                        <p className="ml-5 mb-1 mt-2 text-white text-left">
-                            Your password{" "}
-                        </p>
-
-                        
-                        <div className="flex flex-row">
-                            <input className="ml-5 mt-1 w-72 pl-1"
-                                id="Password"
-                                type={PasswordVisibility}
-                                placeholder="********"
-                                autoComplete="new-password"
-                                value={Password}
-                                onChange={(e) => setPassword(e.target.value)}
-                            />
-                            <img className="mr-5 ml-0 mt-1 h-6 w-7"
-                                src={eye}
-                                alt="/"
-                                onClick={() => {
-                                    if (PasswordVisibility === "password") {
-                                        setPasswordVisibility("text");
-                                    } else {
-                                        setPasswordVisibility("password");
-                                    }
-                                }}
-                            />
-                        </div>
-                        <p className="ml-5 mb-1 mt-2 text-cyan-300 text-left text-sm">
-                            {PasswordError}&nbsp;
-                        </p>
-
-                        <div className="flex flex-row">  
-                            <input className="ml-5 mt-0 h-6 bg-cyan-600 text-left text-sm"
-                                type="checkbox"
-                                value={RememberMe}
-                                checked={RememberMe}                                
-                                onChange={() => setRememberMe(RememberMe => !RememberMe)}
-                            />
-                            <p className="ml-3 mb-1 mt-0 text-white text-left">
-                                Remember me
-                            </p>
-                        </div> 
-
-                        <button className="bg-cyan-600 text-white font-bold text-sm py-2 px-2 rounded
-                                        mt-2 ml-28"
-                            id="SignIn"
-                            style={{ width: "100px" }}
-                            onClick={() => {
-                                setEditingState(editingStates.AUTHENTICATING);
-                            }}>
-                            Sign In
-                        </button>
-                        <p className=" ml-5 mb-0 mt-0 text-cyan-300 text-left text-sm">
-                            {SignInError}&nbsp;
-                        </p>
-
-                        <p className=" ml-5 mb-0 mt-0 text-cyan-300 text-left text-sm"
-                                onClick={() => {setEditingState(editingStates.FORGOT_PASSWORD)}
-                            }>
-                            Forgot your password? Click here to reset it...
-                        </p>
-
-                        <p className=" ml-5 mb-1 mt-0 text-cyan-300 text-left text-sm"
-                                onClick={() => {setEditingState(editingStates.REGISTER)}
-                            }>
-                            Not registered? Click here to register...
-                        </p>
-                    </div>
-r
-                    <div className="relative flex items-center justify-center mt-0 ml-3
-                                    h-82 w-80">
-                        <img className="rounded"
-                            src={Sign_In_Michaela}
+                        <img className="mr-5 ml-0 mt-1 h-6 w-7"
+                            src={eye}
                             alt="/"
-                            draggable={false}                            
-                            width={285}
+                            onClick={() => {
+                                if (PasswordVisibility === "password") {
+                                    setPasswordVisibility("text");
+                                } else {
+                                    setPasswordVisibility("password");
+                                }
+                            }}
                         />
                     </div>
+                    <p className="ml-5 mb-1 mt-2 text-cyan-300 text-left text-sm">
+                        {PasswordError}&nbsp;
+                    </p>
+
+                    <div className="flex flex-row">  
+                        <input className="ml-5 mt-0 h-6 bg-cyan-600 text-left text-sm"
+                            type="checkbox"
+                            value={RememberMe}
+                            checked={RememberMe}                                
+                            onChange={() => setRememberMe(RememberMe => !RememberMe)}
+                        />
+                        <p className="ml-3 mb-1 mt-0 text-white text-left">
+                            Remember me
+                        </p>
+                    </div> 
+
+                    <button className="bg-cyan-600 text-white font-bold text-sm py-2 px-2 rounded
+                                    mt-2 ml-28"
+                        id="SignIn"
+                        style={{ width: "100px" }}
+                        onClick={() => {
+                            setEditingState(editingStates.AUTHENTICATING);
+                        }}>
+                        Sign In
+                    </button>
+                    <p className=" ml-5 mb-0 mt-0 text-cyan-300 text-left text-sm">
+                        {SignInError}&nbsp;
+                    </p>
+
+                    <p className=" ml-5 mb-0 mt-0 text-cyan-300 text-left text-sm"
+                            onClick={() => {setEditingState(editingStates.FORGOT_PASSWORD)}
+                        }>
+                        Forgot your password? Click here to reset it...
+                    </p>
+
+                    <p className=" ml-5 mb-1 mt-0 text-cyan-300 text-left text-sm"
+                            onClick={() => {setEditingState(editingStates.REGISTER)}
+                        }>
+                        Not registered? Click here to register...
+                    </p>
                 </div>
-            </section>
+r
+                <div className="relative flex items-center justify-center mt-0 ml-3
+                                h-82 w-80">
+                    <img className="rounded"
+                        src={Sign_In_Michaela}
+                        alt="/"
+                        draggable={false}                            
+                        width={285}
+                    />
+                </div>
+            </div>            
         </div>        
     );
 }

@@ -11,7 +11,7 @@
 // 02.02.2025 BRD Completed version 1 release. 
 // 19.07.2025 BRD Changed the default user_authority of new users to be U for
 //                regular clients.
-// 30.07.2025 BRD Cloned Strength Coaching from the Strength Research application.
+// 30.07.2025 BRD Cloned for Strength Coaching from the Strength Research application.
 //
 import "./Main.css";
 
@@ -24,7 +24,6 @@ const axios = Axios;
 
 const baseURL = getBaseURL();
 
-import SideNav from "./components/SideNav";
 import TopNav from "./components/TopNav";
 
 import Registration_Person from "./images/Registration_Person.png";
@@ -301,69 +300,66 @@ export default function Registration() {
     // and verify the information supplied.
     //
     return (        
-        <div>
-            <section>
-                <SideNav page="Registration" />
-                <TopNav title="Create and register a new profile on Strength Coaching Online" userName="" userRole="" />
+        <div>                           
+            <TopNav title="" userName="" userRole="" />
 
-                <div className="flex absolute top-24 bottom-0
-                        items-center justify-center
-                        left-[247px] right-0
-                        bg-gray-800 overflow-hidden">
-                
-                    <div className="flex flex-col box-border border-2 rounded-lg
-                                    h-200 w-80">
-                        {(registrationState === registrationStates.PAGE_1) && (
-                            <Page_1
-                                EmailAddress={EmailAddress}
-                                setEmailAddress={setEmailAddress}
-                                EmailAddressError={EmailAddressError}
-                                FirstName={FirstName}
-                                setFirstName={setFirstName}
-                                FirstNameError={FirstNameError}
-                                LastName={LastName}
-                                setLastName={setLastName}
-                                LastNameError={LastNameError}
-                                setRegistrationState={setRegistrationState}
-                            />
-                        )};
+            <div className="flex absolute top-24 bottom-0
+                    items-center justify-center
+                    left-0 right-0
+                    bg-gray-800 overflow-hidden"> 
             
-                        {(registrationState === registrationStates.PAGE_2) && (
-                            <Page_2
-                                VerificationCode={VerificationCode}
-                                EmailAddress={EmailAddress}
-                                VerificationCodeEntered={VerificationCodeEntered}
-                                setVerificationCodeEntered={setVerificationCodeEntered}
-                                VerificationCodeError={VerificationCodeError}
-                                setRegistrationState={setRegistrationState}
-                            />
-                        )};    
-                
-                        {registrationState === registrationStates.PAGE_3 && (
-                            <Page_3 
-                                PasswordVisibility={PasswordVisibility}   
-                                setPasswordVisibility={setPasswordVisibility}                              
-                                Password={Password}
-                                setPassword = {setPassword}
-                                PasswordError = {PasswordError}                                    
-                                PasswordCopy={PasswordCopy}
-                                setPasswordCopy = {setPasswordCopy}
-                                PasswordCopyError = {PasswordCopyError}
-                                setRegistrationState={setRegistrationState}                                    
-                            />
-                        )};
-                    </div>
-
-                    <div className="relative flex items-center justify-center mt-0 ml-3">
-                        <img className="rounded"
-                            src={Registration_Person}
-                            alt="/"
-                            height={110}
-                            width={265}
+                <div className="flex flex-col box-border border-2 rounded-lg
+                                h-200 w-80">
+                    {(registrationState === registrationStates.PAGE_1) && (
+                        <Page_1
+                            EmailAddress={EmailAddress}
+                            setEmailAddress={setEmailAddress}
+                            EmailAddressError={EmailAddressError}
+                            FirstName={FirstName}
+                            setFirstName={setFirstName}
+                            FirstNameError={FirstNameError}
+                            LastName={LastName}
+                            setLastName={setLastName}
+                            LastNameError={LastNameError}
+                            setRegistrationState={setRegistrationState}
                         />
-                    </div> 
-                </div>                   
-            </section>
+                    )};
+        
+                    {(registrationState === registrationStates.PAGE_2) && (
+                        <Page_2
+                            VerificationCode={VerificationCode}
+                            EmailAddress={EmailAddress}
+                            VerificationCodeEntered={VerificationCodeEntered}
+                            setVerificationCodeEntered={setVerificationCodeEntered}
+                            VerificationCodeError={VerificationCodeError}
+                            setRegistrationState={setRegistrationState}
+                        />
+                    )};    
+            
+                    {registrationState === registrationStates.PAGE_3 && (
+                        <Page_3 
+                            PasswordVisibility={PasswordVisibility}   
+                            setPasswordVisibility={setPasswordVisibility}                              
+                            Password={Password}
+                            setPassword = {setPassword}
+                            PasswordError = {PasswordError}                                    
+                            PasswordCopy={PasswordCopy}
+                            setPasswordCopy = {setPasswordCopy}
+                            PasswordCopyError = {PasswordCopyError}
+                            setRegistrationState={setRegistrationState}                                    
+                        />
+                    )};
+                </div>
+
+                <div className="relative flex items-center justify-center mt-0 ml-3">
+                    <img className="rounded"
+                        src={Registration_Person}
+                        alt="/"
+                        height={110}
+                        width={265}
+                    />
+                </div> 
+            </div> 
         </div>    
     );
 }

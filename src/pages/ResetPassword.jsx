@@ -11,6 +11,8 @@
 // Revision History
 // ================
 // 26.02.2025 BRD Original version.
+// 01.08.2025 BRD Converted the Strength Research component to now work 
+//                with Strength Coaching.
 //
 import "./Main.css";
 
@@ -101,39 +103,35 @@ export default function ResetPassword() {
     // verify the user and enter their new password.
     //
     return (        
-        <div>
-            <section>
-                <SideNav page="Reset my password" />
-                <TopNav title="Reset my password" userName="" userRole="" />
+        <div>            
+            <TopNav title="" userName="" userRole="" />
 
-                <div className="flex absolute top-20 bottom-0
-                        items-center justify-center
-                        left-[247px] right-0
-                        bg-gray-800">
-                
-                    <div className="flex flex-col box-border border-2 rounded-lg
-                                    h-200 w-80">
-                                    
-                        {(resetState === resetStates.PAGE_1) && (
-                            <Page_1
-                                EmailAddress={EmailAddress}
-                                setEmailAddress={setEmailAddress}
-                                EmailAddressError={EmailAddressError}                                
-                                setResetState={setResetState}
-                            />
-                        )}; 
-                    </div>            
-                                        
-                    <div className="relative flex items-center justify-center mt-0 ml-3">
-                        <img className="rounded"
-                            src={Reset_Person}
-                            alt="/"
-                            height={110}
-                            width={265}
+            <div className="flex absolute top-24 bottom-0
+                    items-center justify-center
+                    left-0 right-0 bg-gray-800 overflow-hidden">
+            
+                <div className="flex flex-col box-border border-2 rounded-lg
+                                h-200 w-80">
+                                
+                    {(resetState === resetStates.PAGE_1) && (
+                        <Page_1
+                            EmailAddress={EmailAddress}
+                            setEmailAddress={setEmailAddress}
+                            EmailAddressError={EmailAddressError}                                
+                            setResetState={setResetState}
                         />
-                    </div> 
-                </div>                   
-            </section>
+                    )}; 
+                </div>            
+                                    
+                <div className="relative flex items-center justify-center mt-0 ml-3">
+                    <img className="rounded"
+                        src={Reset_Person}
+                        alt="/"
+                        height={110}
+                        width={265}
+                    />
+                </div> 
+            </div> 
         </div>    
     );
 }
