@@ -18,6 +18,8 @@ import TopNav from "./components/TopNav";
 
 import Luke_gym from "./images/Luke_gym.png";
 import Luke_gym_2 from "./images/Luke_gym_2.png";
+import laptop from "./images/laptop.png";
+import sign_in_image from "./images/sign_in_image.png";
 
 //
 // More()
@@ -57,7 +59,14 @@ function More() {
                     setPageNumber={setPageNumber}
                     navigate={navigate}
                 />
-            )};        
+            )};  
+
+            {(pageNumber === 3) && (
+                <Page_3
+                    setPageNumber={setPageNumber}
+                    navigate={navigate}
+                />
+            )};         
         </div>    
     );
 }   
@@ -152,6 +161,107 @@ function Page_2(params) {
                                 items-center justify-center
                                 left-0 right-0 bg-gray-800 overflow-hidden">
 
+                    <div>
+                        <p className="ml-10 text-white text-5xl font-bold">
+                            Train like the 
+                            <span className="text-cyan-300 text-5xl font-bold"> Pros</span>                            
+                        </p>
+                        <br></br>
+                        
+                        <ul>
+                            <li className="ml-28 mr-5 mb-2 text-white text-4xl font-bold">1. Measure ...</li>
+                            <li className="ml-28 mr-5 mb-2 text-white text-4xl font-bold">2. Analyse ...</li>
+                            <li className="ml-28 mr-5 mb-2 text-white text-4xl font-bold">3. Optimise ...</li>                            
+                        </ul> 
+                        <br></br>
+
+                        <img className="rounded ml-16"
+                             src={sign_in_image}
+                             alt="/"
+                             draggable={false}                            
+                             width={350}
+                        />
+                    </div>
+
+                    <div className="flex flex-col"> 
+                        <img className="rounded ml-24"
+                             src={laptop}
+                             alt="/"
+                             draggable={false}                            
+                             width={210}
+                        />
+                        <br></br>  
+
+                        <p className="ml-5 mr-5 text-cyan-300 text-2xl ">  
+                            Coaching that just gets better with            
+                        </p>
+                        <p className="text-center text-cyan-300 text-2xl">  
+                            time !        
+                        </p>
+
+                        <br></br>
+                        <p className="ml-5 mr-5 text-white text-sm">
+                            By tracking your performance, recovery, and perception                     
+                        </p>
+                        <p className="ml-5 mr-5 text-white text-sm">
+                            metrics, we can use your training data in our research                   
+                        </p>
+                        <p className="ml-5 mr-5 text-white text-sm">
+                            to build you a better application and coaching program. 
+                        </p>
+                        <br></br>
+                        <p className="ml-5 mr-5 text-white text-sm">
+                            The more data we have, the more accurately we can
+                        </p>
+                        <p className="ml-5 mr-5 text-white text-sm">
+                            predict what 
+                            <span className="text-cyan-300 text-sm font-bold"> works for you !</span>                            
+                        </p>
+
+                        <div className="flex flex-row">
+                            <button className="bg-cyan-600 text-white font-bold text-sm py-2 px-2 rounded
+                                                mt-2 ml-5"
+                                    id="More"
+                                    style={{ width: "100px"}}
+                                    onClick={() => {params.setPageNumber(1);}}>                                 
+                                &lt; Back
+                            </button>
+
+                            <button className="bg-cyan-600 text-white font-bold text-sm py-2 px-2 rounded
+                                                mt-2 ml-5"
+                                    id="Free"
+                                    style={{ width: "140px"}}
+                                    onClick={() => params.setPageNumber(1)}>                                    
+                                INQUIRE NOW
+                            </button>
+
+                            <button className="bg-cyan-600 text-white font-bold text-sm py-2 px-2 rounded
+                                                                mt-2 ml-5"
+                                    id="More"
+                                    style={{ width: "100px"}}
+                                    onClick={() => {params.setPageNumber(3);}}>
+                                More &gt; 
+                            </button>
+                        </div>
+                    </div>                     
+                </div>     
+            </div>    
+        </div>         
+    );
+}
+//
+// Page_3
+// ======
+function Page_3(params) {    
+    return (        
+        <div>                         
+            <TopNav title="" userName="" userRole=""/>
+
+            <div className="flex flex-col">
+                <div className="flex flex-row absolute top-24 bottom-0
+                                items-center justify-center
+                                left-0 right-0 bg-gray-800 overflow-hidden">
+
                     <img className="rounded"
                         src={Luke_gym_2} 
                         alt="/"
@@ -193,7 +303,7 @@ function Page_2(params) {
                                                 mt-2 ml-5"
                                     id="Back"
                                     style={{ width: "100px"}}
-                                    onClick={() => params.setPageNumber(1)}>                                    
+                                    onClick={() => params.setPageNumber(2)}>                                    
                                 &lt; Back
                             </button>
 
