@@ -20,8 +20,8 @@ import Sign_In_People from "./images/Sign_In_People.png";
 // Landing()
 // =========
 function Landing() {
-    // Ensure that any authenticated user returning to page after signing-in previously 
-    // is deauthenticated.
+    // Ensure that any authenticated user returning to this page after signing-in
+    // previously is deauthenticated.
     sessionStorage.setItem("userID", "");
     sessionStorage.setItem("FirstName", "");
     sessionStorage.setItem("LastName", "");
@@ -74,8 +74,7 @@ function Landing() {
                                                                         mt-2 ml-5"
                                         id="Tell_me_more"
                                         style={{ width: "125px" }}
-                                        onClick={() => {                                                            
-                                        }}>
+                                        onClick={() => navigate("/More")}> 
                                     Tell me more ...
                                 </button>  
                             </div> 

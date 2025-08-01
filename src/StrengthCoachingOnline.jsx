@@ -34,6 +34,7 @@ import Landing from './pages/Landing';
 import SignIn from "./pages/SignIn";
 import ResetPassword from "./pages/ResetPassword";
 import Registration from "./pages/Registration";
+import More from "./pages/More";
 import Home from "./pages/Home";
 import Today from "./pages/Today";
 import MySchedule from "./pages/MySchedule";
@@ -56,6 +57,7 @@ root.render(
             <Route path="/SignIn" element={<SignIn />} />
             <Route path="/ResetPassword" element={<ResetPassword />} /> 
             <Route path="/Registration" element={<Registration />} />
+            <Route path="/More" element={<More />} />
             <Route path="/Home" element={<Home />} />
             <Route path="/Today" element={<Today />} />
             <Route path="/MySchedule" element={<MySchedule />} />
