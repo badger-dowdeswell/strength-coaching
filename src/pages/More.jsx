@@ -116,8 +116,7 @@ function Page_1(params) {
             <div className="flex flex-col">
                 <div className="flex flex-row absolute top-24 bottom-0
                                 items-center justify-center
-                                left-0 right-0 bg-gray-800 overflow-hidden">
-
+                                left-0 right-0 bg-gray-800 overflow-auto">
 
                     <img className="rounded"
                         src={Luke_gym}
@@ -198,7 +197,7 @@ function Page_2(params) {
             <div className="flex flex-col">
                 <div className="flex flex-row absolute top-24 bottom-0
                                 items-center justify-center
-                                left-0 right-0 bg-gray-800 overflow-hidden">
+                                left-0 right-0 bg-gray-800 overflow-auto">
 
                     <div>
                         <p className="ml-10 text-white text-5xl font-bold">
@@ -301,7 +300,7 @@ function Page_3(params) {
             <div className="flex flex-col">
                 <div className="flex flex-row absolute top-24 bottom-0
                                 items-center justify-center
-                                left-0 right-0 bg-gray-800 overflow-hidden">
+                                left-0 right-0 bg-gray-800 overflow-auto">
 
                     <img className="rounded"
                         src={Luke_gym_2} 
@@ -386,7 +385,7 @@ function Page_4(params) {
                                 items-center justify-center
                                 left-0 right-0 bg-gray-800 overflow-hidden">
                     <div className="flex flex-col">
-                        <p className="ml-5 mr-5 text-white text-3xl font-bold">
+                        <p className="ml-5 mr-5 text-white text-3xl text-center font-bold">
                             What the strong people have to say !                  
                         </p>
                         <br></br>
@@ -494,7 +493,7 @@ function Page_41(params) {
 
             <div className="flex flex-col absolute top-24 bottom-0
                             items-center justify-center
-                            left-0 right-0 bg-gray-800 overflow-hidden">
+                            left-0 right-0 bg-gray-800 overflow-auto">
                                     
                 <div className="flex flex-col">
                     <div className="flex flex-col box-border border-2 rounded-lg bg-cyan-600
@@ -563,13 +562,6 @@ function Page_41(params) {
 // =======
 // This is the endorsement from Morgan Nicolsen.
 //
-// which really piqued and held my interest in working with
-//                                 a trainer. One of Luke's strengths lies in his ability to present an encouraging and 
-//                                 non-judgemental environment for his clients. This is especially helpful for those 
-//                                 identifying as female - thanks to the added social complexity around fitness [and 
-//                                 therefore aesthetics] for women - and non-binary/trans etc.
-//
-// //
 function Page_42(params) {    
     return ( 
         <div>                         
@@ -577,7 +569,7 @@ function Page_42(params) {
 
             <div className="flex flex-col absolute top-24 bottom-0
                             items-center justify-center
-                            left-0 right-0 bg-gray-800 overflow-hidden">
+                            left-0 right-0 bg-gray-800 overflow-auto">
                                     
                 <div className="flex flex-col">
                     <div className="flex flex-col box-border border-2 rounded-lg bg-cyan-600
@@ -629,7 +621,6 @@ function Page_42(params) {
                         </div>  
                     </div>
                 </div>
-
                 <br></br>
 
                 <div> 

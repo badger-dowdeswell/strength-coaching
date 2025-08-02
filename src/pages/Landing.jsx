@@ -82,7 +82,7 @@ function Landing() {
                     </div>                    
 
                     <div className="relative flex items-center justify-center mt-0 ml-3">
-                        <img className="rounded"
+                        <img className="rounded" 
                             src={Sign_In_People}
                             alt="/"
                             draggable={false}

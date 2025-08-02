@@ -194,12 +194,13 @@ function SignIn() {
         <div>                           
             <TopNav title="" userName="" userRole="" />
 
-            <div className="flex absolute top-24 bottom-0
+            <div className="absolute flex top-24 bottom-0
                             items-center justify-center
-                            left-0 right-0 bg-gray-800 overflow-hidden">
-                                            
+                            left-0 right-0 bg-gray-800 overflow-y-hidden">
+
+                                    
                 <div className="flex flex-col box-border border-2 rounded-lg
-                                h-82 w-80" >
+                                h-82 w-80 ">
                     <p className="text-white text-center text-xl mt-5">Sign In</p>
 
                     <p className=" ml-5 mb-1 mt-3 text-white text-left">
@@ -221,8 +222,7 @@ function SignIn() {
                     <p className="ml-5 mb-1 mt-2 text-white text-left">
                         Your password{" "}
                     </p>
-
-                    
+                
                     <div className="flex flex-row">
                         <input className="ml-5 mt-1 w-72 pl-1"
                             id="Password"
@@ -285,18 +285,21 @@ function SignIn() {
                         Not registered? Click here to register...
                     </p>
                 </div>
-r
-                <div className="relative flex items-center justify-center mt-0 ml-3
+
+                <div className="relative flex items-center justify-center mt-0 ml-3 
                                 h-82 w-80">
-                    <img className="rounded"
+                    <img className="absolute hidden sm:block
+                                    rounded"                    
                         src={Sign_In_Michaela}
                         alt="/"
                         draggable={false}                            
                         width={285}
                     />
-                </div>
+                </div>                    
+                
             </div>            
         </div>        
     );
 }
 export default SignIn;
+                            
