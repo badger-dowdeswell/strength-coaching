@@ -160,6 +160,13 @@ app.listen(PORT, () => {
     logmsg("It was started at " + dt.toLocaleTimeString() + " on " + dt.toLocaleDateString() + ".\n");
 });
 
+//process.on('SIGTERM', () => {
+//    console.log('\nHTTP server closing.\n');
+//  server.close(() => {
+//    console.log('HTTP server closed.');
+//  });
+//});
+
 //
 // verifyJWT()
 // ===========

@@ -29,6 +29,8 @@ import Luke_gym from "./images/Luke_gym.png";
 import Luke_gym_2 from "./images/Luke_gym_2.png";
 import laptop from "./images/laptop.png";
 import sign_in_image from "./images/sign_in_image.png";
+import E1_image from "./images/E1.png";
+import E1_TN_image from "./images/E1_TN.png";
 
 //
 // More()
@@ -81,7 +83,21 @@ function More() {
                     setPageNumber={setPageNumber}
                     navigate={navigate}
                 />
-            )};       
+            )}; 
+
+            {(pageNumber === 41) && (
+                <Page_41
+                    setPageNumber={setPageNumber}
+                    navigate={navigate}
+                />
+            )}; 
+
+            {(pageNumber === 42) && (
+                <Page_42
+                    setPageNumber={setPageNumber}
+                    navigate={navigate}
+                />
+            )};           
         </div>    
     );
 }   
@@ -99,6 +115,7 @@ function Page_1(params) {
                 <div className="flex flex-row absolute top-24 bottom-0
                                 items-center justify-center
                                 left-0 right-0 bg-gray-800 overflow-hidden">
+
 
                     <img className="rounded"
                         src={Luke_gym}
@@ -142,7 +159,7 @@ function Page_1(params) {
 
                         <div className="flex flex-row">
                             <button className="bg-cyan-600 text-white font-bold text-sm py-2 px-2 rounded
-                                                mt-2 ml-5"
+                                                mt-2 ml-16"
                                     id="More"
                                     style={{ width: "100px"}}
                                     onClick={() => params.navigate("/")}>                                    
@@ -170,7 +187,7 @@ function Page_1(params) {
 // Page_2
 // ======
 // This is the "Train like the Pros" page.
-
+//
 function Page_2(params) {    
     return (        
         <div>                         
@@ -199,6 +216,7 @@ function Page_2(params) {
                              alt="/"
                              draggable={false}                            
                              width={350}
+                             onClick={() => params.navigate("/SignIn")}
                         />
                     </div>
 
@@ -321,7 +339,7 @@ function Page_3(params) {
 
                         <div className="flex flex-row">
                             <button className="bg-cyan-600 text-white font-bold text-sm py-2 px-2 rounded
-                                                mt-2 ml-5"
+                                                mt-2 ml-8"
                                     id="Back"
                                     style={{ width: "100px"}}
                                     onClick={() => params.setPageNumber(2)}>                                    
@@ -371,14 +389,69 @@ function Page_4(params) {
                         </p>
                         <br></br>
 
-                        <p className="ml-5 mr-5 text-white text-3xl font-bold">
-                            next bit          
-                        </p>                     
+                        <div className="flex flex-row ml-20">
+                            <div className="mr-10" >
+                                <img className="rounded"
+                                    src={E1_TN_image}
+                                    alt="/"
+                                    draggable={false}                            
+                                    width={175}
+                                    onClick={() => {params.setPageNumber(41)}}>                                    
+                                </img>                                
 
-                        <div className="flex flex-row ml-14">
+                                <p className="text-center text-white text-sm font-bold">
+                                    Peter Guliver        
+                                </p> 
+                            </div>   
+
+                            <div>
+                                <img className="rounded"
+                                     src={E1_TN_image}
+                                     alt="/"
+                                     draggable={false}                            
+                                     width={175}
+                                />  
+
+                                <p className="text-center text-white text-sm font-bold">
+                                    Morgan Nicolsen     
+                                </p> 
+                            </div>    
+                        </div>
+
+                        <br></br>
+
+                        <div className="flex flex-row ml-20">
+                            <div className="mr-10" >
+                                <img className="rounded"
+                                     src={E1_TN_image}
+                                     alt="/"
+                                     draggable={false}                            
+                                     width={175}
+                                />  
+
+                                <p className="text-center text-white text-sm font-bold">
+                                    Barry Dowdeswell        
+                                </p> 
+                            </div>   
+
+                            <div>
+                                <img className="rounded"
+                                     src={E1_TN_image}
+                                     alt="/"
+                                     draggable={false}                            
+                                     width={175}
+                                />  
+
+                                <p className="text-center text-white text-sm font-bold">
+                                    Anna Clair
+                                </p> 
+                            </div>    
+                        </div>
+
+                        <div className="flex flex-row ml-16">
                             <button className="bg-cyan-600 text-white font-bold text-sm py-2 px-2 rounded
                                                 mt-2 ml-5"
-                                    id="More"
+                                    id="Back"
                                     style={{ width: "100px"}}
                                     onClick={() => {params.setPageNumber(3);}}>                                 
                                 &lt; Back
@@ -387,8 +460,7 @@ function Page_4(params) {
                             <button className="bg-cyan-600 text-white font-bold text-sm py-2 px-2 rounded
                                                 mt-2 ml-5"
                                     id="Free"
-                                    style={{ width: "140px"}}
-                                    onClick={() => params.setPageNumber(1)}>                                    
+                                    style={{ width: "140px"}}>                                                                       
                                 Load More
                             </button>
 
@@ -407,43 +479,99 @@ function Page_4(params) {
     );
 }
 
+//
+// page_41
+// =======
+// This is the endorsement from Peter Guliver
+//
+function Page_41(params) {    
+    return ( 
+        <div>                         
+            <TopNav title="" userName="" userRole=""/>       
 
+            <div className="flex flex-col absolute top-24 bottom-0
+                            items-center justify-center
+                            left-0 right-0 bg-gray-800 overflow-hidden">
+                                    
+                <div className="flex flex-col">
+                    <div className="flex flex-col box-border border-2 rounded-lg bg-cyan-600
+                            ml-20 mr-20 h-auto w-auto">
+                        <div> 
+                            <br></br>       
+                            <p className="ml-5 mr-5 text-white text-1xl font-bold">
+                                I have worked with Luke over the past 5 years, both in person
+                                and virtually. Over this time we have done regular mobility and
+                                stretching sessions and a weights program focussed on building strength.
+                                <br></br><br></br>
 
-        //         <div className="flex flex-row absolute top-24 bottom-0
-        //                         items-center justify-center
-        //                         left-0 right-0 bg-gray-800 overflow-hidden">
+                                Luke is an outstanding trainer and coach. He is extremely knowledgeable, proactive, reliable, and
+                                just an all-round great guy. I couldn't recomend him more highly.   
+                                <br></br><br></br>
 
-        //             <div className="flex flex-col">
-        //                 <p className="ml-5 mr-5 text-white text-3xl font-bold">
-        //                     Left t                 
-        //                 </p>
+                                Since we've been working together, I've been hitting PBs for squats and deadlifts in the
+                                gym and the mobility has eliminated those annoying niggles you get with age !
+                                <br></br><br></br>
+                            </p>
+                        </div>
 
-        //                 <p className="ml-5 mr-5 text-white text-3xl font-bold">
-        //                     Right r                 
-        //                 </p>
-        //             </div>
-                                                                            
-                    
-        //             <br></br>
+                        <div className="flex flex-row">
+                            <div className="ml-6" >
+                                <img className="rounded"
+                                    src={E1_image}
+                                    alt="/"
+                                    draggable={false}                            
+                                    width={100}
+                                />  
+                            </div> 
 
-        //             <div className="flex flex-col">
-        //                 <div>
-        //                     <p className="ml-5 mr-5 text-white text-3xl font-bold">
-        //                         Left                  
-        //                     </p>
+                            <div className="ml-8">  
+                                <p className="ml-0 text-white text-2xl font-bold">
+                                    Peter Guliver   
+                                </p>                                
+                                <p className="ml-0 text-white text-sm font-bold">
+                                    Partner and Chief Operating Officer   
+                                </p> 
+                                <p className="ml-0 mb-10 text-white text-sm">
+                                    Deloitte
+                                </p> 
+                            </div>
+                        </div>  
+                    </div>
+                </div>
 
-        //                     <p className="ml-5 mr-5 text-white text-3xl font-bold">
-        //                         Right                  
-        //                     </p>
+                <br></br>
 
-        //                 </div>
-                        
-        //             </div> 
+                <div> 
+                    <button className="bg-cyan-600 text-white font-bold text-sm py-2 px-2 rounded
+                                        before:mt-2 ml-5"
+                            id="Back"
+                            style={{ width: "100px"}}
+                            onClick={() => {params.setPageNumber(4);}}>                                 
+                        &lt; Back
+                    </button>
+                </div>    
+            </div>                                    
+        </div>    
+    );
+}         
 
-
-                    
-        //         </div>
-        //     </div> 
-        // </div> 
+//
+// page_42
+// =======
+// This is the endorsement from Morgan Nicolsen.
+//
+function Page_42(params) {    
+    return (        
+        <div> 
+            <button className="bg-cyan-600 text-white font-bold text-sm py-2 px-2 rounded
+                                 mt-2 ml-5"
+                    id="Back"
+                    style={{ width: "100px"}}
+                    onClick={() => {params.setPageNumber(4);}}>                                 
+                        &lt; Back
+            </button>
+        </div>
+    );
+}            
 
 export default More
