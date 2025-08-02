@@ -31,6 +31,8 @@ import laptop from "./images/laptop.png";
 import sign_in_image from "./images/sign_in_image.png";
 import E1_image from "./images/E1.png";
 import E1_TN_image from "./images/E1_TN.png";
+import E2_image from "./images/E2.png";
+import E2_TN_image from "./images/E2_TN.png";
 
 //
 // More()
@@ -406,11 +408,12 @@ function Page_4(params) {
 
                             <div>
                                 <img className="rounded"
-                                     src={E1_TN_image}
+                                     src={E2_TN_image}
                                      alt="/"
                                      draggable={false}                            
-                                     width={175}
-                                />  
+                                     width={173}
+                                     onClick={() => {params.setPageNumber(42)}}>  
+                                </img>                                     
 
                                 <p className="text-center text-white text-sm font-bold">
                                     Morgan Nicolsen     
@@ -482,7 +485,7 @@ function Page_4(params) {
 //
 // page_41
 // =======
-// This is the endorsement from Peter Guliver
+// This is the endorsement from Peter Guliver.  
 //
 function Page_41(params) {    
     return ( 
@@ -505,7 +508,7 @@ function Page_41(params) {
                                 <br></br><br></br>
 
                                 Luke is an outstanding trainer and coach. He is extremely knowledgeable, proactive, reliable, and
-                                just an all-round great guy. I couldn't recomend him more highly.   
+                                just an all-round great guy. I couldn't recommend him more highly.   
                                 <br></br><br></br>
 
                                 Since we've been working together, I've been hitting PBs for squats and deadlifts in the
@@ -524,7 +527,7 @@ function Page_41(params) {
                                 />  
                             </div> 
 
-                            <div className="ml-8">  
+                            <div className="ml-6 mt-3">  
                                 <p className="ml-0 text-white text-2xl font-bold">
                                     Peter Guliver   
                                 </p>                                
@@ -560,18 +563,87 @@ function Page_41(params) {
 // =======
 // This is the endorsement from Morgan Nicolsen.
 //
+// which really piqued and held my interest in working with
+//                                 a trainer. One of Luke's strengths lies in his ability to present an encouraging and 
+//                                 non-judgemental environment for his clients. This is especially helpful for those 
+//                                 identifying as female - thanks to the added social complexity around fitness [and 
+//                                 therefore aesthetics] for women - and non-binary/trans etc.
+//
+// //
 function Page_42(params) {    
-    return (        
-        <div> 
-            <button className="bg-cyan-600 text-white font-bold text-sm py-2 px-2 rounded
-                                 mt-2 ml-5"
-                    id="Back"
-                    style={{ width: "100px"}}
-                    onClick={() => {params.setPageNumber(4);}}>                                 
+    return ( 
+        <div>                         
+            <TopNav title="" userName="" userRole=""/>       
+
+            <div className="flex flex-col absolute top-24 bottom-0
+                            items-center justify-center
+                            left-0 right-0 bg-gray-800 overflow-hidden">
+                                    
+                <div className="flex flex-col">
+                    <div className="flex flex-col box-border border-2 rounded-lg bg-cyan-600
+                            ml-20 mr-20 h-auto w-auto">
+                        <div> 
+                            <br></br>       
+                            <p className="ml-5 mr-5 text-white text-1xl font-bold">
+                                Luke's approach to personal training is just that - personalised. Luke
+                                is extremely adept at getting to know a client, their experiences, expectations,
+                                and insecurities, building an approach to training that suits THEM, not a generic
+                                approach plus-or-minus a few details. As a client of Luke's, I always felt supported, 
+                                acknowledged, and considered when it came to my sessions, goals, and needs. Luke is 
+                                highly knowledgeable not just on the fundamental movements he trains in, but also their 
+                                fundamental purpose and connection with other components of body mechanics.
+                                <br></br><br></br>
+
+                                In every session, I learned so much from Luke about how to adapt lifting techniques to 
+                                suit my own body's unique movement capabilities or restrictions, and what was happening
+                                in my body in those movements, which really piqued and held my interest in working with
+                                a trainer. One of Luke's strengths lies in his ability to present an encouraging and 
+                                non-judgemental environment for his clients. This is especially helpful for those 
+                                identifying as female - thanks to the added social complexity around fitness [and 
+                                therefore aesthetics] for women - and non-binary/trans etc.
+                                <br></br><br></br>
+                            </p>
+                        </div>
+
+                        <div className="flex flex-row">
+                            <div className="ml-6" >
+                                <img className="rounded"
+                                    src={E2_image}
+                                    alt="/"
+                                    draggable={false}                            
+                                    width={100}
+                                />  
+                            </div> 
+
+                            <div className="ml-6 mt-3">  
+                                <p className="ml-0 text-white text-2xl font-bold">
+                                    Morgan Nicolsen 
+                                </p>                                                        
+                                <p className="ml-0 text-white text-sm font-bold">
+                                    Practice Manager, Technical Analyst - Services  
+                                </p> 
+                                <p className="ml-0 mb-10 text-white text-sm">
+                                    The University of Auckland
+                                </p>                             
+                            </div>
+                        </div>  
+                    </div>
+                </div>
+
+                <br></br>
+
+                <div> 
+                    <button className="bg-cyan-600 text-white font-bold text-sm py-2 px-2 rounded
+                                        before:mt-2 ml-5"
+                            id="Back"
+                            style={{ width: "100px"}}
+                            onClick={() => {params.setPageNumber(4);}}>                                 
                         &lt; Back
-            </button>
-        </div>
+                    </button>
+                </div>    
+            </div>                                    
+        </div>    
     );
-}            
+}    
 
 export default More
