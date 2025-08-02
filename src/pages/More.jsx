@@ -33,6 +33,9 @@ import E1_image from "./images/E1.png";
 import E1_TN_image from "./images/E1_TN.png";
 import E2_image from "./images/E2.png";
 import E2_TN_image from "./images/E2_TN.png";
+import E4_image from "./images/E4.png";
+import E4_TN_image from "./images/E4_TN.png";
+
 
 //
 // More()
@@ -96,6 +99,13 @@ function More() {
 
             {(pageNumber === 42) && (
                 <Page_42
+                    setPageNumber={setPageNumber}
+                    navigate={navigate}
+                />
+            )};     
+
+            {(pageNumber === 44) && (
+                <Page_44
                     setPageNumber={setPageNumber}
                     navigate={navigate}
                 />
@@ -383,7 +393,7 @@ function Page_4(params) {
             <div className="flex flex-col">
                 <div className="flex flex-row absolute top-24 bottom-0
                                 items-center justify-center
-                                left-0 right-0 bg-gray-800 overflow-hidden">
+                                left-0 right-0 bg-gray-800 overflow-auto">
                     <div className="flex flex-col">
                         <p className="ml-5 mr-5 text-white text-3xl text-center font-bold">
                             What the strong people have to say !                  
@@ -429,23 +439,27 @@ function Page_4(params) {
                                      alt="/"
                                      draggable={false}                            
                                      width={175}
-                                />  
+                                     onClick={() => {params.setPageNumber(44)}}>  
+                                </img>  
 
-                                <p className="text-center text-white text-sm font-bold">
-                                    Barry Dowdeswell        
+                                <p className="text-center text-white text-sm font-bold"
+                                   onClick={() => {params.setPageNumber(44)}}>  
+                                    Someone    
                                 </p> 
                             </div>   
 
                             <div>
                                 <img className="rounded"
-                                     src={E1_TN_image}
+                                     src={E4_TN_image}
                                      alt="/"
                                      draggable={false}                            
                                      width={175}
-                                />  
+                                     onClick={() => {params.setPageNumber(44)}}>  
+                                </img>  
 
-                                <p className="text-center text-white text-sm font-bold">
-                                    Anna Clair
+                                <p className="text-center text-white text-sm font-bold"
+                                   onClick={() => {params.setPageNumber(44)}}>
+                                    Barry Dowdeswell
                                 </p> 
                             </div>    
                         </div>
@@ -573,7 +587,7 @@ function Page_42(params) {
                                     
                 <div className="flex flex-col">
                     <div className="flex flex-col box-border border-2 rounded-lg bg-cyan-600
-                            ml-20 mr-20 h-auto w-auto">
+                            ml-20 mr-20 h-auto w-auto overflow-y: scroll">
                         <div> 
                             <br></br>       
                             <p className="ml-5 mr-5 text-white text-1xl font-bold">
@@ -594,6 +608,27 @@ function Page_42(params) {
                                 identifying as female - thanks to the added social complexity around fitness [and 
                                 therefore aesthetics] for women - and non-binary/trans etc.
                                 <br></br><br></br>
+
+                                I always truely enjoyed my sessions with Luke, thanks to his knowledge and his great
+                                sense of humour. Within three to four months, I noticed really facinating progress in
+                                my techniques and mobility, with movements I've been doing for years, and have found
+                                myself remembering Luke's adviceand specific tips long after the fact. This the 
+                                hallmark of a great trainer - if you remember specific things THEY have told when
+                                you're standing at the squat rack, and not just "lift the heavy thing", they've done
+                                a great job.     
+                                <br></br><br></br>
+
+                                I would heartily reccomend Luke's services to anyone looking to pick up a training 
+                                regime - no matter how advanced or new to strength training. Especially for anyone
+                                new to training, Luke is greatly placed to help you understand why a movement is 
+                                important in a training plan, and hoow to maximise the time with it. As someone who 
+                                lifting for years, I found Luke had a real knack for cueing me in the tiniest of ways
+                                to make the most impactful changes in my movements - it really was an excellent 
+                                learning experience in each and every session. Not only that, but Luke helped me to 
+                                identify what I loved about strength training, and encouraged and trained me to 
+                                participate in my first lifting competition, which I know will absolutely not be my
+                                last. I hope to work with Luke again one day, where I'll finally nail that pull-up ! 
+                                <br></br><br></br> 
                             </p>
                         </div>
 
@@ -635,6 +670,93 @@ function Page_42(params) {
             </div>                                    
         </div>    
     );
-}    
+} 
+
+
+//
+// page_44
+// =======
+// This is the endorsement from Barry Dowdeswell
+//
+function Page_44(params) {    
+    return ( 
+        <div>                         
+            <TopNav title="" userName="" userRole=""/>       
+
+            <div className="flex flex-col absolute top-24 bottom-0
+                            items-center justify-center
+                            lleft-0 right-0 bg-gray-800 overflow-auto">
+                                    
+                <div className="flex flex-col">
+                    <div className="flex flex-col box-border border-2 rounded-lg bg-cyan-600
+                            ml-20 mr-20 h-auto w-auto">
+                        <div className="overflow: auto"> 
+                            <br></br>       
+                            <p className="ml-5 mr-5 text-white text-1xl font-bold">
+                                Over the past eight years, Luke has coached me through a great health transition. 
+                                We have worked together, both in the gym and remotely, and, during each stage, he 
+                                has coached me how to become stronger.
+                                <br></br><br></br>
+                                
+                                I now run at the pace I always wanted to and feel great. Luke helped me to understand how 
+                                having someone alongside me to guide me through a customised program was exactly
+                                what I needed. His positivity is infectious and I love the times we work-out together. 
+                                <br></br><br></br>
+
+                                Luke is not only a fitness coach, he also has a deep understanding of sports physiology 
+                                and health science. He knows how to apply sound, up-to-date research in his programs to 
+                                create a customised fitness regime that I understand. I am older, so when I had a few 
+                                medical issues recently, it was great to have Luke reinforce what my doctor was reccomending
+                                by tailoring my program to get me back to peak-performance. 
+                                <br></br><br></br>
+                                
+                                Even more, he has taught me how to understand both the why and the how of each exercise 
+                                so I can follow each block schedule on my own when I am training alone, early in the morning,
+                                at my local gym. He has helped me to support my busy teaching and research schedule by becoming
+                                strong; that makes all the difference.
+                                <br></br><br></br>
+                            </p>
+                        </div>
+
+                        <div className="flex flex-row">
+                            <div className="ml-6" >
+                                <img className="rounded"
+                                    src={E4_image}
+                                    alt="/"
+                                    draggable={false}                            
+                                    width={100}
+                                />  
+                            </div> 
+
+                            <div className="ml-6 mt-3">  
+                                <p className="ml-0 text-white text-2xl font-bold">
+                                    Dr Barry Dowdeswell   
+                                </p>                                
+                                <p className="ml-0 text-white text-sm font-bold">
+                                    Researcher and Senior Lecturer in Software Engineering   
+                                </p> 
+                                <p className="ml-0 mb-10 text-white text-sm">
+                                    Otago Polytechnic Auckland International Campus
+                                </p> 
+                            </div>
+                        </div>  
+                    </div>
+                </div>
+
+                <br></br>
+
+                <div> 
+                    <button className="bg-cyan-600 text-white font-bold text-sm py-2 px-2 rounded
+                                        before:mt-2 ml-5"
+                            id="Back"
+                            style={{ width: "100px"}}
+                            onClick={() => {params.setPageNumber(4);}}>                                 
+                        &lt; Back
+                    </button>
+                </div>    
+            </div>                                    
+        </div>    
+    );
+}         
 
 export default More
