@@ -33,6 +33,8 @@ import E1_image from "./images/E1.png";
 import E1_TN_image from "./images/E1_TN.png";
 import E2_image from "./images/E2.png";
 import E2_TN_image from "./images/E2_TN.png";
+import E3_image from "./images/E3.png";
+import E3_TN_image from "./images/E3_TN.png";
 import E4_image from "./images/E4.png";
 import E4_TN_image from "./images/E4_TN.png";
 
@@ -103,6 +105,13 @@ function More() {
                     navigate={navigate}
                 />
             )};     
+
+            {(pageNumber === 43) && (
+                <Page_43
+                    setPageNumber={setPageNumber}
+                    navigate={navigate}
+                />
+            )};   
 
             {(pageNumber === 44) && (
                 <Page_44
@@ -435,16 +444,16 @@ function Page_4(params) {
                         <div className="flex flex-row ml-20">
                             <div className="mr-10" >
                                 <img className="rounded"
-                                     src={E1_TN_image}
+                                     src={E3_TN_image}
                                      alt="/"
                                      draggable={false}                            
                                      width={175}
-                                     onClick={() => {params.setPageNumber(44)}}>  
+                                     onClick={() => {params.setPageNumber(43)}}>  
                                 </img>  
 
                                 <p className="text-center text-white text-sm font-bold"
-                                   onClick={() => {params.setPageNumber(44)}}>  
-                                    Someone    
+                                   onClick={() => {params.setPageNumber(43)}}>  
+                                    Naomi Page 
                                 </p> 
                             </div>   
 
@@ -672,6 +681,89 @@ function Page_42(params) {
     );
 } 
 
+//
+// page_43
+// =======
+// This is the endorsement from Naomi Page.
+//
+function Page_43(params) {    
+    return ( 
+        <div>                         
+            <TopNav title="" userName="" userRole=""/>       
+
+            <div className="flex flex-col absolute top-24 bottom-0
+                            items-center justify-center
+                            lleft-0 right-0 bg-gray-800 overflow-auto">
+                                    
+                <div className="flex flex-col">
+                    <div className="flex flex-col box-border border-2 rounded-lg bg-cyan-600
+                            ml-20 mr-20 h-auto w-auto">
+                        <div className="overflow: auto"> 
+                            <br></br>       
+                            <p className="ml-5 mr-5 text-white text-1xl font-bold">
+                                Luke is a brilliant coach and his knowledge and experience really shone through.
+                                <br></br><br></br>
+
+                                Having come to Luke with a significant injury, he designed a program that made it 
+                                comfortable for me to continue training and that made it easy to work through the 
+                                rehab process.
+                                <br></br><br></br>
+
+                                I can't express how impressed I was with programming, particulary post-surgery. He
+                                got the balance spot-on, in what was managable and what I could recover from. This 
+                                skill is a winning combination that not many coaches have.
+                                <br></br><br></br>
+
+                                His willingness to work with you as an athlete, compromise, and find solutions is 
+                                also a big plus ! 
+                                <br></br><br></br>
+
+                                Without a doubt, Luke is one of the best coaches I've ever had. Definitely 
+                                reccomend ! 
+                                <br></br><br></br>
+                            </p>
+                        </div>
+
+                        <div className="flex flex-row">
+                            <div className="ml-6" >
+                                <img className="rounded"
+                                    src={E3_image}
+                                    alt="/"
+                                    draggable={false}                            
+                                    width={100}
+                                />  
+                            </div> 
+
+                            <div className="ml-6 mt-3">  
+                                <p className="ml-0 text-white text-2xl font-bold">
+                                    Naomi Page
+                                </p>                                
+                                <p className="ml-0 text-white text-sm font-bold">
+                                    &nbsp;
+                                </p> 
+                                <p className="ml-0 mb-10 text-white text-sm">
+                                    &nbsp;
+                                </p> 
+                            </div>
+                        </div>  
+                    </div>
+                </div>
+
+                <br></br>
+
+                <div> 
+                    <button className="bg-cyan-600 text-white font-bold text-sm py-2 px-2 rounded
+                                        before:mt-2 ml-5"
+                            id="Back"
+                            style={{ width: "100px"}}
+                            onClick={() => {params.setPageNumber(4);}}>                                 
+                        &lt; Back
+                    </button>
+                </div>    
+            </div>                                    
+        </div>    
+    );
+}         
 
 //
 // page_44
