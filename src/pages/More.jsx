@@ -37,6 +37,7 @@ import E3_image from "./images/E3.png";
 import E3_TN_image from "./images/E3_TN.png";
 import E4_image from "./images/E4.png";
 import E4_TN_image from "./images/E4_TN.png";
+import Coffee_with_Coach from "./images/coffee_with_coach.png";
 
 
 //
@@ -53,6 +54,7 @@ function More() {
 
     let navigate = useNavigate();
     const [pageNumber, setPageNumber] = useState(1);
+    const [coffeeWithCoachEmailAddress, setCoffeeWithCoachEmailAddress] = useState("");
 
     return (        
         <div>                           
@@ -118,7 +120,16 @@ function More() {
                     setPageNumber={setPageNumber}
                     navigate={navigate}
                 />
-            )};           
+            )}; 
+
+            {(pageNumber === 5) && (
+                <Page_5
+                    setPageNumber={setPageNumber}
+                    navigate={navigate}
+                    coffeeWithCoachEmailAddress={coffeeWithCoachEmailAddress}
+                    setCoffeeWithCoachEmailAddress={setCoffeeWithCoachEmailAddress}
+                />
+            )};               
         </div>    
     );
 }   
@@ -271,9 +282,9 @@ function Page_2(params) {
                             The more data we have, the more accurately we can
                         </p>
                         <p className="ml-5 mr-5 text-white text-sm">
-                            predict what 
-                            <span className="text-cyan-300 text-sm font-bold"> works for you !</span>                            
+                            predict what <span className="text-cyan-300 text-sm font-bold"> works for you !</span>                            
                         </p>
+                        <br></br>
 
                         <div className="flex flex-row">
                             <button className="bg-cyan-600 text-white font-bold text-sm py-2 px-2 rounded
@@ -288,7 +299,7 @@ function Page_2(params) {
                                                 mt-2 ml-5"
                                     id="Free"
                                     style={{ width: "140px"}}
-                                    onClick={() => params.setPageNumber(1)}>                                    
+                                    onClick={(e) => {window.location.href ='mailto:badger@rockweather.com?subject=I%20would%20like%20to%20know%20more%20about%20coaching';}}>  
                                 INQUIRE NOW
                             </button>
 
@@ -493,7 +504,7 @@ function Page_4(params) {
                                                                 mt-2 ml-5"
                                     id="Next"
                                     style={{ width: "100px"}}
-                                    onClick={() => {params.setPageNumber(3);}}>
+                                    onClick={() => {params.setPageNumber(5);}}>
                                 Next &gt; 
                             </button>
                         </div>  
@@ -849,6 +860,91 @@ function Page_44(params) {
             </div>                                    
         </div>    
     );
-}         
+}  
+
+//
+// Page_5
+// ======
+// This is the "Coffee with Coach Emails" page.
+//
+function Page_5(params) { 
+    const [PasswordError, setPasswordError] = useState("");
+
+    return (        
+        <div>                         
+            <TopNav title="" userName="" userRole=""/>
+
+            <div className="flex flex-col">
+                <div className="flex flex-row absolute top-24 bottom-0
+                                items-center justify-center
+                                left-0 right-0 bg-gray-800 overflow-auto">
+
+                    <img className="rounded"
+                        src={Coffee_with_Coach} 
+                        alt="/"
+                        draggable={false}                            
+                        width={350}
+                    />             
+
+                    <div className="flex flex-col">                                                               
+                        <p className="ml-5 mr-5 text-white text-4xl font-bold">
+                            Coffee with Coach Emails                
+                        </p>
+                        <br></br>
+                        
+                        <p className="ml-5 mr-5 text-white text-2xl font-bold">
+                            Grab a coffee, take a seat, and get 
+                        </p>
+                        <p className="ml-5 mr-5 text-white text-2xl font-bold">    
+                            motivation, training, and nutrition
+                        </p>
+                        <p className="ml-5 mr-5 text-white text-2xl font-bold">       
+                            advice delivered straight to your inbox.
+                        </p>                         
+                        <br></br>
+
+                        <input className="ml-5 mr-5 mt-1 pl-1 w-64"
+                            id="UserID"
+                            type="text"
+                            placeholder="My email address"
+                            autoComplete="new-password"
+                            value={params.coffeeWithCoachEmailAddress}
+                            onChange={(e) => params.setCoffeeWithCoachEmailAddress(e.target.value)}
+                        />
+                        <p className=" ml-5 mb-1 mt-2 text-cyan-300 text-left text-sm">
+                            {PasswordError}&nbsp;
+                        </p>                   
+             
+                        <div className="flex flex-row">
+                            <button className="bg-cyan-600 text-white font-bold text-sm py-2 px-2 rounded
+                                                mt-2 ml-10"
+                                    id="Back"
+                                    style={{ width: "100px"}}
+                                    onClick={() => params.setPageNumber(2)}>                                    
+                                &lt; Back
+                            </button>
+
+                            <button className="bg-cyan-600 text-white font-bold text-sm py-2 px-2 rounded
+                                                mt-2 ml-5"
+                                    id="Free"
+                                    style={{ width: "140px"}}
+                                    onClick={() => params.setPageNumber(1)}>                                    
+                                SIGN UP
+                            </button>
+
+                            <button className="bg-cyan-600 text-white font-bold text-sm py-2 px-2 rounded
+                                                                mt-2 ml-5"
+                                    id="More"
+                                    style={{ width: "100px"}}
+                                    onClick={() => {params.setPageNumber(4)}}>
+                                Next &gt; 
+                            </button>
+                        </div>  
+                    </div>                                    
+                </div>                
+            </div>   
+        </div>         
+    );
+}
 
 export default More
