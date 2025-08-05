@@ -17,7 +17,6 @@
 //
 import './Main.css';
 
-import SideNav from "./components/SideNav";
 import TopNav from "./components/TopNav";
 import { getBaseURL } from "./getBaseURL";
 import { useEffect, useState, useReducer } from "react";
@@ -372,13 +371,12 @@ export default function EditMyProfile() {
     // they can be accessed by the user.
     //
     return (
-        <div>    
-            <SideNav page="Home" IsChanged={IsChanged} />
-            <TopNav title="Edit my profile" />
+        <div> 
+            <TopNav title="" />
 
             <div className="flex flex-col absolute top-24 bottom-0
                         items-center justify-center
-                        left-[247px] right-0 bg-gray-800 overflow-hidden">    
+                        left-0 right-0 bg-gray-800 overflow-hidden">    
 
                 <div className="flex flex-col box-border border-2 rounded-lg    
                                 ml-10 mr-10 h-auto w-auto">

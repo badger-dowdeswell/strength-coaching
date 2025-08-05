@@ -11,10 +11,13 @@
 //
 import './Main.css';
 
-import SideNav from "./components/SideNav";
 import TopNav from "./components/TopNav";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+
+import My_Block_Schedule from "./images/My_Block_Schedule.png";
+import Block_Review from "./images/Block_Review.png";
+import Edit_My_Profile from "./images/Edit_My_Profile.png";
 //
 // Home
 // ====
@@ -61,28 +64,123 @@ function Home() {
 
     return (
         <div>
-            <div>
-                <section>
-                <SideNav page="Home" IsChanged={false} />
-                <TopNav title="Home" userID = {userID} userImage = {userImage}
-                        userName={userName} userRole={userRole} />
-
-                    <div className="flex flex-col absolute top-24 bottom-0
+            <TopNav title="" userID = {userID} userImage = {userImage}
+                    userName={userName} userRole={userRole} />
+            
+            <div className="flex flex-col">                
+                <div className="flex flex-row absolute top-24 bottom-0
                                 items-center justify-center
-                                left-[247px] right-0
-                                bg-gray-800 overflow-hidden">
+                                left-0 right-0 bg-gray-800 overflow-auto">
 
-                    <p className="ml-1 mt-3 text-white">This is the Home page</p>
-                    <br></br>
+                    <div className="flex flex-col"> 
+                        <div className="flex flex-row ml-20">
+                            <div className="mr-10">
+                                <img className="rounded"
+                                    src={My_Block_Schedule}
+                                    alt="/"
+                                    draggable={false}                            
+                                    width={275}
+                                    onClick={() => {navigate("/Home")}}>         
+                                </img>                                
+            
+                                <p className="text-center text-white text-sm font-bold"
+                                    onClick={() => {navigate("/Home")}}>
+                                    My Block Schedule        
+                                </p> 
+                            </div>   
+            
+                            <div className="mr-10">
+                                <img className="rounded"
+                                        src={Block_Review}
+                                        alt="/"
+                                        draggable={false}                            
+                                        width={275}
+                                        onClick={() => {navigate("/Home")}}>
+                                </img>                                     
+                                <p className="text-center text-white text-sm font-bold">
+                                    Block Reflection     
+                                </p> 
+                            </div> 
 
-                    <p className="ml-1 text-white">
-                        Content goes in here ... and here
-                    </p>
-                    <br></br>
-                </div>
-                </section>
+                            <div className="mr-10">
+                                <img className="rounded"
+                                     src={Block_Review}
+                                     alt="/"
+                                     draggable={false}                            
+                                     width={275}
+                                     onClick={() => {navigate("/Home")}}>  
+                                </img>  
+
+                                <p className="text-center text-white text-sm font-bold"
+                                    onClick={() => {navigate("/Home")}}>
+                                    Resources Hub
+                                </p> 
+                            </div>    
+                        </div>                     
+                        <br></br>
+                        <br></br>
+                       
+                        <div className="flex flex-row ml-20">
+                            <div className="mr-10">
+                                <img className="rounded"
+                                    src={My_Block_Schedule}
+                                    alt="/"
+                                    draggable={false}                            
+                                    width={275}
+                                    onClick={() => {navigate("/Home")}}>         
+                                </img>                                
+            
+                                <p className="text-center text-white text-sm font-bold"
+                                   onClick={() => {navigate("/Home")}}>
+                                    Something Else   
+                                </p> 
+                            </div>   
+            
+                            <div className="mr-10">
+                                <img className="rounded"
+                                     src={Block_Review}
+                                     alt="/"
+                                     draggable={false}                            
+                                     width={273}
+                                     onClick={() => {navigate("/Home")}}>
+                                </img>                                     
+                                <p className="text-center text-white text-sm font-bold"
+                                   onClick={() => {navigate("/Home")}}>
+                                    Something Else  
+                                </p> 
+                            </div> 
+
+                            <div className="mr-10">
+                                <img className="rounded"
+                                     src={Edit_My_Profile}
+                                     alt="/"
+                                     draggable={false}                            
+                                     width={275}
+                                     onClick={() => {navigate("/EditMyProfile")}}>  
+                                </img>  
+
+                                <p className="text-center text-white text-sm font-bold"
+                                   onClick={() => {navigate("/EditMyProfile")}}>
+                                    Edit my Profile
+                                </p> 
+                            </div>    
+                        </div>                     
+                        <br></br>
+                        <br></br>
+
+
+                        <div className="flex flex-row ml-16">
+                            <button className="bg-cyan-600 text-white font-bold text-sm py-2 px-2 rounded mt-2 ml-5"
+                                    id="Back"
+                                    style={{ width: "100px"}}
+                                    onClick={() => {navigate("/")}}>                                 
+                                Sign Out
+                            </button> 
+                        </div> 
+                    </div>      
+                </div> 
             </div>
         </div>
-    )
+    );
 }
 export default Home

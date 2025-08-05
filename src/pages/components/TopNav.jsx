@@ -65,21 +65,21 @@ function TopNav(params) {
       <div className="fixed w-full h-24
                       flex flex-row
                       top-0 left-0 m-0 
-                      bg-gray-900 text-white">
+                      bg-gray-900 text-white overflow-y-hidden">
 
             <div className="relative flex items-center justify-center mt-1">
                 <img src={StrengthCoachingLogo}
                      alt="/" draggable={false} 
-                     height={95} width={247}
+                     height={95} width={250}
                      onClick={() => navigate("/")}/>
             </div>
 
-            <div className="absolute left-64 top-10 w-auto 
-                         text-white font-bold text-xl">
+            <div className="absolute left-64 top-8 w-auto 
+                         text-white font-bold text-3xl">
                 <p>{params.title}</p>
             </div>
 
-            <div className="absolute top-0 right-64
+            <div className="absolute top-0 right-5
                             text-white">
                 <div className="flex flex-row-reverse">
                     <div>
