@@ -62,7 +62,7 @@ function Landing() {
                     <div className="flex flex-row">                                
                             <div> 
                                 <button className="bg-cyan-600 text-white font-bold text-sm py-2 px-2 rounded
-                                                                        mt-2 ml-5"                                    
+                                                                        mt-2 ml-5"                                                                         
                                     id="Sign_In"
                                     style={{ width: "125px" }}
                                     onClick={() => navigate("/SignIn")}>

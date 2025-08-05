@@ -322,6 +322,7 @@ export default function Registration() {
                             setLastName={setLastName}
                             LastNameError={LastNameError}
                             setRegistrationState={setRegistrationState}
+                            navigate={navigate}
                         />
                     )};
         
@@ -375,8 +376,8 @@ function Page_1(params) {
         <div>
             <p className="text-white text-center font-bold text-xl mt-5">Registration</p>
 
-            <p className=" ml-5 mb-1 mt-3 text-white text-left">Email address</p>
-            <input className="ml-5 mr-5 mt-1 w-64 pl-1"
+            <p className=" ml-7 mb-1 mt-3 text-white text-left">Email address</p>
+            <input className="ml-7 mr-5 mt-1 w-64 pl-1"   
                 id="EmailAddress"
                 type="text"
                 placeholder=""
@@ -384,12 +385,12 @@ function Page_1(params) {
                 value={params.EmailAddress}
                 onChange={(e) => {params.setEmailAddress(e.target.value);}}
             />
-            <p className=" ml-5 mb-0 mt-2 text-cyan-300 text-left text-sm">
+            <p className="ml-7 mb-0 mt-2 text-cyan-300 text-left text-sm">
                 {params.EmailAddressError}&nbsp;
             </p>
 
-            <p className=" ml-5 mb-1 mt-2 text-white text-left">First name</p>
-            <input className="ml-5 mr-5 mt-1 w-64 pl-1"
+            <p className=" ml-7 mb-1 mt-2 text-white text-left">First name</p>
+            <input className="ml-7 mr-5 mt-1 w-64 pl-1"
                 id="FirstName"                
                 type="text"
                 placeholder=""
@@ -397,12 +398,12 @@ function Page_1(params) {
                 value={params.FirstName}
                 onChange={(e) => params.setFirstName(e.target.value)}
             />
-            <p className=" ml-5 mb-1 mt-2 text-cyan-300 text-left text-sm">
+            <p className=" ml-7 mb-1 mt-2 text-cyan-300 text-left text-sm">
                 {params.FirstNameError}&nbsp;
             </p>
 
-            <p className=" ml-5 mb-1 mt-2 text-white text-left">Last name</p>
-            <input className="ml-5 mr-5 mt-1 w-64 pl-1"
+            <p className=" ml-7 mb-1 mt-2 text-white text-left">Last name</p>
+            <input className="ml-7 mr-5 mt-1 w-64 pl-1"
                 id="LastName"
                 type="text"
                 placeholder=""
@@ -410,17 +411,27 @@ function Page_1(params) {
                 value={params.LastName}
                 onChange={(e) => {params.setLastName(e.target.value);}}
             />
-            <p className=" ml-5 mb-1 mt-2 text-cyan-300 text-left text-sm">
+            <p className=" ml-7 mb-1 mt-2 text-cyan-300 text-left text-sm">
                 {params.LastNameError}&nbsp;
             </p>
 
-            <button className="bg-cyan-600 text-white font-bold text-sm py-2 px-2 rounded
-                            mt-3 ml-28 mb-0"
-                id="Next"
-                style={{ width: "100px" }}                
-                onClick={() => {params.setRegistrationState(registrationStates.VERIFY_PAGE_1);}} >
-                Next &gt;
-            </button>
+            <div className="flex flex-row">
+                <button className="bg-cyan-600 text-white font-bold text-sm py-2 px-2 rounded
+                                 mt-2 ml-12 mb-0"
+                    id="Next"
+                    style={{ width: "100px" }}                
+                    onClick={() => {params.setRegistrationState(registrationStates.VERIFY_PAGE_1);}} >
+                    Next &gt;
+                </button>
+
+                <button className="bg-cyan-600 text-white font-bold text-sm py-2 px-2 rounded
+                                mt-2 ml-5"
+                    id="Cancel"
+                    style={{ width: "100px" }}                
+                    onClick={() => {params.navigate("/")}} >
+                    Cancel
+                </button>
+            </div>
       </div>
     );
 }

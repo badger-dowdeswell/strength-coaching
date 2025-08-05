@@ -197,7 +197,6 @@ function SignIn() {
             <div className="absolute flex top-24 bottom-0
                             items-center justify-center
                             left-0 right-0 bg-gray-800 overflow-y-hidden">
-
                                     
                 <div className="flex flex-col box-border border-2 rounded-lg
                                 h-82 w-80 ">
@@ -260,32 +259,46 @@ function SignIn() {
                         </p>
                     </div> 
 
-                    <button className="bg-cyan-600 text-white font-bold text-sm py-2 px-2 rounded
-                                    mt-2 ml-28"
-                        id="SignIn"
-                        style={{ width: "100px" }}
-                        onClick={() => {
-                            setEditingState(editingStates.AUTHENTICATING);
-                        }}>
-                        Sign In
-                    </button>
-                    <p className=" ml-5 mb-0 mt-0 text-cyan-300 text-left text-sm">
-                        {SignInError}&nbsp;
-                    </p>
-
                     <p className=" ml-5 mb-0 mt-0 text-cyan-300 text-left text-sm"
                             onClick={() => {setEditingState(editingStates.FORGOT_PASSWORD)}
                         }>
                         Forgot your password? Click here to reset it...
                     </p>
 
-                    <p className=" ml-5 mb-1 mt-0 text-cyan-300 text-left text-sm"
+                    <p className=" ml-5 mb-1 mt-3 text-cyan-300 text-left text-sm"
                             onClick={() => {setEditingState(editingStates.REGISTER)}
                         }>
                         Not registered? Click here to register...
                     </p>
-                </div>
 
+                    <div className="flex flex-row">                         
+                        <button className="bg-cyan-600 text-white font-bold text-sm py-2 px-2 rounded
+                                        mt-2 ml-12"
+                            id="SignIn"
+                            style={{ width: "100px" }}
+                            onClick={() => {
+                                setEditingState(editingStates.AUTHENTICATING);
+                            }}>
+                            Sign In
+                        </button>
+
+                        <button className="bg-cyan-600 text-white font-bold text-sm py-2 px-2 rounded
+                                        mt-2 ml-5"
+                            id="Cancel"
+                            style={{ width: "100px" }}
+                            onClick={() => {
+                                navigate("/");
+                            }}>
+                            Cancel
+                        </button>
+                    </div>    
+                    <p className=" ml-5 mb-0 mt-0 text-cyan-300 text-left text-sm">
+                        {SignInError}&nbsp;
+                    </p>
+
+                    
+                </div>
+                
                 <div className="relative flex items-center justify-center mt-0 ml-3 
                                 h-82 w-80">
                     <img className="absolute hidden sm:block
@@ -293,10 +306,9 @@ function SignIn() {
                         src={Sign_In_Michaela}
                         alt="/"
                         draggable={false}                            
-                        width={285}
+                        width={295}
                     />
-                </div>                    
-                
+                </div> 
             </div>            
         </div>        
     );

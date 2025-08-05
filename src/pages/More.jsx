@@ -159,7 +159,7 @@ function Page_1(params) {
             <div className="flex flex-col">
                 <div className="flex flex-row absolute top-24 bottom-0
                                 items-center justify-center
-                                left-0 right-0 bg-gray-800 overflow-auto">
+                                left-0 right-0 bg-gray-800 overflow-hidden">
 
                     <img className="rounded"
                         src={Luke_gym}
@@ -240,7 +240,7 @@ function Page_2(params) {
             <div className="flex flex-col">
                 <div className="flex flex-row absolute top-24 bottom-0
                                 items-center justify-center
-                                left-0 right-0 bg-gray-800 overflow-auto">
+                                left-0 right-0 bg-gray-800 overflow-hidden">
 
                     <div>
                         <p className="ml-10 text-white text-5xl font-bold">
@@ -344,7 +344,7 @@ function Page_3(params) {
             <div className="flex flex-col">
                 <div className="flex flex-row absolute top-24 bottom-0
                                 items-center justify-center
-                                left-0 right-0 bg-gray-800 overflow-auto">
+                                left-0 right-0 bg-gray-800 overflow-hidden">
 
                     <img className="rounded"
                         src={Luke_gym_2} 
@@ -427,7 +427,7 @@ function Page_4(params) {
             <div className="flex flex-col">
                 <div className="flex flex-row absolute top-24 bottom-0
                                 items-center justify-center
-                                left-0 right-0 bg-gray-800 overflow-auto">
+                                left-0 right-0 bg-gray-800 overflow-hidden">
                     <div className="flex flex-col">
                         <p className="ml-5 mr-5 text-white text-3xl text-center font-bold">
                             What the strong people have to say !                  
@@ -541,7 +541,7 @@ function Page_41(params) {
 
             <div className="flex flex-col absolute top-24 bottom-0
                             items-center justify-center
-                            left-0 right-0 bg-gray-800 overflow-auto">
+                            left-0 right-0 bg-gray-800 overflow-hidden">
                                     
                 <div className="flex flex-col">
                     <div className="flex flex-col box-border border-2 rounded-lg bg-cyan-600
@@ -617,7 +617,7 @@ function Page_42(params) {
 
             <div className="flex flex-col absolute top-24 bottom-0
                             items-center justify-center
-                            left-0 right-0 bg-gray-800 overflow-auto">
+                            left-0 right-0 bg-gray-800 overflow-hidden">
                                     
                 <div className="flex flex-col">
                     <div className="flex flex-col box-border border-2 rounded-lg bg-cyan-600
@@ -718,7 +718,7 @@ function Page_43(params) {
 
             <div className="flex flex-col absolute top-24 bottom-0
                             items-center justify-center
-                            lleft-0 right-0 bg-gray-800 overflow-auto">
+                            lleft-0 right-0 bg-gray-800 overflow-hidden">
                                     
                 <div className="flex flex-col">
                     <div className="flex flex-col box-border border-2 rounded-lg bg-cyan-600
@@ -802,7 +802,7 @@ function Page_44(params) {
 
             <div className="flex flex-col absolute top-24 bottom-0
                             items-center justify-center
-                            lleft-0 right-0 bg-gray-800 overflow-auto">
+                            lleft-0 right-0 bg-gray-800 overflow-hidden">
                                     
                 <div className="flex flex-col">
                     <div className="flex flex-col box-border border-2 rounded-lg bg-cyan-600
@@ -908,7 +908,7 @@ function Page_5(params) {
             <div className="flex flex-col">
                 <div className="flex flex-row absolute top-24 bottom-0
                                 items-center justify-center
-                                left-0 right-0 bg-gray-800 overflow-auto">
+                                left-0 right-0 bg-gray-800 overflow-hidden">
 
                     <img className="rounded"
                         src={Coffee_with_Coach} 
@@ -1009,7 +1009,7 @@ function Page_6(params) {
             <div className="flex flex-col">
                 <div className="flex flex-row absolute top-24 bottom-0
                                 items-center justify-center
-                                left-0 right-0 bg-gray-800 overflow-auto">
+                                left-0 right-0 bg-gray-800 overflow-hidden">
 
                     <img className="rounded"
                         src={Luke_Resources_Hub} 
