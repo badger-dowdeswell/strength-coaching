@@ -22,6 +22,7 @@ import './Main.css';
 
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
+import {validateEmail} from "./components/UtilLib";
 
 import TopNav from "./components/TopNav";
 
@@ -38,6 +39,7 @@ import E3_TN_image from "./images/E3_TN.png";
 import E4_image from "./images/E4.png";
 import E4_TN_image from "./images/E4_TN.png";
 import Coffee_with_Coach from "./images/coffee_with_coach.png";
+import Luke_Resources_Hub from "./images/Luke_Resources_Hub.png";
 
 
 //
@@ -132,7 +134,15 @@ function More() {
                     Agree={Agree}
                     setAgree={setAgree}
                 />
-            )};               
+            )};  
+
+            {(pageNumber === 6) && (
+                <Page_6
+                    setPageNumber={setPageNumber}
+                    navigate={navigate}
+                /> 
+            )};  
+                            
         </div>    
     );
 }   
@@ -320,6 +330,7 @@ function Page_2(params) {
         </div>         
     );
 }
+
 //
 // Page_3
 // ======
@@ -872,6 +883,23 @@ function Page_44(params) {
 //
 function Page_5(params) { 
     const [PasswordError, setPasswordError] = useState("");
+    const [AgreementError, setAgreementError] = useState("");  
+
+
+    function verify() {
+        if (!validateEmail(params.coffeeWithCoachEmailAddress)) {
+            console.log("Invalid");
+            setPasswordError("That email address is not valid.");
+        } else {
+            setPasswordError("");
+            console.log("Valid");
+        }
+        if ((params.coffeeWithCoachEmailAddress) && (!params.Agree)) {
+            setAgreementError("Please tick the agreement box.");
+        } else {
+            setAgreementError("");
+        }
+    }
 
     return (        
         <div>                         
@@ -923,12 +951,15 @@ function Page_5(params) {
                                 type="checkbox"
                                 value={params.Agree}
                                 checked={params.Agree}                                
-                                onChange={() => params.setAgree(Agree => !Agree)}
+                                onChange={() => params.setAgree(!params.Agree)}
                             />
                             <p className="ml-3 text-white text-sm">    
                                 I agree to sharing my email with Strength Coaching Online who<br></br>may contact me (required).
                             </p>                            
                         </div>
+                        <p className=" ml-5 mb-1 mt-2 text-cyan-300 text-left text-sm">
+                            {AgreementError}&nbsp;
+                        </p> 
                         <br></br>   
              
                         <div className="flex flex-row">
@@ -936,15 +967,17 @@ function Page_5(params) {
                                                 mt-2 ml-10"
                                     id="Back"
                                     style={{ width: "100px"}}
-                                    onClick={() => params.setPageNumber(2)}>                                    
+                                    onClick={() => params.setPageNumber(4)}>                                    
                                 &lt; Back
                             </button>
 
                             <button className="bg-cyan-600 text-white font-bold text-sm py-2 px-2 rounded
                                                 mt-2 ml-5"
-                                    id="Free"
+                                    id="Sign_Up"
                                     style={{ width: "140px"}}
-                                    onClick={() => params.setPageNumber(1)}>                                    
+                                    onClick={() => {verify(params.coffeeWithCoachEmailAddress);
+                                                    }
+                                    }>                                    
                                 SIGN UP
                             </button>
 
@@ -952,11 +985,94 @@ function Page_5(params) {
                                                                 mt-2 ml-5"
                                     id="More"
                                     style={{ width: "100px"}}
-                                    onClick={() => {params.setPageNumber(4)}}>
+                                    onClick={() => {params.setPageNumber(6)}}>
                                 Next &gt; 
                             </button>
                         </div>  
                     </div>                                    
+                </div>                
+            </div>   
+        </div>         
+    );
+}
+
+//
+// Page_6
+// ======
+// This is the page of information about the Resources hub.
+//
+function Page_6(params) {    
+    return (        
+        <div>                         
+            <TopNav title="" userName="" userRole=""/>
+
+            <div className="flex flex-col">
+                <div className="flex flex-row absolute top-24 bottom-0
+                                items-center justify-center
+                                left-0 right-0 bg-gray-800 overflow-auto">
+
+                    <img className="rounded"
+                        src={Luke_Resources_Hub} 
+                        alt="/"
+                        draggable={false}                            
+                        width={270}
+                    />             
+
+                    <div className="flex flex-col">                                                               
+                        <p className="ml-5 mr-5 text-white text-4xl font-bold">
+                            Resources hub               
+                        </p>
+                        <br></br>
+
+                        <p className="ml-5 mr-5 text-white text-2xl font-bold">
+                            Free Training Programs                  
+                        </p>
+                        <p className="ml-5 mr-5 text-white text-2xl font-bold">
+                            and Resources.                   
+                        </p>
+                        <br></br>
+
+                        <div>
+                            <ul>
+                                <li className="ml-5 mr-5 mb-2 text-white text-2xl font-bold">&#8226;&nbsp; Full-Length Training Programs. </li>
+                                <li className="ml-5 mr-5 mb-2 text-white text-2xl font-bold">&#8226;&nbsp; Nutrition and Training EBooks.</li>
+                                <li className="ml-5 mr-5 mb-2 text-white text-2xl font-bold">&#8226;&nbsp; Tools, Trackers, and Calculators.</li>                                
+                            </ul>
+                        </div>
+                        <br></br>
+
+                        
+
+                        <p className="ml-5 mr-5 text-white text-sm"> ​Click the ACCESS THE HUB button below to access everything</p>
+                        <p className="ml-5 mr-5 text-white text-sm"> you need to get started with strength training.</p>  
+                        <br></br>                    
+
+                        <div className="flex flex-row">
+                            <button className="bg-cyan-600 text-white font-bold text-sm py-2 px-2 rounded
+                                                mt-2 ml-8"
+                                    id="Back"
+                                    style={{ width: "100px"}}
+                                    onClick={() => params.setPageNumber(5)}>                                    
+                                &lt; Back
+                            </button>
+
+                            <button className="bg-cyan-600 text-white font-bold text-sm py-2 px-2 rounded
+                                                mt-2 ml-5"
+                                    id="Free"
+                                    style={{ width: "140px"}}
+                                    onClick={() => params.setPageNumber(6)}>                                    
+                                ACCESS THE HUB
+                            </button>
+
+                            <button className="bg-cyan-600 text-white font-bold text-sm py-2 px-2 rounded
+                                                                mt-2 ml-5"
+                                    id="Home"
+                                    style={{ width: "100px"}}
+                                    onClick={() => params.navigate("/")}>  
+                                Home 
+                            </button>
+                        </div>
+                    </div>                     
                 </div>                
             </div>   
         </div>         
