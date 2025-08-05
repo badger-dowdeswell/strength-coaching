@@ -55,6 +55,7 @@ function More() {
     let navigate = useNavigate();
     const [pageNumber, setPageNumber] = useState(1);
     const [coffeeWithCoachEmailAddress, setCoffeeWithCoachEmailAddress] = useState("");
+    const [Agree, setAgree] = useState(false);
 
     return (        
         <div>                           
@@ -128,6 +129,8 @@ function More() {
                     navigate={navigate}
                     coffeeWithCoachEmailAddress={coffeeWithCoachEmailAddress}
                     setCoffeeWithCoachEmailAddress={setCoffeeWithCoachEmailAddress}
+                    Agree={Agree}
+                    setAgree={setAgree}
                 />
             )};               
         </div>    
@@ -913,7 +916,20 @@ function Page_5(params) {
                         />
                         <p className=" ml-5 mb-1 mt-2 text-cyan-300 text-left text-sm">
                             {PasswordError}&nbsp;
-                        </p>                   
+                        </p> 
+
+                        <div className="flex flex-row">  
+                            <input className="ml-5 mt-0 h-6 bg-cyan-600 text-left text-sm"
+                                type="checkbox"
+                                value={params.Agree}
+                                checked={params.Agree}                                
+                                onChange={() => params.setAgree(Agree => !Agree)}
+                            />
+                            <p className="ml-3 text-white text-sm">    
+                                I agree to sharing my email with Strength Coaching Online who<br></br>may contact me (required).
+                            </p>                            
+                        </div>
+                        <br></br>   
              
                         <div className="flex flex-row">
                             <button className="bg-cyan-600 text-white font-bold text-sm py-2 px-2 rounded
