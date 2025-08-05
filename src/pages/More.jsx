@@ -310,7 +310,7 @@ function Page_2(params) {
 
                             <button className="bg-cyan-600 text-white font-bold text-sm py-2 px-2 rounded
                                                 mt-2 ml-5"
-                                    id="Free"
+                                    id="Inquire"
                                     style={{ width: "140px"}}
                                     onClick={(e) => {window.location.href ='mailto:badger@rockweather.com?subject=I%20would%20like%20to%20know%20more%20about%20coaching';}}>  
                                 INQUIRE NOW
@@ -395,7 +395,7 @@ function Page_3(params) {
                                                 mt-2 ml-5"
                                     id="Free"
                                     style={{ width: "140px"}}
-                                    onClick={() => params.setPageNumber(1)}>                                    
+                                    onClick={() => params.setPageNumber(6)}>                                    
                                 FREE RESOURCES
                             </button>
 
