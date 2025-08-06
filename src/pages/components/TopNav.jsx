@@ -41,7 +41,7 @@ function TopNav(params) {
    let navigate = useNavigate();
 
    switch (sessionStorage.getItem("UserAuthority")) {
-   case "A":
+   case "S":
       userRole = "Administrator";
       break;
 
