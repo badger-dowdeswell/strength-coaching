@@ -534,20 +534,20 @@ function Page_4(params) {
 // =======
 // This is the endorsement from Peter Guliver.  
 //
-function Page_41(params) {    
+function Page_41(params) {   
     return ( 
         <div>                         
-            <TopNav title="" userName="" userRole=""/>       
+            <TopNav title="" userName="" userRole=""/>     
 
-            <div className="flex flex-col absolute top-24 bottom-0
+            <div className="flex flex-col absolute top-24 bottom-3
                             items-center justify-center
                             left-0 right-0 bg-gray-800 overflow-hidden">
                                     
-                <div className="flex flex-col">
+                <div className="flex flex-col justify-center">
                     <div className="flex flex-col box-border border-2 rounded-lg bg-cyan-600
-                            ml-20 mr-20 h-auto w-auto">
-                        <div> 
-                            <br></br>       
+                                    ml-20 mr-20 h-5/6 w-5/6 overflow-y-scroll">
+                        <div>  
+                            <br></br> 
                             <p className="ml-5 mr-5 text-white text-1xl font-bold">
                                 I have worked with Luke over the past 5 years, both in person
                                 and virtually. Over this time we have done regular mobility and
@@ -587,21 +587,19 @@ function Page_41(params) {
                             </div>
                         </div>  
                     </div>
-                </div>
-
-                <br></br>
-
-                <div> 
-                    <button className="bg-cyan-600 text-white font-bold text-sm py-2 px-2 rounded
-                                        before:mt-2 ml-5"
-                            id="Back"
-                            style={{ width: "100px"}}
-                            onClick={() => {params.setPageNumber(4);}}>                                 
-                        &lt; Back
-                    </button>
-                </div>    
-            </div>                                    
-        </div>    
+                
+                    <div className="flex justify-center">  
+                        <button className="bg-cyan-600 text-white font-bold text-sm py-2 px-2 rounded
+                                            before mt-8"
+                                id="Back"
+                                style={{ width: "100px"}}
+                                onClick={() => {params.setPageNumber(4);}}>                                 
+                            &lt; Back
+                        </button>                    
+                    </div>
+                </div>                                    
+            </div> 
+        </div>   
     );
 }         
 
@@ -610,20 +608,20 @@ function Page_41(params) {
 // =======
 // This is the endorsement from Morgan Nicolsen.
 //
-function Page_42(params) {    
+function Page_42(params) {  
     return ( 
         <div>                         
-            <TopNav title="" userName="" userRole=""/>       
+            <TopNav title="" userName="" userRole=""/>     
 
-            <div className="flex flex-col absolute top-24 bottom-0
+            <div className="flex flex-col absolute top-24 bottom-3
                             items-center justify-center
                             left-0 right-0 bg-gray-800 overflow-hidden">
                                     
-                <div className="flex flex-col">
+                <div className="flex flex-col justify-center">
                     <div className="flex flex-col box-border border-2 rounded-lg bg-cyan-600
-                            ml-20 mr-20 h-auto w-auto overflow-y: scroll">
-                        <div> 
-                            <br></br>       
+                                    ml-20 mr-20 h-5/6 w-5/6 overflow-y-scroll">
+                        <div>  
+                            <br></br>           
                             <p className="ml-5 mr-5 text-white text-1xl font-bold">
                                 Luke's approach to personal training is just that - personalised. Luke
                                 is extremely adept at getting to know a client, their experiences, expectations,
@@ -689,22 +687,21 @@ function Page_42(params) {
                             </div>
                         </div>  
                     </div>
-                </div>
-                <br></br>
-
-                <div> 
-                    <button className="bg-cyan-600 text-white font-bold text-sm py-2 px-2 rounded
-                                        before:mt-2 ml-5"
-                            id="Back"
-                            style={{ width: "100px"}}
-                            onClick={() => {params.setPageNumber(4);}}>                                 
-                        &lt; Back
-                    </button>
-                </div>    
-            </div>                                    
-        </div>    
+                
+                    <div className="flex justify-center">  
+                        <button className="bg-cyan-600 text-white font-bold text-sm py-2 px-2 rounded
+                                            before mt-8"
+                                id="Back"
+                                style={{ width: "100px"}}
+                                onClick={() => {params.setPageNumber(4);}}>                                 
+                            &lt; Back
+                        </button>                    
+                    </div>
+                </div>                                    
+            </div> 
+        </div>   
     );
-} 
+}         
 
 //
 // page_43
@@ -716,16 +713,16 @@ function Page_43(params) {
         <div>                         
             <TopNav title="" userName="" userRole=""/>       
 
-            <div className="flex flex-col absolute top-24 bottom-0
+            <div className="flex flex-col absolute top-24 bottom-3
                             items-center justify-center
-                            lleft-0 right-0 bg-gray-800 overflow-hidden">
+                            left-0 right-0 bg-gray-800 overflow-hidden">
                                     
-                <div className="flex flex-col">
+                <div className="flex flex-col justify-center">
                     <div className="flex flex-col box-border border-2 rounded-lg bg-cyan-600
-                            ml-20 mr-20 h-auto w-auto">
-                        <div className="overflow: auto"> 
-                            <br></br>       
-                            <p className="ml-5 mr-5 text-white text-1xl font-bold">
+                                    ml-20 mr-20 h-5/6 w-5/6 overflow-y-scroll">                                                       
+                        <div> 
+                            <br></br>                                
+                            <p className="ml-5 mr-5 text-white text-1xl font-bold">                        
                                 Luke is a brilliant coach and his knowledge and experience really shone through.
                                 <br></br><br></br>
 
@@ -752,10 +749,10 @@ function Page_43(params) {
                         <div className="flex flex-row">
                             <div className="ml-6" >
                                 <img className="rounded"
-                                    src={E3_image}
-                                    alt="/"
-                                    draggable={false}                            
-                                    width={100}
+                                     src={E3_image}
+                                     alt="/"
+                                     draggable={false}                            
+                                     width={100}
                                 />  
                             </div> 
 
@@ -771,22 +768,20 @@ function Page_43(params) {
                                 </p> 
                             </div>
                         </div>  
+                    </div>                    
+
+                    <div className="flex justify-center">  
+                        <button className="bg-cyan-600 text-white font-bold text-sm py-2 px-2 rounded
+                                            before mt-8"
+                                id="Back"
+                                style={{ width: "100px"}}
+                                onClick={() => {params.setPageNumber(4);}}>                                 
+                            &lt; Back
+                        </button>                    
                     </div>
-                </div>
-
-                <br></br>
-
-                <div> 
-                    <button className="bg-cyan-600 text-white font-bold text-sm py-2 px-2 rounded
-                                        before:mt-2 ml-5"
-                            id="Back"
-                            style={{ width: "100px"}}
-                            onClick={() => {params.setPageNumber(4);}}>                                 
-                        &lt; Back
-                    </button>
-                </div>    
-            </div>                                    
-        </div>    
+                </div>                                    
+            </div> 
+        </div>   
     );
 }         
 
@@ -798,17 +793,17 @@ function Page_43(params) {
 function Page_44(params) {    
     return ( 
         <div>                         
-            <TopNav title="" userName="" userRole=""/>       
+            <TopNav title="" userName="" userRole=""/>     
 
-            <div className="flex flex-col absolute top-24 bottom-0
+            <div className="flex flex-col absolute top-24 bottom-3
                             items-center justify-center
-                            lleft-0 right-0 bg-gray-800 overflow-hidden">
+                            left-0 right-0 bg-gray-800 overflow-hidden">
                                     
-                <div className="flex flex-col">
+                <div className="flex flex-col justify-center">
                     <div className="flex flex-col box-border border-2 rounded-lg bg-cyan-600
-                            ml-20 mr-20 h-auto w-auto">
-                        <div className="overflow: auto"> 
-                            <br></br>       
+                                    ml-20 mr-20 h-5/6 w-5/6 overflow-y-scroll">
+                        <div>  
+                            <br></br>                                 
                             <p className="ml-5 mr-5 text-white text-1xl font-bold">
                                 Over the past eight years, Luke has coached me through a great health transition. 
                                 We have worked together, both in the gym and remotely, and, during each stage, he 
@@ -858,19 +853,17 @@ function Page_44(params) {
                             </div>
                         </div>  
                     </div>
+
+                    <div className="flex justify-center"> 
+                        <button className="bg-cyan-600 text-white font-bold text-sm py-2 px-2 rounded
+                                            before mt-8"
+                                id="Back"
+                                style={{ width: "100px"}}
+                                onClick={() => {params.setPageNumber(4);}}>                                 
+                            &lt; Back
+                        </button>
+                    </div>    
                 </div>
-
-                <br></br>
-
-                <div> 
-                    <button className="bg-cyan-600 text-white font-bold text-sm py-2 px-2 rounded
-                                        before:mt-2 ml-5"
-                            id="Back"
-                            style={{ width: "100px"}}
-                            onClick={() => {params.setPageNumber(4);}}>                                 
-                        &lt; Back
-                    </button>
-                </div>    
             </div>                                    
         </div>    
     );
