@@ -295,20 +295,16 @@ function SignIn() {
                     <p className=" ml-5 mb-0 mt-0 text-cyan-300 text-left text-sm">
                         {SignInError}&nbsp;
                     </p>
-
-                    
-                </div>
+                </div>                
                 
-                <div className="relative flex items-center justify-center mt-0 ml-3 
-                                h-82 w-80">
-                    <img className="absolute hidden sm:block
-                                    rounded"                    
+                <div className="relative flex items-center justify-center mt-0 ml-3 h-82 w-80">
+                    <img className="absolute rounded"                    
                         src={Sign_In_Michaela}
                         alt="/"
                         draggable={false}                            
                         width={295}
                     />
-                </div> 
+                </div>                 
             </div>            
         </div>        
     );
