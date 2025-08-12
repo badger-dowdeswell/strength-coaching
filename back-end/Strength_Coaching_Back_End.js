@@ -63,6 +63,7 @@
 //                the environment process object is now native in running Node applications.
 // 28.05.2025 BRD Cloned the new Strength Coaching Online back end from the original Strength
 //                Research Online back end.
+// 12.08.2025 BRD Added support for the User table field user_image.
 //
 import express from 'express';
 import cors from 'cors';
@@ -222,6 +223,7 @@ app.get('/api/authenticateUser', async(request, response) => {
                 const user_authority = result.rows[0].user_authority;
                 const first_name = result.rows[0].first_name;
                 const last_name = result.rows[0].last_name;
+                const user_image = result.rows[0].user_image;
 
                 // Compare the password submitted and the encrypted password.
                 bcrypt.compare(recvPassword , encryptedPassword, function(err, result) {
@@ -237,6 +239,7 @@ app.get('/api/authenticateUser', async(request, response) => {
                                                 first_name: first_name,
                                                 last_name:  last_name,
                                                 user_authority: user_authority,
+                                                user_image: user_image,
                                                 JWT: token};
                                 // console.log("Packet returned: " + packet.user_ID);
                                 response.status(200).send(packet);
@@ -505,6 +508,7 @@ app.put('/api/updateUser', (request, response) => {
                 ' "state" = ' + "'" + request.body.state.replace(/'/g, "''") + "' , " +
                 ' "country" = ' + "'" + request.body.country.replace(/'/g, "''") + "' , " +
                 ' "date_of_birth" = ' + "'" + request.body.date_of_birth.replace(/'/g, "''") + "' " +
+                ' "user_image" = ' + "'" + request.body.user_image(/'/g, "''") + "' " +
                 ' WHERE "user_ID" = ' + "'" + request.body.user_ID + "';\n" +                
             'EXCEPTION\n ' +
             'WHEN OTHERS THEN\n' +

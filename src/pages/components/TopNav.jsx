@@ -33,39 +33,40 @@ import { useNavigate } from "react-router-dom";
 import StrengthCoachingLogo from "./componentImages/Strength_Coaching_Logo.png";
 
 function TopNav(params) { 
-   var userID = sessionStorage.getItem("userID");  
-   let userName = sessionStorage.getItem("FirstName") + " " + sessionStorage.getItem("LastName");  
-   var userImage = "./userImages/" + userID + ".png";
-   var userRole = ""; 
+    let navigate = useNavigate();
 
-   let navigate = useNavigate();
+    var userID = sessionStorage.getItem("userID");  
+    let userName = sessionStorage.getItem("FirstName") + " " + sessionStorage.getItem("LastName");  
+    var userImage = "./userImages/" + sessionStorage.getItem("UserImage"); // "./userImages/" + userID + ".png"; RA_BRD
+    console.log("\nuserImage " + userImage);
+    var userRole = "";   
 
-   switch (sessionStorage.getItem("UserAuthority")) {
-   case "S":
-      userRole = "Administrator";
-      break;
+    switch (sessionStorage.getItem("UserAuthority")) {
+    case "S":
+        userRole = "Administrator";
+        break;
 
-   case "C":
-      userRole = "Coach";
-      break;   
+    case "C":
+        userRole = "Coach";
+        break;   
 
-   case "U":
-      userRole = "Client";
-      break;  
-      
-   case "A":
-      userRole = "AIRES AI"; 
-      break;  
+    case "U":
+        userRole = "Client";
+        break;  
+        
+    case "A":
+        userRole = "AIRES AI"; 
+        break;  
 
-   default:
-      userRole="";
-   } 
+    default:
+        userRole="";
+    } 
 
-   return (
-      <div className="fixed w-full h-24
-                      flex flex-row
-                      top-0 left-0 m-0 
-                      bg-gray-900 text-white overflow-y-hidden">
+    return (
+        <div className="fixed w-full h-24
+                       flex flex-row
+                       top-0 left-0 m-0 
+                       bg-gray-900 text-white overflow-y-hidden">
 
             <div className="relative flex items-center justify-center mt-1">
                 <img src={StrengthCoachingLogo}

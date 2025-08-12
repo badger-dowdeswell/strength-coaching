@@ -318,6 +318,7 @@ export default function EditMyProfile() {
                 setState(response.data.state || "");
                 setCountry(response.data.country || ""); 
                 setDateOfBirth(formatDate("YYYY-MM-DD", decodeISOdate(response.data.date_of_birth)));
+                setUserImage(response.data.user_image || "");
                 setEditingState(editingStates.EDITING);                              
             } else if (response.status === 404) {
               setEditingState(editingStates.NOT_FOUND);
@@ -350,6 +351,7 @@ export default function EditMyProfile() {
             state: State,
             country: Country,
             date_of_birth: DateOfBirth,
+            user_image: UserImage
         })
         .then((response) => {
             setEditingState(editingStates.EXITING);
@@ -358,7 +360,7 @@ export default function EditMyProfile() {
             console.log(".catch() updateUser() err: " + err.message);
             // RA_Badger
             // swal("Manage Registrant Information",
-            // "This registrant could not be updated because the program has encountered a problem.\n\n" +
+            // "This user could not be updated because the program has encountered a problem.\n\n" +
             // "The details have been logged and the site administrator has been notified.\n\n" +
             // "Please click OK to continue.");
         })
@@ -461,6 +463,8 @@ export default function EditMyProfile() {
 
                     {(currentPage === pages.PAGE_2) && (
                         <Page_2
+                            userID={userID}
+                            UserImage={UserImage} setUserImage={setUserImage}
                         />
                     )};    
 
@@ -831,14 +835,54 @@ function Page_1(params) {
 //
 // Page_2()
 // ========
-// The second tabbed-dialog page allows the user to upload their profile picture.
+// The second tabbed-dialog page allows the user to upload their profile picture and to change their password.
 //
 function Page_2(params) { 
+    var userImage = "./userImages/" + params.UserImage; 
+
     return (
         <div>
             <p className="text-white text-center font-bold text-xl mt-1 mb-44">My Profile Picture</p>
 
-            <p className="text-white text-center text-sm mt-5 mb-60">This page will allow users to load their own profile picture for their profile.</p>
+            <div className="flex flex-row">
+                <div>
+                    <img className="ml-5 mb-5 mt-0"
+                        src={userImage}
+                        alt="/"
+                        draggable={false}
+                        height={175}
+                        width={175}
+                        onError={({currentTarget}) => {
+                                   currentTarget.onerror = null; // prevents looping
+                                   currentTarget.src="./userImages/template.png";
+                                }}
+                    />
+                </div>
+
+                <div className="ml-10 mr-10">
+                    <p className="text-white">
+                        Your picture is displayed at the top of the page <br></br>
+                        beside your name after you sign in. It also appears <br></br>
+                        in your Block schedule to identify the training<br></br>
+                        videos you upload for review.<br></br><br></br>
+                        
+                        Click the Change button to select and upload a new <br></br>
+                        picture of yourself
+                    </p>
+                </div>
+            </div>
+
+            <div>
+                <button className="bg-cyan-600 text-white font-bold text-sm py-2 px-2 rounded
+                                   ml-14"
+                    id="Change"
+                    style={{ width: "100px" }}
+                    onClick={() => {
+                                    
+                                }}>
+                    Change
+                </button>
+            </div>
 
         </div>    
     );

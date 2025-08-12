@@ -12,6 +12,7 @@
 // 09.01.2025 BRD Original version.
 // 01.08.2025 BRD Converted the Strength Research component to now work 
 //                with Strength Coaching.
+// 12.08.2025 BRD Added support for user images specifed in the User table.
 //
 import "./Main.css";
 
@@ -41,6 +42,7 @@ function SignIn() {
     const [LastName, setLastName] = useState("");
     const [Password, setPassword] = useState("");
     const [RememberMe, setRememberMe] = useState(false);
+    const [UserImage, setUserImage] = useState("");
 
     const [UserIDError, setUserIDError] = useState("");
     const [PasswordError, setPasswordError] = useState("");
@@ -69,6 +71,7 @@ function SignIn() {
             sessionStorage.setItem("FirstName", "");
             sessionStorage.setItem("LastName", "");
             sessionStorage.setItem("UserAuthority", "");
+            sessionStorage.setItem("UserImage", "");
             sessionStorage.setItem("JWT", "");            
             break;
 
@@ -110,6 +113,7 @@ function SignIn() {
             console.log("Authenticated FirstName " + FirstName);
             sessionStorage.setItem("LastName", LastName);
             sessionStorage.setItem("UserAuthority", UserAuthority);
+            sessionStorage.setItem("UserImage", UserImage);
             sessionStorage.setItem("JWT", JWT);
             return navigate("/Home");
 
@@ -176,6 +180,7 @@ function SignIn() {
                 console.log("First_name " + response.data.first_name);
                 setLastName(response.data.last_name);
                 setUserAuthority(response.data.user_authority);
+                setUserImage(response.data.user_image);
                 setJWT(response.data.JWT);
                 setEditingState(editingStates.AUTHENTICATED);
             } else {
@@ -192,7 +197,7 @@ function SignIn() {
     // =======
     return (        
         <div>                           
-            <TopNav title="" userName="" userRole="" />
+            <TopNav title="" userName="" userRole="" userImage=""/>
 
             <div className="absolute flex top-24 bottom-0
                             items-center justify-center
