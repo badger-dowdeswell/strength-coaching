@@ -157,8 +157,9 @@ const db = new Pool({
 app.listen(PORT, () => {     
     var dt = new Date();
     logmsg("\nThe Strength Research Online Back-End version " + process.env.VER +
-           " is now listening on port " + PORT);
-    logmsg("It was started at " + dt.toLocaleTimeString() + " on " + dt.toLocaleDateString() + ".\n");
+           " is now listening on port " + PORT + ". It was started at " +
+            dt.toLocaleTimeString() + " on " + dt.toLocaleDateString() + 
+            " using local environment sr.env.\n");
 });
 
 //process.on('SIGTERM', () => {
@@ -216,7 +217,7 @@ app.get('/api/authenticateUser', async(request, response) => {
     db.query(query, (err, result) => {
         if (!err) {
             if (result.rows[0] !== undefined) {
-                console.log("/api/authenticateUser: user found");
+                //console.log("/api/authenticateUser: user found");
                 response.setHeader("Content-Type", "application/json");
                 const encryptedPassword = result.rows[0].password;
                 const user_ID = result.rows[0].user_ID;
@@ -228,10 +229,10 @@ app.get('/api/authenticateUser', async(request, response) => {
                 // Compare the password submitted and the encrypted password.
                 bcrypt.compare(recvPassword , encryptedPassword, function(err, result) {
                     if (err) {
-                        console.log("bcrypt.compare() error " + err.message);
+                        //console.log("bcrypt.compare() error " + err.message);
                         response.status(500).send(err.message);
                     } else if (result) {
-                        console.log("passwords match");
+                        //console.log("passwords match");
                         // Generate the JSON web token, setting it to expire.
                         jwt.sign({user_ID}, JWT_SECRET, JWT_EXPIRES_IN , (err, token) => {
                             if (!err) {
@@ -244,22 +245,22 @@ app.get('/api/authenticateUser', async(request, response) => {
                                 // console.log("Packet returned: " + packet.user_ID);
                                 response.status(200).send(packet);
                             } else {
-                                console.log(err.message);
+                                //console.log(err.message);
                                 response.status(500).json({err});
                             }
                         });
                     } else {
-                        console.log("passwords do not match");
+                        //console.log("passwords do not match");
                         response.status(404).send('User was not authenticated');
                     }
                 });
             } else {
-                logmsg("/api/authenticateUser: user was not found");
+                //logmsg("/api/authenticateUser: user was not found");
                 response.status(404).send('User was not found');
             }
         } else {
             response.status(500).send('Returned error' + err);
-            logmsg("/api/authenticateUser returned error :" + err + "\n" + query);            
+            //logmsg("/api/authenticateUser returned error :" + err + "\n" + query);            
         }
     });
 });
@@ -273,7 +274,7 @@ app.get('/api/authenticateUser', async(request, response) => {
 app.get('/api/getUser', async (request, response) => {    
     const JWT = request.query.JWT;
     if (!verifyJWT(JWT)) {
-        logmsg("api/getUser JWT does not verify");
+        //logmsg("api/getUser JWT does not verify");
         response.status(403).send("Not authorised");
     } else {
         const user_ID = request.query.user_ID;
@@ -291,8 +292,8 @@ app.get('/api/getUser', async (request, response) => {
                 }
             } else {
                 response.status(500).send('Returned error' + err);
-                logmsg("/api/getUser returned error :" + err + "\n" +
-                       "query: " + sqlSelectCmd);
+                //logmsg("/api/getUser returned error :" + err + "\n" +
+                    //  "query: " + sqlSelectCmd);
             }
         });
     }
@@ -326,22 +327,22 @@ app.put('/api/createUser', async (request, response) => {
                                   "'" + (request.body.email_address.replace(/'/g, "''")) + "') " +
                          'RETURNING "user_ID"';
 
-    console.log("api/createUser\n" + sqlSelectCmd + "\n");
+    //console.log("api/createUser\n" + sqlSelectCmd + "\n");
     
     db.query(sqlSelectCmd, (err, result) => {
         if (!err) {
             if (result.rows[0] !== undefined) {
-                logmsg("/api/createUser: user created. User_ID is " + result.rows[0].user_ID);
+                //logmsg("/api/createUser: user created. User_ID is " + result.rows[0].user_ID);
                 const packet = {user_ID: result.rows[0].user_ID};
-                console.log(packet);
+                //console.log(packet);
                 response.status(200).send(packet);
             } else {
-                logmsg("/api/createUser: user was not created");
+                //logmsg("/api/createUser: user was not created");
                 response.status(404).send("User was not created");
             }
         } else {
             response.sendStatus(500);
-            logmsg("/api/createUser returned error :" + err + "\n" + sqlSelectCmd);
+            //logmsg("/api/createUser returned error :" + err + "\n" + sqlSelectCmd);
         }
     });
 });
@@ -359,17 +360,17 @@ app.get('/api/getUser', async (request, response) => {
     db.query(sqlSelectCmd, (err, result) => {
         if (!err) {
             if (result.rows[0] !== undefined) {
-                console.log("/api/getUser: user found");
+                //console.log("/api/getUser: user found");
                 response.setHeader("Content-Type", "application/json");
                 response.status(200).json(result.rows[0]);
             } else {
-                console.log("/api/getUser: user was not found");
+                //console.log("/api/getUser: user was not found");
                 response.status(404).send('User was not found');
             }
         } else {
             response.status(500).send('Returned error' + err);
-            logmsg("/api/getUser returned error :" + err + "\n");
-            logmsg(sqlSelectCmd);
+            //logmsg("/api/getUser returned error :" + err + "\n");
+            //logmsg(sqlSelectCmd);
         }
     });
 });
@@ -386,17 +387,17 @@ app.get('/api/getUserByEmail', async (request, response) => {
     db.query(sqlSelectCmd, (err, result) => {
         if (!err) {
             if (result.rows[0] !== undefined) {
-                console.log("/api/getUserByEmail: user found with the email address " + email_address);
+                //console.log("/api/getUserByEmail: user found with the email address " + email_address);
                 response.setHeader("Content-Type", "application/json");
                 response.status(200).json(result.rows[0]);
             } else {
-                logmsg("/api/getUserByEmail: no user has registered the email address " + email_address);
+                //logmsg("/api/getUserByEmail: no user has registered the email address " + email_address);
                 response.setHeader("Content-Type", "application/json");
                 response.status(404).send('User not found');
             }
         } else {
             response.status(500).send('Returned error' + err);
-            logmsg("/api/getRegistrantByEmail returned error" + err + "\n" + sqlSelectCmd);
+            //logmsg("/api/getRegistrantByEmail returned error" + err + "\n" + sqlSelectCmd);
         }
     });
 });
@@ -410,29 +411,29 @@ app.get('/api/getUserByEmail', async (request, response) => {
 app.get('/api/duplicateAlias', async (request, response) => {
     const JWT = request.query.JWT;
     if (!verifyJWT(JWT)) {
-        logmsg("api/duplicateAlias JWT does not verify");
+        //logmsg("api/duplicateAlias JWT does not verify");
         response.status(403).send("Not authorised");
     } else {
         const alias = request.query.alias;
         const user_ID = request.query.user_ID;
         // eslint-disable-next-line no-useless-concat
         const sqlSelectCmd = 'SELECT "user_ID", "alias" FROM "User" WHERE "user_ID" <> ' + "'" + user_ID + "'" + ' AND "alias" ILIKE ' + "'" + alias + "'";
-        console.log(sqlSelectCmd);
+        //console.log(sqlSelectCmd);
         
         db.query(sqlSelectCmd, (err, result) => {
             if (!err) {
                 if (result.rows[0] !== undefined) {
-                    console.log("/api/duplicateAlias: user " + result.rows[0].user_ID + " is using that alias");
+                    //console.log("/api/duplicateAlias: user " + result.rows[0].user_ID + " is using that alias");
                     response.setHeader("Content-Type", "application/json");
                     response.status(200).json(result.rows[0]);
                 } else {
-                    logmsg("/api/duplicateAlias: no user has registered that alias");
+                    //logmsg("/api/duplicateAlias: no user has registered that alias");
                     response.setHeader("Content-Type", "application/json");
                     response.status(404).send('Alias is not in use');
                 }
             } else {
                 response.status(500).send('Returned error' + err);
-                logmsg("/api/duplicateAlias returned error" + err + "\n" + sqlSelectCmd);
+                //logmsg("/api/duplicateAlias returned error" + err + "\n" + sqlSelectCmd);
             } 
         });
     }    
@@ -447,7 +448,7 @@ app.get('/api/duplicateAlias', async (request, response) => {
 app.get('/api/duplicateEmail', async (request, response) => {
     const JWT = request.query.JWT;
     if (!verifyJWT(JWT)) {
-        logmsg("api/duplicateEmail JWT does not verify");
+        //logmsg("api/duplicateEmail JWT does not verify");
         response.status(403).send("Not authorised");
     } else {
         const email_address = request.query.email_address;
@@ -455,22 +456,22 @@ app.get('/api/duplicateEmail', async (request, response) => {
         // eslint-disable-next-line no-useless-concat
         const sqlSelectCmd = 'SELECT "user_ID", "email_address" FROM "User" WHERE "user_ID" <> ' + "'" + user_ID + "'" + 
                              ' AND "email_address" ILIKE ' + "'" + email_address + "'";
-        console.log(sqlSelectCmd);
+        //console.log(sqlSelectCmd);
         
         db.query(sqlSelectCmd, (err, result) => {
             if (!err) {
                 if (result.rows[0] !== undefined) {
-                    console.log("/api/duplicateEmail: user " + result.rows[0].user_ID + " is using that email address");
+                    //console.log("/api/duplicateEmail: user " + result.rows[0].user_ID + " is using that email address");
                     response.setHeader("Content-Type", "application/json");
                     response.status(200).json(result.rows[0]);
                 } else {
-                    logmsg("/api/duplicateEmail: no user has registered that email address");
+                    //logmsg("/api/duplicateEmail: no user has registered that email address");
                     response.setHeader("Content-Type", "application/json");
                     response.status(404).send('Email address is not in use');
                 }
             } else {
                 response.status(500).send('Returned error' + err);
-                logmsg("/api/duplicateEmail returned error" + err + "\n" + sqlSelectCmd);
+                //logmsg("/api/duplicateEmail returned error" + err + "\n" + sqlSelectCmd);
             } 
         });
     }    
@@ -479,7 +480,7 @@ app.get('/api/duplicateEmail', async (request, response) => {
 //
 // updateUser()
 // ============
-// Updates the data for an existing user recor. It uses a transaction 
+// Updates the data for an existing user record. It uses a transaction 
 // with a commit and rollback in the event of an issue.
 //
 app.put('/api/updateUser', (request, response) => {
@@ -487,7 +488,7 @@ app.put('/api/updateUser', (request, response) => {
 
     if (!verifyJWT(JWT)) {
         response.status(403).send("Not authorised");
-        logmsg("User is not authorised");
+        //logmsg("User is not authorised");
     } else {
         const sqlUpdateCmd = 'DO $$\n' +
             'BEGIN \n' +
@@ -507,8 +508,8 @@ app.put('/api/updateUser', (request, response) => {
                 ' "postcode" = ' + "'" + request.body.postcode.replace(/'/g, "''") + "' , " +
                 ' "state" = ' + "'" + request.body.state.replace(/'/g, "''") + "' , " +
                 ' "country" = ' + "'" + request.body.country.replace(/'/g, "''") + "' , " +
-                ' "date_of_birth" = ' + "'" + request.body.date_of_birth.replace(/'/g, "''") + "' " +
-                ' "user_image" = ' + "'" + request.body.user_image(/'/g, "''") + "' " +
+                ' "date_of_birth" = ' + "'" + request.body.date_of_birth.replace(/'/g, "''") + "', " +
+                ' "user_image" = ' + "'" + request.body.user_image.replace(/'/g, "''") + "' " +
                 ' WHERE "user_ID" = ' + "'" + request.body.user_ID + "';\n" +                
             'EXCEPTION\n ' +
             'WHEN OTHERS THEN\n' +
@@ -521,13 +522,13 @@ app.put('/api/updateUser', (request, response) => {
             sqlUpdateCmd, (err, result) => {                 
                 if (!err) {
                     response.status(200).send("/api/updateUser: user updated.");
-                    logmsg("user updated");
+                    //logmsg("user updated");
                     //logmsg("/api/updateUser() \n" +
-                    //     "query: " + sqlUpdateCmd);
+                    //       "query: " + sqlUpdateCmd);
                 } else {
                     response.status(500).send("/api/updateUser: Unexpected error " + err.message);
-                    logmsg("/api/updateUser() returned an unexpected error :" + err.message + "\n" +
-                           "query: " + sqlUpdateCmd);
+                    //logmsg("/api/updateUser() returned an unexpected error :" + err.message + "\n" +
+                    //       "query: " + sqlUpdateCmd);
                 }
             }
         );

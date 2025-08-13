@@ -25,6 +25,7 @@ import { editingStates, pages } from "./Constants";
 import { Salutations, Countries} from "./components/LookUpLists";
 import { formatDate, decodeISOdate, validateDate } from "./DateLib";
 import Modal from "./components/Modal";
+import FileUpload from './components/FileUpload';
 
 import Axios from 'axios';
 const axios = Axios;
@@ -115,8 +116,8 @@ export default function EditMyProfile() {
             break;
     
         case editingStates.UPDATING:            
-            console.log("Updating..");
-            console.log("IsChanged " + IsChanged); 
+            //console.log("Updating..");
+            //console.log("IsChanged " + IsChanged); 
             sessionStorage.setItem("FirstName", FirstName);
             sessionStorage.setItem("LastName", LastName);
             updateUser(); 
@@ -155,7 +156,7 @@ export default function EditMyProfile() {
             try {
                 let response = await axios.get(baseURL + "duplicateAlias?user_ID=" + userID + "&alias=" + alias + "&JWT=" + JWT);
                 // Another user is already using that alias.
-                console.log("checkDuplicateAlias() found "+ response.status);
+                //console.log("checkDuplicateAlias() found "+ response.status);
                 if (response.status === 200) {
                     errors.Alias="That alias is already in use";                
                     errors.page = 1;   
@@ -164,7 +165,7 @@ export default function EditMyProfile() {
             } catch (err) {
                 // No other user is using that alias. That means that the query did not return anything so it returns
                 // like an error via this section.
-                console.log("checkDuplicateAlias() not found " + err.status); 
+                //console.log("checkDuplicateAlias() not found " + err.status); 
                 errors.Alias = "";  
                 errors.page = 0;
                 setEditingState(editingStates.VALIDATING_STAGE_2); 
@@ -186,7 +187,7 @@ export default function EditMyProfile() {
             try {
                 let response = await axios.get(baseURL + "duplicateEmail?user_ID=" + userID + "&email_address=" + email_address + "&JWT=" + JWT);
                 // Another user is already using that alias.
-                console.log("checkDuplicateEmail() found "+ response.status);
+                //console.log("checkDuplicateEmail() found "+ response.status);
                 if (response.status === 200) {
                     errors.EmailAddress="That email address is in use";                
                     errors.page = 1;   
@@ -195,7 +196,7 @@ export default function EditMyProfile() {
             } catch (err) {
                 // No other user is using that email. That means that the query did not return anything so it returns
                 // like an error via this section.
-                console.log("checkDuplicateEmail() not found " + err.status); 
+                //console.log("checkDuplicateEmail() not found " + err.status); 
                 errors.Alias = "";  
                 errors.page = 0;
                 setEditingState(editingStates.VALIDATING_STAGE_3); 
@@ -324,7 +325,7 @@ export default function EditMyProfile() {
               setEditingState(editingStates.NOT_FOUND);
             }            
         } catch (err) {
-            console.log("getUser() error: " + err.status);
+            //console.log("getUser() error: " + err.status);
             setEditingState(editingStates.NOT_FOUND);        
         }        
     };
@@ -357,7 +358,7 @@ export default function EditMyProfile() {
             setEditingState(editingStates.EXITING);
         })
         .catch(err => {
-            console.log(".catch() updateUser() err: " + err.message);
+            //console.log(".catch() updateUser() err: " + err.message);
             // RA_Badger
             // swal("Manage Registrant Information",
             // "This user could not be updated because the program has encountered a problem.\n\n" +
@@ -872,17 +873,11 @@ function Page_2(params) {
                 </div>
             </div>
 
-            <div>
-                <button className="bg-cyan-600 text-white font-bold text-sm py-2 px-2 rounded
-                                   ml-14"
-                    id="Change"
-                    style={{ width: "100px" }}
-                    onClick={() => {
-                                    
-                                }}>
-                    Change
-                </button>
+            <div>                 
+                <FileUpload />
             </div>
+
+            
 
         </div>    
     );

@@ -32,6 +32,9 @@
 //        case editingStates.EDITING:
 //           ... action code;
 //           break;
+
+import { IDLE_BLOCKER } from "react-router-dom"
+
 //
 export const editingStates = {
     UNDEFINED: 0,
@@ -55,6 +58,13 @@ export const editingStates = {
     VALIDATING_STAGE_3: 18,
     REGISTER: 25,
     ERROR: 500
+}
+
+export const uploadStates = {
+    IDLE: 0,
+    UPLOADING: 1,
+    UPLOADED: 2,
+    ERROR: 3
 }
 
 //

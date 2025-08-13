@@ -38,7 +38,7 @@ function TopNav(params) {
     var userID = sessionStorage.getItem("userID");  
     let userName = sessionStorage.getItem("FirstName") + " " + sessionStorage.getItem("LastName");  
     var userImage = "./userImages/" + sessionStorage.getItem("UserImage"); // "./userImages/" + userID + ".png"; RA_BRD
-    console.log("\nuserImage " + userImage);
+    
     var userRole = "";   
 
     switch (sessionStorage.getItem("UserAuthority")) {

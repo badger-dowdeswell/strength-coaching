@@ -182,9 +182,10 @@ export function validateDate(dateFormat, dateString) {
         var year = Number(dateString.slice(0,4));
         var month = Number(dateString.slice(5,7));
         var day = Number(dateString.slice(8,10));
-        console.log("validateDate() : [" + dateString + "] day = " + day + " month = " + 
-                    month + " year = " + year + " Leap Year = " + 
-                    isLeapYear(new Date(year, 1, 1)));
+        
+        //console.log("validateDate() : [" + dateString + "] day = " + day + " month = " + 
+        //            month + " year = " + year + " Leap Year = " + 
+        //            isLeapYear(new Date(year, 1, 1)));
 
         if ((day > 0) && (year > CUTOFF_MIN_YEAR)) {
             switch (month) {
