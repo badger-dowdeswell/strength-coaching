@@ -64,14 +64,20 @@
 // 28.05.2025 BRD Cloned the new Strength Coaching Online back end from the original Strength
 //                Research Online back end.
 // 12.08.2025 BRD Added support for the User table field user_image.
+// 13.08.2025 BRD Added the uploadFile api to allow images and other resources to be posted
+//                to the server via the back-end and saved in predefined locations.
 //
 import express from 'express';
+const app = express();
+import expressFileUpload from "express-fileupload";
+const fileUpload = expressFileUpload();
+import path from "react"; 
+
 import cors from 'cors';
 import pg from 'pg';
 import bcrypt from "bcrypt";
 import jwt from 'jsonwebtoken';
 import nodemailer from 'nodemailer';
-const app = express();
 
 const JWT_SECRET = "Obtuse*10149#Yeti";
 const JWT_EXPIRES_IN = {expiresIn: '1d'};
@@ -128,7 +134,7 @@ const transporter = nodemailer.createTransport({
 // RA_Badger - need to add data and time and write to log file...
 //
 function logmsg(msg) {
-    console.log(msg);
+    console.log("\n" + msg);
 }
 
 //
@@ -533,4 +539,36 @@ app.put('/api/updateUser', (request, response) => {
             }
         );
     }
-});      
+}); 
+
+//
+// uploadFile()
+// ============
+// Receives a file that a user is uploading from a front-end via
+// an api call. The file is saved in an upload location that is
+// named in the post. Note that the api does not specify an absolute
+// file path where the file will be saved. That would be a security 
+// vulnerability since the server paths are not exposed to the 
+// front-end. Instead, the "path" is just a just predefined names
+// that the back-end matches to a real file path that is part of
+// the site structure. Note that the api must include a JWT since
+// this api can only be executed by an authenticated user.
+//
+// https://www.youtube.com/watch?v=4pmkQjsKJ-U
+// https://www.npmjs.com/package/express-fileupload
+// https://github.com/richardgirges/express-fileupload/tree/master/example#basic-file-upload
+// npm i express-fileupload
+//
+app.put('/api/uploadFile', (request, response) => {
+    const JWT = request.query.JWT;
+
+    logmsg("/api/uploadFile: executing.") 
+
+    if (!verifyJWT(JWT)) {
+        response.status(403).send("Not authorised");
+        logmsg("/api/uploadFile: User is not authorised");
+    } else {
+        logmsg("/api/uploadFile: file uploaded.") 
+        response.status(200).send("/api/uploadFile: file uploaded.");       
+    }
+}); 

@@ -23,39 +23,55 @@
 import {useState} from "react";
 import {uploadStates} from "../Constants";
 
+import { getBaseURL } from "../getBaseURL";
+const baseURL = getBaseURL();
+import Axios from 'axios';
+const axios = Axios;
 
-export default function FileUpload() {
+//
+// FileUpload()
+// ============
+export default function FileUpload(params) {
     const [file, setFile] = useState(null);
     const [uploadState, setUploadState] = useState(uploadStates.IDLE);
+    console.log("JWT " + params.JWT);
 
     //
     // handleFileChange()
     // ==================
     function handleFileChange(e) {
         if (e.target.files) {
-            setFile(e.target.files[0]);           
-
+            setFile(e.target.files[0]); 
         }
     }
 
     //
     // handleFileUpload()
     // ==================
-    async function handleFileUpload() {
+    // This makes an asynchronous call to the back-end function that can receive
+    // a file resource and save it to the appropriate directory on the server.
+    //
+    async function handleFileUpload(JWT) {
         if (!file) {
             // No file was selected so do not attempt the upload.
             return;
         } else {
+            console.log("\nposting...")
             setUploadState(uploadStates.UPLOADING);
-            const formDate = new FormData();
-            FormData.append('file', file);
-
-            try {
-                // 14:22
-
-            } catch {
-
-            }
+            const formData = new FormData();
+            formData.append('file', file);
+            
+            axios.put(baseURL + "uploadFile?JWT=" + JWT, formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                },
+            })
+            .then((response) => {
+                setUploadState(uploadStates.UPLOADED);        
+            })                
+            .catch(err => {
+                setUploadState(uploadStates.ERROR); 
+            })
         }
     }
 
@@ -71,10 +87,23 @@ export default function FileUpload() {
                 <button className="bg-cyan-600 text-white font-bold text-sm py-2 px-2 rounded
                                         mt-2 ml-5"
                         id="Upload"
-                        style={{ width: "100px" }}>                    
+                        style={{ width: "100px" }}
+                        onClick={handleFileUpload(params.JWT)}>                    
                     Upload
                 </button>
             }
+
+            {uploadState === uploadStates.UPLOADED && (
+                <p className="mt-2 text-sm text-cyan-600">
+                    Image was uploaded successfully.
+                </p>
+            )}
+
+            {uploadState === uploadStates.ERROR && (
+                <p className="mt-2 text-sm text-cyan-600">
+                    Image could not be uploaded. Please try again.
+                </p>
+            )}            
 
             {file && (
                 <div className="mb-4 ml-14 text-white text-sm">

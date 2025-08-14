@@ -466,6 +466,7 @@ export default function EditMyProfile() {
                         <Page_2
                             userID={userID}
                             UserImage={UserImage} setUserImage={setUserImage}
+                            JWT={JWT}
                         />
                     )};    
 
@@ -874,7 +875,9 @@ function Page_2(params) {
             </div>
 
             <div>                 
-                <FileUpload />
+                <FileUpload
+                    JWT = {params.JWT}
+                 />
             </div>
 
             
