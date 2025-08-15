@@ -82,7 +82,12 @@ import express from 'express';
 const app = express();
 import expressFileUpload from "express-fileupload";
 const fileUpload = expressFileUpload();
+
+import multer from 'multer';
+const upload = multer({dest: 'uploads/'});
+
 import path from "react"; 
+const pathName = path;
 
 import cors from 'cors';
 import pg from 'pg';
@@ -501,7 +506,7 @@ app.get('/api/duplicateEmail', async (request, response) => {
 // with a commit and rollback in the event of an issue.
 //
 app.put('/api/updateUser', (request, response) => {
-    const JWT = request.query.JWT;
+    const JWT = request.query.JWT;    
 
     if (!verifyJWT(JWT)) {
         response.status(403).send("Not authorised");
@@ -569,22 +574,40 @@ app.put('/api/updateUser', (request, response) => {
 // https://www.youtube.com/watch?v=4pmkQjsKJ-U
 // https://www.npmjs.com/package/express-fileupload
 // https://github.com/richardgirges/express-fileupload/tree/master/example#basic-file-upload
+// https://www.linkedin.com/pulse/how-upload-files-using-express-fileupload-expressjs-project-biswas-8zcic/
 // npm i express-fileupload
 //
-app.post('/api/uploadFile', (request, response) => {
+//app.post('/api/uploadFile', (request, response) => {
+//    const JWT = request.query.JWT;
+//    logmsg("/api/uploadFile: executing.") 
+
+app.post('/api/uploadFile', upload.array("photos"), (request, response) => {
     const JWT = request.query.JWT;
-
+    const image = request.image;
     logmsg("/api/uploadFile: executing.") 
-
-    setTimeout(() => {
-            if (!verifyJWT(JWT)) {
-            response.status(403).send("Not authorised");
-            logmsg("/api/uploadFile: User is not authorised");
-        } else {
-            logmsg("/api/uploadFile: file uploaded.") 
-            response.status(200).send("/api/uploadFile: file uploaded."); 
-            // TEST response.status(500).send("/api/uploadFile: file upload failed.");         
-        }
-    }, 5000);
     
+    if (!verifyJWT(JWT)) {
+        response.status(403).send("Not authorised");
+        logmsg("/api/uploadFile: User is not authorised");
+    } else {
+        console.log("received files: ", request.files);
+        response.json({files: request.files });  
+        //response.status(200).send("/api/uploadFile: file uploaded.");    
+    }      
 }); 
+
+
+        
+        //const uploadPath = path.join(__dirname, "uploads", uploadedFile.name);
+        //uploadedFile.mv(uploadPath, (err) => {
+        //    if (err) {
+        //        response.status(400).send(err);
+        //    } else {
+        //        logmsg("/api/uploadFile: file uploaded.") 
+        //        response.status(200).send("/api/uploadFile: file uploaded."); 
+        //    }
+        //});
+
+        //const files = request.files
+        //console.log("files: " + files);        
+        // TEST response.status(500).send("/api/uploadFile: file upload failed.");    

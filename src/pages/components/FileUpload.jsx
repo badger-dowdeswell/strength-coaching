@@ -13,6 +13,8 @@
 // The code used in this component was adapted from the example available in the Cosden tutorial
 // available here: https://www.youtube.com/watch?v=pWd6Enu2Pjs
 //
+// https://www.youtube.com/watch?v=3R05wQXAdkY ????
+//
 // The parameters that must be supplied to the component are: 
 //
 //
@@ -31,9 +33,13 @@ const axios = Axios;
 //
 // FileUpload()
 // ============
-export default function FileUpload(params) {
-    const [file, setFile] = useState(null);
+export default function FileUpload(params) {  
     const [uploadState, setUploadState] = useState(uploadStates.IDLE); 
+
+    const [files, setFiles] = useState([]);
+    const changeFiles = (e) => {
+        setFiles(e.target.files);
+    };
 
     //
     // selectFile
@@ -51,9 +57,9 @@ export default function FileUpload(params) {
             setFile(e.target.files[0]);             
             console.log("\nUploading...")
             const formData = new FormData();
-            formData.append('file', file);
+            formData.append('image', e.target.files);
             setUploadState(uploadStates.UPLOADING);
-            uploadFile(params.JWT, formData);
+            // uploadFile(params.JWT, formData);
         }
     }
 
@@ -61,12 +67,13 @@ export default function FileUpload(params) {
     // uploadFile()
     // ============
     const uploadFile = async (JWT, formData) => { 
-        await axios.post(baseURL + "uploadFile?JWT=" + JWT, formData, {
+        await axios.post(baseURL + "uploadFile?JWT=" + JWT, formData, {                                 
             headers: {
                 'Content-Type': 'multipart/form-data',
             },
         })
         .then((response) => {
+            console.log("response ", response.data);
             setUploadState(uploadStates.UPLOADED);             
         })                
         .catch(err => {
@@ -74,19 +81,40 @@ export default function FileUpload(params) {
         })
     }
 
-    return (
-        <div className="space-y-4">            
-            <input className="ml-14"                
-                   type="file" 
-                   file-selector                         
-                   onChange={(e) => {selectFile(e)}}
-            />                 
+    const uploadFiles = (e) => {
+        e.preventDefault();
+        const formData = new FormData();
+        for (const file of files) {
+            formData.append("photos", file);
+        }
+        uploadFile(params.JWT, formData);
 
-            {file && (
+        //console.log("uploadFiles: ", files);
+
+    }
+
+    return (
+        <div className="space-y-4"> 
+            <form onSubmit={uploadFiles}>        
+                <input className="ml-14"
+                        id="SelectImage"                
+                        type="file" multiple 
+                        onChange={changeFiles}
+                /> 
+
+                <button className="bg-cyan-600 text-white font-bold text-sm py-2 px-2 rounded"                                
+                    type = "submit"
+                    onChange={(e) => {selectFile(e)}}
+                    >
+                    Upload files    
+                </button> 
+            </form>               
+
+            {files[0] && (
                 <div className="mb-4 ml-14 text-white text-sm">
-                    <p>File name: {file.name}</p>
-                    <p>File size: {(file.size / 1024).toFixed(2)} KB</p>
-                    <p>File type: {file.type}</p>
+                    <p>File name: {files[0].name}</p>
+                    <p>File size: {(files[0].size / 1024).toFixed(2)} KB</p>
+                    <p>File type: {files[0].type}</p>
                 </div>  
             )}
 
