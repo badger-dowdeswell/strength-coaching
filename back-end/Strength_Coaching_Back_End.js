@@ -559,7 +559,7 @@ app.put('/api/updateUser', (request, response) => {
 // https://github.com/richardgirges/express-fileupload/tree/master/example#basic-file-upload
 // npm i express-fileupload
 //
-app.put('/api/uploadFile', (request, response) => {
+app.post('/api/uploadFile', (request, response) => {
     const JWT = request.query.JWT;
 
     logmsg("/api/uploadFile: executing.") 

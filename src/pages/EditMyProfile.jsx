@@ -844,7 +844,7 @@ function Page_2(params) {
 
     return (
         <div>
-            <p className="text-white text-center font-bold text-xl mt-1 mb-44">My Profile Picture</p>
+            <p className="text-white text-center font-bold text-xl mt-1 mb-5">My Profile Picture</p>
 
             <div className="flex flex-row">
                 <div>
@@ -868,8 +868,7 @@ function Page_2(params) {
                         in your Block schedule to identify the training<br></br>
                         videos you upload for review.<br></br><br></br>
                         
-                        Click the Change button to select and upload a new <br></br>
-                        picture of yourself
+                        Click the Choose file button to select a new picture<br></br>                        
                     </p>
                 </div>
             </div>
@@ -880,7 +879,9 @@ function Page_2(params) {
                  />
             </div>
 
-            
+            <div className="mt-1">
+                <p>bottom</p>
+            </div>
 
         </div>    
     );
