@@ -13,7 +13,7 @@
 // The code used in this component was adapted from the example available in the Cosden tutorial
 // available here: https://www.youtube.com/watch?v=pWd6Enu2Pjs
 //
-// https://www.youtube.com/watch?v=3R05wQXAdkY ????
+// https://www.youtube.com/watch?v=3R05wQXAdkY 
 //
 // The parameters that must be supplied to the component are: 
 //
@@ -95,14 +95,17 @@ export default function FileUpload(params) {
 
     return (
         <div className="space-y-4"> 
-            <form onSubmit={uploadFiles}>        
-                <input className="ml-14"
-                        id="SelectImage"                
-                        type="file" multiple 
-                        onChange={changeFiles}
+            <form onSubmit={uploadFiles}>  
+                <label className="bg-cyan-600 text-white font-bold text-sm py-2 px-2 rounded ml-12"
+                    for="SelectImage"> 
+                    Choose image    
+                </label>       
+                <input className="ml-14 hidden"
+                       id="SelectImage"                
+                       type="file" 
+                       onChange={changeFiles}
                 /> 
-
-                <button className="bg-cyan-600 text-white font-bold text-sm py-2 px-2 rounded"                                
+                <button className="bg-cyan-600 text-white font-bold text-sm py-2 px-2 rounded ml-24"                                
                     type = "submit"
                     onChange={(e) => {selectFile(e)}}
                     >

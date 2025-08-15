@@ -571,10 +571,6 @@ app.put('/api/updateUser', (request, response) => {
 // The api call must include a JWT since this api can only be executed
 // by an authenticated user.
 //
-// https://www.youtube.com/watch?v=4pmkQjsKJ-U
-// https://www.npmjs.com/package/express-fileupload
-// https://github.com/richardgirges/express-fileupload/tree/master/example#basic-file-upload
-// https://www.linkedin.com/pulse/how-upload-files-using-express-fileupload-expressjs-project-biswas-8zcic/
 // npm i express-fileupload
 //
 //app.post('/api/uploadFile', (request, response) => {
