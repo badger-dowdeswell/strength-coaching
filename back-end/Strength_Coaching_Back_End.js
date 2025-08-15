@@ -576,12 +576,15 @@ app.post('/api/uploadFile', (request, response) => {
 
     logmsg("/api/uploadFile: executing.") 
 
-    if (!verifyJWT(JWT)) {
-        response.status(403).send("Not authorised");
-        logmsg("/api/uploadFile: User is not authorised");
-    } else {
-        logmsg("/api/uploadFile: file uploaded.") 
-        response.status(200).send("/api/uploadFile: file uploaded."); 
-        // TEST response.status(500).send("/api/uploadFile: file upload failed.");         
-    }
+    setTimeout(() => {
+            if (!verifyJWT(JWT)) {
+            response.status(403).send("Not authorised");
+            logmsg("/api/uploadFile: User is not authorised");
+        } else {
+            logmsg("/api/uploadFile: file uploaded.") 
+            response.status(200).send("/api/uploadFile: file uploaded."); 
+            // TEST response.status(500).send("/api/uploadFile: file upload failed.");         
+        }
+    }, 5000);
+    
 }); 
