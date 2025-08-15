@@ -10,23 +10,34 @@
 // Full documentation for the server is available in the Strength Coaching Online
 // documentation folder. This is available in the Github Repository: 
 //
-//         https://github.com/badger-dowdeswell/strength_coaching.git
-//
-// RA_BRD Email in React tutorial: https://www.youtube.com/watch?v=PJmz0GhE45s
-// Nodemailer:     https://www.nodemailer.com/
+//         https://github.com/badger-dowdeswell/strength_coaching.git 
 // 
 // Installing the Back-End server
 // ==============================
-// Run npm install in the command terminal to install all the required dependencies
-// automatically. The complete list of dependencies can be found in package.json in
-// the "dependencies" and "dev-dependencies" section.
+// The complete list of dependencies can be found in package.json in the "dependencies"
+// and "dev-dependencies" section. The current version requires Node.js v24.0.2 or higher.
+// Install it with:
 //
-// The current version requires Node.js v24.0.2 or higher. Install it with nvm install 24
+//     npm install -g npm@latest 
+//
+// The back-end requires express and the express-fileupload packages. Install them with: 
+//
+//     npm install express express-fileupload
 //
 // When running this alongside a front-end written in the Vite framework, you can add
-// the script command "dev": "nodemon /Strength_Research_Back_End.js" to the "scripts"
-// section of package.json. This means the same command can be used to start either the
-// back-end or the front-end in separate terminal windows during development.
+// the script command:
+//
+//    "dev": nodemon --env-file=sr.env Strength_Coaching_Back_End.js 
+//
+// to the "scripts" section of package.json. This means the command can be used to restart
+// the back-end automatically each time the code changes during development. Parameters 
+// specific to the server are stored in the sr.env file which must be loaded using the
+// command --env-file=sr.env shown in the "dev" command above.
+//
+//
+//
+// RA_BRD Email in React tutorial: https://www.youtube.com/watch?v=PJmz0GhE45s
+// Nodemailer:     https://www.nodemailer.com/
 //
 // MARK: RA_Badger: This is interesting... see the Express documentation at
 // https://expressjs.com/en/advanced/healthcheck-graceful-shutdown.html
@@ -545,14 +556,15 @@ app.put('/api/updateUser', (request, response) => {
 // uploadFile()
 // ============
 // Receives a file that a user is uploading from a front-end via
-// an api call. The file is saved in an upload location that is
-// named in the post. Note that the api does not specify an absolute
+// this api post call. The file is saved in an pre-defined upload
+// location. Note that the api does not specify an absolute
 // file path where the file will be saved. That would be a security 
 // vulnerability since the server paths are not exposed to the 
-// front-end. Instead, the "path" is just a just predefined names
-// that the back-end matches to a real file path that is part of
-// the site structure. Note that the api must include a JWT since
-// this api can only be executed by an authenticated user.
+// front-end. Instead, the file object type is just a just predefined 
+// enumerated type that the back-end matches to a real file path that
+// is is applicable to the particular site structure. 
+// The api call must include a JWT since this api can only be executed
+// by an authenticated user.
 //
 // https://www.youtube.com/watch?v=4pmkQjsKJ-U
 // https://www.npmjs.com/package/express-fileupload
@@ -569,6 +581,7 @@ app.post('/api/uploadFile', (request, response) => {
         logmsg("/api/uploadFile: User is not authorised");
     } else {
         logmsg("/api/uploadFile: file uploaded.") 
-        response.status(200).send("/api/uploadFile: file uploaded.");       
+        response.status(200).send("/api/uploadFile: file uploaded."); 
+        // TEST response.status(500).send("/api/uploadFile: file upload failed.");         
     }
 }); 

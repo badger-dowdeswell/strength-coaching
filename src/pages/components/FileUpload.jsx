@@ -33,23 +33,18 @@ const axios = Axios;
 // ============
 export default function FileUpload(params) {
     const [file, setFile] = useState(null);
-    const [uploadState, setUploadState] = useState(uploadStates.IDLE);    
-
-    //
-    // handleFileChange()
-    // ==================
-    function handleFileChange(e) {
-        if (e.target.files) {
-            setFile(e.target.files[0]); 
-            setUploadState(uploadStates.IDLE);
-        }
-    }
+    const [uploadState, setUploadState] = useState(uploadStates.IDLE); 
 
     //
     // selectFile
     // ==========
-    // This saves the file information of the selected file so that it can
-    // be uploaded to the server.
+    // This creates a form object to save the file properties of the 
+    // selected file so that it can be uploaded to the server via an
+    // api call to the back end.
+    //
+    // RA_BRD Need to send in a parameter to ensure that only valid
+    // images can be uploaded to the server. This is an important
+    // security consideration.
     //
     async function selectFile(e) {
         if (e.target.files) {
@@ -67,9 +62,9 @@ export default function FileUpload(params) {
     // ============
     const uploadFile = async (JWT, formData) => { 
         await axios.post(baseURL + "uploadFile?JWT=" + JWT, formData, {
-                headers: {
-                    'Content-Type': 'multipart/form-data',
-        },
+            headers: {
+                'Content-Type': 'multipart/form-data',
+            },
         })
         .then((response) => {
             setUploadState(uploadStates.UPLOADED);             
@@ -100,6 +95,12 @@ export default function FileUpload(params) {
                      Image was uploaded successfully.
                 </p>
             )}
+
+            {uploadState === uploadStates.ERROR && ( 
+                <p className="mt-2 text-sm text-cyan-600">
+                     Whoops - image was not uploaded successfully.
+                </p>
+            )}    
         </div>
     );
 }
@@ -124,4 +125,14 @@ export default function FileUpload(params) {
 //                 <p className="mt-2 text-sm text-cyan-600">
 //                     Image could not be uploaded. Please try again.
 //                 </p>
-//             )}       
+//             )}      
+
+//
+    // handleFileChange()
+    // ==================
+    //function handleFileChange(e) {
+    //    if (e.target.files) {
+    //        setFile(e.target.files[0]); 
+    //        setUploadState(uploadStates.IDLE);
+    //    }
+    //}
