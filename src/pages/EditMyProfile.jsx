@@ -840,7 +840,7 @@ function Page_1(params) {
 // The second tabbed-dialog page allows the user to upload their profile picture and to change their password.
 //
 function Page_2(params) { 
-    var userImage = "./userImages/" + params.UserImage; 
+    const [userImage, setUserImage] = useState("./userImages/" + params.UserImage); 
 
     return (
         <div>
@@ -876,11 +876,13 @@ function Page_2(params) {
             <div>                 
                 <FileUpload
                     JWT = {params.JWT}
+                    userImage= {userImage}
+                    setUserImage = {setUserImage}
                  />
             </div>
 
             <div className="mt-1">
-                <p>bottom</p>
+                <p>&nbsp;</p>
             </div>
 
         </div>    

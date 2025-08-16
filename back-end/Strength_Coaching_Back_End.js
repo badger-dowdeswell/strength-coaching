@@ -83,11 +83,21 @@ const app = express();
 import expressFileUpload from "express-fileupload";
 const fileUpload = expressFileUpload();
 
-import multer from 'multer';
-const upload = multer({dest: 'uploads/'});
+import path from "path"; 
 
-import path from "react"; 
-const pathName = path;
+// Multi-File Upload (multer) configuration for image and other resource files uploaded
+// to this server.
+import multer from 'multer';
+const storage = multer.diskStorage({
+    destination: (request, file, cb) => {
+        cb(null, process.cwd() + "/uploads");
+    },
+    filename: (request, file, cb) => {
+        cb(null, file.originalname);
+    },
+});
+const upload = multer({storage});
+
 
 import cors from 'cors';
 import pg from 'pg';
@@ -571,39 +581,17 @@ app.put('/api/updateUser', (request, response) => {
 // The api call must include a JWT since this api can only be executed
 // by an authenticated user.
 //
-// npm i express-fileupload
-//
-//app.post('/api/uploadFile', (request, response) => {
-//    const JWT = request.query.JWT;
-//    logmsg("/api/uploadFile: executing.") 
-
 app.post('/api/uploadFile', upload.array("photos"), (request, response) => {
     const JWT = request.query.JWT;
     const image = request.image;
     logmsg("/api/uploadFile: executing.") 
     
     if (!verifyJWT(JWT)) {
-        response.status(403).send("Not authorised");
         logmsg("/api/uploadFile: User is not authorised");
+        response.status(403).send("Not authorised");        
     } else {
         console.log("received files: ", request.files);
-        response.json({files: request.files });  
-        //response.status(200).send("/api/uploadFile: file uploaded.");    
+        response.status(200).json({files: request.files });
     }      
 }); 
 
-
-        
-        //const uploadPath = path.join(__dirname, "uploads", uploadedFile.name);
-        //uploadedFile.mv(uploadPath, (err) => {
-        //    if (err) {
-        //        response.status(400).send(err);
-        //    } else {
-        //        logmsg("/api/uploadFile: file uploaded.") 
-        //        response.status(200).send("/api/uploadFile: file uploaded."); 
-        //    }
-        //});
-
-        //const files = request.files
-        //console.log("files: " + files);        
-        // TEST response.status(500).send("/api/uploadFile: file upload failed.");    

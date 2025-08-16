@@ -33,12 +33,20 @@ const axios = Axios;
 //
 // FileUpload()
 // ============
+// https://www.youtube.com/watch?v=SMim5-ox0K4
+// https://developer.mozilla.org/en-US/docs/Web/API/File_API/Using_files_from_web_applications#example_using_object_urls_to_display_images
+// https://www.youtube.com/watch?v=JJ0pjRotdKI
+//
 export default function FileUpload(params) {  
     const [uploadState, setUploadState] = useState(uploadStates.IDLE); 
 
     const [files, setFiles] = useState([]);
+    const [preview, setPreview] = useState(null);
     const changeFiles = (e) => {
         setFiles(e.target.files);
+        setPreview(URL.createObjectURL(e.target.files[0])); 
+        //const objectURL =  URL.createObjectURL(files);
+        //params.SetUserImage(objectURL);           
     };
 
     //
@@ -54,32 +62,16 @@ export default function FileUpload(params) {
     //
     async function selectFile(e) {
         if (e.target.files) {
-            setFile(e.target.files[0]);             
+            setFiles(e.target.files); 
             console.log("\nUploading...")
             const formData = new FormData();
             formData.append('image', e.target.files);
             setUploadState(uploadStates.UPLOADING);
-            // uploadFile(params.JWT, formData);
+            //uploadFile(params.JWT, files[0].name, formData);
         }
     }
 
-    //
-    // uploadFile()
-    // ============
-    const uploadFile = async (JWT, formData) => { 
-        await axios.post(baseURL + "uploadFile?JWT=" + JWT, formData, {                                 
-            headers: {
-                'Content-Type': 'multipart/form-data',
-            },
-        })
-        .then((response) => {
-            console.log("response ", response.data);
-            setUploadState(uploadStates.UPLOADED);             
-        })                
-        .catch(err => {
-            setUploadState(uploadStates.ERROR);            
-        })
-    }
+    
 
     const uploadFiles = (e) => {
         e.preventDefault();
@@ -87,34 +79,59 @@ export default function FileUpload(params) {
         for (const file of files) {
             formData.append("photos", file);
         }
-        uploadFile(params.JWT, formData);
-
-        //console.log("uploadFiles: ", files);
-
+        uploadFile(params.JWT, files[0].name, formData);
+    } 
+    
+    //
+    // uploadFile()
+    // ============
+    const uploadFile = async (JWT, filename, formData) => { 
+        await axios.post(baseURL + "uploadFile?JWT=" + JWT, formData, {                                 
+            headers: {
+                'Content-Type': 'multipart/form-data',
+            },
+        })
+        .then((response) => {
+            console.log("Uploaded file. " + filename );    
+            setUploadState(uploadStates.UPLOADED);             
+        })                
+        .catch(err => {
+            console.log("uploadFile error " + err);            
+            setUploadState(uploadStates.ERROR);            
+        })
     }
 
-    return (
+    return (  
         <div className="space-y-4"> 
-            <form onSubmit={uploadFiles}>  
+            <form onSubmit={uploadFiles}
+                id="submit">                 
                 <label className="bg-cyan-600 text-white font-bold text-sm py-2 px-2 rounded ml-12"
-                    for="SelectImage"> 
+                       htmlFor="SelectImage"> 
                     Choose image    
                 </label>       
-                <input className="ml-14 hidden"
+                <input className="hidden"
                        id="SelectImage"                
                        type="file" 
-                       onChange={changeFiles}
+                       onChange={changeFiles}                      
                 /> 
-                <button className="bg-cyan-600 text-white font-bold text-sm py-2 px-2 rounded ml-24"                                
-                    type = "submit"
-                    onChange={(e) => {selectFile(e)}}
-                    >
+                <button className="bg-cyan-600 text-white font-bold text-sm py-2 px-2 rounded ml-24"
+                        id="submit"                                
+                        type = "submit"
+                        onChange={(e) => {selectFile(e)}}>
                     Upload files    
                 </button> 
-            </form>               
+            </form>  
 
             {files[0] && (
                 <div className="mb-4 ml-14 text-white text-sm">
+                    <img className="ml-5 mb-5 mt-0"
+                        src={preview}
+                        alt="/"
+                        draggable={false}
+                        height={175}
+                        width={175}
+                        
+                    />
                     <p>File name: {files[0].name}</p>
                     <p>File size: {(files[0].size / 1024).toFixed(2)} KB</p>
                     <p>File type: {files[0].type}</p>
@@ -135,35 +152,3 @@ export default function FileUpload(params) {
         </div>
     );
 }
-
-// {file && uploadState !== uploadStates.UPLOADING &&
-//                 <button className="bg-cyan-600 text-white font-bold text-sm py-2 px-2 rounded
-//                                         mt-2 ml-5"
-//                         id="Upload"
-//                         style={{ width: "100px" }}
-//                         onClick={handleFileUpload(params.JWT)}>                    
-//                     Upload
-//                 </button>
-//             }
-
-//             {uploadState === uploadStates.UPLOADED && (
-//                 <p className="mt-2 text-sm text-cyan-600">
-//                     Image was uploaded successfully.
-//                 </p>
-//             )}
-
-//             {uploadState === uploadStates.ERROR && (
-//                 <p className="mt-2 text-sm text-cyan-600">
-//                     Image could not be uploaded. Please try again.
-//                 </p>
-//             )}      
-
-//
-    // handleFileChange()
-    // ==================
-    //function handleFileChange(e) {
-    //    if (e.target.files) {
-    //        setFile(e.target.files[0]); 
-    //        setUploadState(uploadStates.IDLE);
-    //    }
-    //}
