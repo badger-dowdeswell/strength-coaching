@@ -80,6 +80,10 @@
 //
 import express from 'express';
 const app = express();
+
+// Serve static files from the 'public' directory
+//app.use(express.static('public')); 
+
 import expressFileUpload from "express-fileupload";
 const fileUpload = expressFileUpload();
 
@@ -87,10 +91,13 @@ import path from "path";
 
 // Multi-File Upload (multer) configuration for image and other resource files uploaded
 // to this server.
+// "./userImages/"
+//cb(null, process.cwd() + "/uploads");
+//
 import multer from 'multer';
 const storage = multer.diskStorage({
     destination: (request, file, cb) => {
-        cb(null, process.cwd() + "/uploads");
+        cb(null, process.cwd() + "/../public/userImages/");
     },
     filename: (request, file, cb) => {
         cb(null, file.originalname);

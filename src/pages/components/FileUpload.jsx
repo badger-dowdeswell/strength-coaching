@@ -71,8 +71,6 @@ export default function FileUpload(params) {
         }
     }
 
-    
-
     const uploadFiles = (e) => {
         e.preventDefault();
         const formData = new FormData();

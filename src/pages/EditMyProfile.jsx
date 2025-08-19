@@ -21,11 +21,11 @@ import TopNav from "./components/TopNav";
 import { getBaseURL } from "./getBaseURL";
 import { useEffect, useState, useReducer } from "react";
 import { useNavigate } from "react-router-dom";
-import { editingStates, pages } from "./Constants";
+import { editingStates, uploadStates, pages } from "./Constants";
 import { Salutations, Countries} from "./components/LookUpLists";
 import { formatDate, decodeISOdate, validateDate } from "./DateLib";
 import Modal from "./components/Modal";
-import FileUpload from './components/FileUpload';
+//import FileUpload from './components/FileUpload';
 
 import Axios from 'axios';
 const axios = Axios;
@@ -839,17 +839,88 @@ function Page_1(params) {
 // ========
 // The second tabbed-dialog page allows the user to upload their profile picture and to change their password.
 //
-function Page_2(params) { 
-    const [userImage, setUserImage] = useState("./userImages/" + params.UserImage); 
+function Page_2(params) {     
+    const [uploadState, setUploadState] = useState(uploadStates.IDLE); 
+    const [files, setFiles] = useState([]);  
+    const [preview, setPreview] = useState("./userImages/" + params.UserImage); 
 
+    //
+    // changeFiles()
+    // =============
+    // Save the file object that contains the information about the
+    // new image chosen and display it as a preview before it is
+    // uploaded.
+    //
+    const changeFiles = (e) => {
+        setFiles(e.target.files);
+        setPreview(URL.createObjectURL(e.target.files[0]));             
+    };
+    
+    //
+    // selectFile
+    // ==========
+    // This creates a form object to save the file properties of the 
+    // selected file so that it can be uploaded to the server via an
+    // api call to the back end.
+    //
+    // RA_BRD Need to send in a parameter to ensure that only valid
+    // images can be uploaded to the server. This is an important
+    // security consideration.
+    //
+    async function selectFile(e) {
+        if (e.target.files) {
+            setFiles(e.target.files); 
+            console.log("\nUploading...")
+            const formData = new FormData();
+            formData.append('image', e.target.files);
+            setUploadState(uploadStates.UPLOADING);
+                //uploadFile(params.JWT, files[0].name, formData);
+        }
+    }
+    
+    //
+    // encodeFiles
+    // ===========
+    // Pack the file into a Form object so it can be posted
+    // to the server using a back-end api call.
+    //
+    const encodeFile = (e) => {
+        e.preventDefault();
+        const formData = new FormData();
+        for (const file of files) {
+            formData.append("photos", file);
+        }
+        uploadFile(params.JWT, files[0].name, formData);
+    } 
+        
+    //
+    // uploadFile()
+    // ============
+    const uploadFile = async (JWT, filename, formData) => { 
+        await axios.post(baseURL + "uploadFile?JWT=" + JWT, formData, {                                 
+            headers: {
+                'Content-Type': 'multipart/form-data',
+            },
+        })
+        .then((response) => {
+            console.log("Uploaded file. " + filename ); 
+            params.setUserImage(files[0].name);   
+            setUploadState(uploadStates.UPLOADED);             
+        })                
+        .catch(err => {
+            console.log("uploadFile error " + err);            
+            setUploadState(uploadStates.ERROR);            
+        })
+    }
+    
     return (
         <div>
             <p className="text-white text-center font-bold text-xl mt-1 mb-5">My Profile Picture</p>
 
             <div className="flex flex-row">
-                <div>
+                <div>                    
                     <img className="ml-5 mb-5 mt-0"
-                        src={userImage}
+                        src={preview}
                         alt="/"
                         draggable={false}
                         height={175}
@@ -871,20 +942,41 @@ function Page_2(params) {
                         Click the Choose file button to select a new picture<br></br>                        
                     </p>
                 </div>
-            </div>
+            </div> 
 
-            <div>                 
-                <FileUpload
-                    JWT = {params.JWT}
-                    userImage= {userImage}
-                    setUserImage = {setUserImage}
-                 />
-            </div>
-
-            <div className="mt-1">
-                <p>&nbsp;</p>
-            </div>
-
+            <div className="space-y-4"> 
+                <form onSubmit={encodeFile}
+                    id="submit">                 
+                    <label className="bg-cyan-600 text-white font-bold text-sm py-2 px-2 rounded ml-12"
+                           htmlFor="SelectImage"> 
+                        Choose image    
+                    </label>       
+                    <input className="hidden"
+                           id="SelectImage"                
+                           type="file" 
+                           onChange={changeFiles}                      
+                    /> 
+                    <button className="bg-cyan-600 text-white font-bold text-sm py-2 px-2 rounded ml-24"
+                            id="submit"                                
+                            type = "submit"
+                            onChange={(e) => {selectFile(e)}}>
+                        Upload files    
+                    </button> 
+                </form>  
+                                
+            
+                {uploadState === uploadStates.UPLOADED && ( 
+                    <p className="mt-2 text-sm text-cyan-600">
+                        Image was uploaded successfully.
+                    </p>
+                )}
+            
+                {uploadState === uploadStates.ERROR && ( 
+                    <p className="mt-2 text-sm text-cyan-600">
+                        Whoops - image was not uploaded successfully.
+                    </p>
+                )}  
+            </div> 
         </div>    
     );
 } 
