@@ -34,8 +34,25 @@
 // specific to the server are stored in the sr.env file which must be loaded using the
 // command --env-file=sr.env shown in the "dev" command above.
 //
+// Shutting down processes
+// =======================
+// Sometimes, the back-end Node process shuts down but does not release the port it is 
+// running on. The Linux List Open Files command lsof is one way to identify if the port
+// (which is really just another file in Linux) is still connected:
 //
+//    sudo lsof -1 :3010   which gives and output like this:
 //
+//    COMMAND     PID   USER   FD   TYPE DEVICE SIZE/OFF NODE NAME
+//    MainThrea 44866 badger   22u  IPv6 315170      0t0  TCP *:3010 (LISTEN)
+//
+// In this example, the port is open via process specified in the PID which is 44866 in 
+// this case. Shut it down with a kill and restart the backend normally:
+//
+//    kill -9 :3010
+//    npm run dev
+//
+// Interesting stuff to investigate later
+// ======================================
 // RA_BRD Email in React tutorial: https://www.youtube.com/watch?v=PJmz0GhE45s
 // Nodemailer:     https://www.nodemailer.com/
 //
@@ -81,16 +98,18 @@
 import express from 'express';
 const app = express();
 
-// Serve static files from the 'public' directory
+// Serve static files from the 'public' directory..
+// may not be needed but check when testing the
+// latest version on the live server RA_BRD
 //app.use(express.static('public')); 
-
-import expressFileUpload from "express-fileupload";
-const fileUpload = expressFileUpload();
+//import expressFileUpload from "express-fileupload";
+//const fileUpload = expressFileUpload();
 
 import path from "path"; 
 
 // Multi-File Upload (multer) configuration for image and other resource files uploaded
-// to this server.
+// to this server. User images are stored in the public/userImages directory.
+//
 // "./userImages/"
 //cb(null, process.cwd() + "/uploads");
 //
@@ -104,7 +123,6 @@ const storage = multer.diskStorage({
     },
 });
 const upload = multer({storage});
-
 
 import cors from 'cors';
 import pg from 'pg';

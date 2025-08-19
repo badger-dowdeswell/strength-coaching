@@ -25,7 +25,6 @@ import { editingStates, uploadStates, pages } from "./Constants";
 import { Salutations, Countries} from "./components/LookUpLists";
 import { formatDate, decodeISOdate, validateDate } from "./DateLib";
 import Modal from "./components/Modal";
-//import FileUpload from './components/FileUpload';
 
 import Axios from 'axios';
 const axios = Axios;
@@ -120,6 +119,7 @@ export default function EditMyProfile() {
             //console.log("IsChanged " + IsChanged); 
             sessionStorage.setItem("FirstName", FirstName);
             sessionStorage.setItem("LastName", LastName);
+            sessionStorage.setItem("UserImage", UserImage);
             updateUser(); 
             break;
 
@@ -467,6 +467,7 @@ export default function EditMyProfile() {
                             userID={userID}
                             UserImage={UserImage} setUserImage={setUserImage}
                             JWT={JWT}
+                            IsChanged={IsChanged} setIsChanged={setIsChanged}
                         />
                     )};    
 
@@ -873,7 +874,7 @@ function Page_2(params) {
             console.log("\nUploading...")
             const formData = new FormData();
             formData.append('image', e.target.files);
-            setUploadState(uploadStates.UPLOADING);
+            setUploadState(uploadStates.UPLOADING);            
                 //uploadFile(params.JWT, files[0].name, formData);
         }
     }
@@ -891,6 +892,7 @@ function Page_2(params) {
             formData.append("photos", file);
         }
         uploadFile(params.JWT, files[0].name, formData);
+        params.setIsChanged(true);
     } 
         
     //
@@ -918,13 +920,12 @@ function Page_2(params) {
             <p className="text-white text-center font-bold text-xl mt-1 mb-5">My Profile Picture</p>
 
             <div className="flex flex-row">
-                <div>                    
+                <div className="w-36 h-40">                    
                     <img className="ml-5 mb-5 mt-0"
                         src={preview}
                         alt="/"
                         draggable={false}
-                        height={175}
-                        width={175}
+                        width={150}                         
                         onError={({currentTarget}) => {
                                    currentTarget.onerror = null; // prevents looping
                                    currentTarget.src="./userImages/template.png";
@@ -934,49 +935,44 @@ function Page_2(params) {
 
                 <div className="ml-10 mr-10">
                     <p className="text-white">
-                        Your picture is displayed at the top of the page <br></br>
-                        beside your name after you sign in. It also appears <br></br>
-                        in your Block schedule to identify the training<br></br>
-                        videos you upload for review.<br></br><br></br>
-                        
-                        Click the Choose file button to select a new picture<br></br>                        
+                        Your picture is displayed at the top of the page beside your <br></br>
+                        name after you sign in. It also appears in your Block schedule<br></br>
+                        to identify the training videos you upload for review.<br></br>
+                        <br></br>                        
+                        Click <b>Choose Image</b> to select a new picture. If you wish to <br></br> 
+                        save this as your new picture click <b>Upload image</b>.                       
                     </p>
-                </div>
+                    {uploadState === uploadStates.UPLOADED && ( 
+                        <p className="mt-2 text-sm text-cyan-600">
+                            Image was uploaded successfully.
+                        </p>
+                    )} 
+                </div>            
             </div> 
-
-            <div className="space-y-4"> 
+                              
+            <div className="mt-5">
                 <form onSubmit={encodeFile}
                     id="submit">                 
-                    <label className="bg-cyan-600 text-white font-bold text-sm py-2 px-2 rounded ml-12"
-                           htmlFor="SelectImage"> 
-                        Choose image    
+                    <label className="bg-cyan-600 text-white font-bold text-sm py-3 px-3 rounded ml-10 h-10"                    
+                        htmlFor="ChoosePicture">                        
+                        Choose picture    
                     </label>       
                     <input className="hidden"
-                           id="SelectImage"                
-                           type="file" 
-                           onChange={changeFiles}                      
+                        id="ChoosePicture"                
+                        type="file"                        
+                        onChange={changeFiles}                                     
                     /> 
-                    <button className="bg-cyan-600 text-white font-bold text-sm py-2 px-2 rounded ml-24"
+                    <button className="bg-cyan-600 text-white font-bold text-sm py-2 px-2 rounded ml-5 h-10 w-32"
                             id="submit"                                
-                            type = "submit"
-                            onChange={(e) => {selectFile(e)}}>
-                        Upload files    
+                            type = "submit"                                                       
+                            onChange={(e) => {setUploadState(uploadStates.IDLE);
+                                              selectFile(e)}}>
+                        Upload picture    
                     </button> 
-                </form>  
-                                
-            
-                {uploadState === uploadStates.UPLOADED && ( 
-                    <p className="mt-2 text-sm text-cyan-600">
-                        Image was uploaded successfully.
-                    </p>
-                )}
-            
-                {uploadState === uploadStates.ERROR && ( 
-                    <p className="mt-2 text-sm text-cyan-600">
-                        Whoops - image was not uploaded successfully.
-                    </p>
-                )}  
+                </form>                 
             </div> 
+
+            <p className="mt-36 mb-2">@nbsp;</p>            
         </div>    
     );
 } 
