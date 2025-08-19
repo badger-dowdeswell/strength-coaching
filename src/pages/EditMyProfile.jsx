@@ -925,7 +925,8 @@ function Page_2(params) {
                         src={preview}
                         alt="/"
                         draggable={false}
-                        width={150}                         
+                        width={150} 
+                        height={150}                        
                         onError={({currentTarget}) => {
                                    currentTarget.onerror = null; // prevents looping
                                    currentTarget.src="./userImages/template.png";
@@ -942,34 +943,40 @@ function Page_2(params) {
                         Click <b>Choose Image</b> to select a new picture. If you wish to <br></br> 
                         save this as your new picture click <b>Upload image</b>.                       
                     </p>
-                    {uploadState === uploadStates.UPLOADED && ( 
-                        <p className="mt-2 text-sm text-cyan-600">
-                            Image was uploaded successfully.
-                        </p>
-                    )} 
                 </div>            
             </div> 
                               
             <div className="mt-5">
-                <form onSubmit={encodeFile}
-                    id="submit">                 
-                    <label className="bg-cyan-600 text-white font-bold text-sm py-3 px-3 rounded ml-10 h-10"                    
-                        htmlFor="ChoosePicture">                        
-                        Choose picture    
-                    </label>       
-                    <input className="hidden"
-                        id="ChoosePicture"                
-                        type="file"                        
-                        onChange={changeFiles}                                     
-                    /> 
-                    <button className="bg-cyan-600 text-white font-bold text-sm py-2 px-2 rounded ml-5 h-10 w-32"
-                            id="submit"                                
-                            type = "submit"                                                       
-                            onChange={(e) => {setUploadState(uploadStates.IDLE);
-                                              selectFile(e)}}>
-                        Upload picture    
-                    </button> 
-                </form>                 
+                <div className= "flex flex-row">
+                    <div>
+                        <form onSubmit={encodeFile}
+                            id="submit">                 
+                            <label className="bg-cyan-600 text-white font-bold text-sm py-3 px-3 rounded ml-10 h-10"                    
+                                htmlFor="ChoosePicture">                        
+                                Choose picture    
+                            </label>       
+                            <input className="hidden"
+                                id="ChoosePicture"                
+                                type="file"                        
+                                onChange={changeFiles}                                     
+                            /> 
+                            <button className="bg-cyan-600 text-white font-bold text-sm py-2 px-2 rounded ml-5 h-10 w-32"
+                                    id="submit"                                
+                                    type = "submit"                                                       
+                                    onChange={(e) => {setUploadState(uploadStates.IDLE);
+                                                    selectFile(e)}}>
+                                Upload picture    
+                            </button> 
+                        </form>    
+                    </div>
+                    <div>    
+                        {uploadState === uploadStates.UPLOADED && ( 
+                            <p className="mt-2 ml-4 text-sm text-cyan-600">
+                                Image was uploaded successfully.
+                            </p>
+                        )} 
+                    </div>                    
+                </div>               
             </div> 
 
             <p className="mt-36 mb-2">@nbsp;</p>            
