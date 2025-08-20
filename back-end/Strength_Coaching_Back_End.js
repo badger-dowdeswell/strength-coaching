@@ -40,7 +40,7 @@
 // running on. The Linux List Open Files command lsof is one way to identify if the port
 // (which is really just another file in Linux) is still connected:
 //
-//    sudo lsof -1 :3010   which gives and output like this:
+//    sudo lsof -i :3010   which gives and output like this:
 //
 //    COMMAND     PID   USER   FD   TYPE DEVICE SIZE/OFF NODE NAME
 //    MainThrea 44866 badger   22u  IPv6 315170      0t0  TCP *:3010 (LISTEN)

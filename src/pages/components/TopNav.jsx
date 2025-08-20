@@ -37,7 +37,9 @@ function TopNav(params) {
 
     var userID = sessionStorage.getItem("userID");  
     let userName = sessionStorage.getItem("FirstName") + " " + sessionStorage.getItem("LastName");  
-    var userImage = "./userImages/" + sessionStorage.getItem("UserImage"); // "./userImages/" + userID + ".png"; RA_BRD
+//    var userImage = "./userImages/" + sessionStorage.getItem("UserImage"); // "./userImages/" + userID + ".png"; RA_BRD
+    var userImage = "./front-end/userImages/" + sessionStorage.getItem("UserImage"); // "./userImages/" + userID + ".png"; RA_BRD
+
     
     var userRole = "";   
 
