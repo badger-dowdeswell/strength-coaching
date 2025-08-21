@@ -98,20 +98,12 @@
 import express from 'express';
 const app = express();
 
-// Serve static files from the 'public' directory..
-// may not be needed but check when testing the
-// latest version on the live server RA_BRD
-//app.use(express.static('public')); 
-//import expressFileUpload from "express-fileupload";
-//const fileUpload = expressFileUpload();
-
-import path from "path"; 
+import path from "path";  //RA_BRD is this used?
 
 // Multi-File Upload (multer) configuration for image and other resource files uploaded
-// to this server. User images are stored in the public/userImages directory.
-//
-// "./userImages/"
-//cb(null, process.cwd() + "/uploads");
+// to this server. User images are stored in the front-end/userImages directory. They can
+// be served as public static files from here so the front-end can display them. Vite
+// ensures that they are treated as public objects.
 //
 import multer from 'multer';
 const storage = multer.diskStorage({
@@ -596,7 +588,7 @@ app.put('/api/updateUser', (request, response) => {
 //
 // uploadFile()
 // ============
-// Receives a file that a user is uploading from a front-end via
+// Receives a file that a user is uploading from a React front-end via
 // this api post call. The file is saved in an pre-defined upload
 // location. Note that the api does not specify an absolute
 // file path where the file will be saved. That would be a security 
