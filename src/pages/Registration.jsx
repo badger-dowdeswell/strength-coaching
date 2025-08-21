@@ -29,6 +29,10 @@ import TopNav from "./components/TopNav";
 import Registration_Person from "./images/Registration_Person.png";
 import eye from "./images/password_eye.png";
 
+var default_user_image = "template.png"; // This ensures that there is an image to display
+                                         // after the user signs-in for the first time before
+                                         // they upload their own image.
+
 //
 // RegistrationStates
 // ==================
@@ -272,7 +276,8 @@ export default function Registration() {
             registration_token: VerificationCode,          
             first_name: FirstName,            
             last_name: LastName,
-            email_address: EmailAddress 
+            email_address: EmailAddress, 
+            user_image: default_user_image
         })
         .then((response) => {
             if (response.status === 200) {

@@ -120,6 +120,7 @@ export default function EditMyProfile() {
             sessionStorage.setItem("FirstName", FirstName);
             sessionStorage.setItem("LastName", LastName);
             sessionStorage.setItem("UserImage", UserImage);
+            console.log("Updating... [" + UserImage +"]");
             updateUser(); 
             break;
 
@@ -842,8 +843,9 @@ function Page_1(params) {
 //
 function Page_2(params) {     
     const [uploadState, setUploadState] = useState(uploadStates.IDLE); 
-    const [files, setFiles] = useState([]);  
-    const [preview, setPreview] = useState("./userImages/" + params.UserImage); 
+    const [files, setFiles] = useState([]);     
+    const [preview, setPreview] = useState("/userImages/" + params.UserImage); 
+    console.log("\nUserImage" + preview); 
 
     //
     // changeFiles()
@@ -874,8 +876,7 @@ function Page_2(params) {
             console.log("\nUploading...")
             const formData = new FormData();
             formData.append('image', e.target.files);
-            setUploadState(uploadStates.UPLOADING);            
-                //uploadFile(params.JWT, files[0].name, formData);
+            setUploadState(uploadStates.UPLOADING);  
         }
     }
     
@@ -929,7 +930,7 @@ function Page_2(params) {
                         height={150}                        
                         onError={({currentTarget}) => {
                                    currentTarget.onerror = null; // prevents looping
-                                   currentTarget.src="./userImages/template.png";
+                                   currentTarget.src="/userImages/template.png";
                                 }}
                     />
                 </div>
@@ -941,7 +942,7 @@ function Page_2(params) {
                         to identify the training videos you upload for review.<br></br>
                         <br></br>                        
                         Click <b>Choose Image</b> to select a new picture. If you wish to <br></br> 
-                        save this as your new picture click <b>Upload image</b>.                       
+                        save this as your new picture click <b>Upload picture</b>.                       
                     </p>
                 </div>            
             </div> 

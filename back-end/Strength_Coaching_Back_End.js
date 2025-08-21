@@ -116,7 +116,7 @@ import path from "path";
 import multer from 'multer';
 const storage = multer.diskStorage({
     destination: (request, file, cb) => {
-        cb(null, process.cwd() + "/../public/userImages/");
+        cb(null, process.cwd() + "/../front-end/userImages/");     
     },
     filename: (request, file, cb) => {
         cb(null, file.originalname);
@@ -375,13 +375,14 @@ app.put('/api/createUser', async (request, response) => {
     var hashedPassword = await encryptPassword((request.body.password.replace(/'/g, "''")));
 
     const sqlSelectCmd = 'INSERT INTO "User" ("user_authority", "password", "user_status", "registration_token", ' +
-                         '"first_name", "last_name", "email_address")' +
+                         '"first_name", "last_name", "email_address", "user_image")' +
                          " VALUES ('" + request.body.user_authority + "', '" + hashedPassword + "', " +
                                   "'" + request.body.user_status + "', " + 
                                   "'" + (request.body.registration_token.replace(/'/g, "''")) + "', " +
                                   "'" + (request.body.first_name.replace(/'/g, "''")) + "', " +
                                   "'"+ (request.body.last_name.replace(/'/g, "''")) + "', " +
-                                  "'" + (request.body.email_address.replace(/'/g, "''")) + "') " +
+                                  "'" + (request.body.email_address.replace(/'/g, "''")) + "', " +
+                                  "'" + (request.body.user_image.replace(/'/g, "''")) + "') " +
                          'RETURNING "user_ID"';
 
     //console.log("api/createUser\n" + sqlSelectCmd + "\n");
@@ -615,7 +616,7 @@ app.post('/api/uploadFile', upload.array("photos"), (request, response) => {
         logmsg("/api/uploadFile: User is not authorised");
         response.status(403).send("Not authorised");        
     } else {
-        console.log("received files: ", request.files);
+        console.log("/api/uploadFile: Received file(s): ", request.files);
         response.status(200).json({files: request.files });
     }      
 }); 

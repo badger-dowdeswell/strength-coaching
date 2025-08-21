@@ -29,17 +29,17 @@
 //                defined in the database.
 //
 import '../Main.css';
-import { useNavigate } from "react-router-dom";
+import {useState} from "react";
+import {useNavigate} from "react-router-dom";
 import StrengthCoachingLogo from "./componentImages/Strength_Coaching_Logo.png";
 
 function TopNav(params) { 
-    let navigate = useNavigate();
+    let navigate = useNavigate();    
 
     var userID = sessionStorage.getItem("userID");  
     let userName = sessionStorage.getItem("FirstName") + " " + sessionStorage.getItem("LastName");  
-//    var userImage = "./userImages/" + sessionStorage.getItem("UserImage"); // "./userImages/" + userID + ".png"; RA_BRD
-    var userImage = "./front-end/userImages/" + sessionStorage.getItem("UserImage"); // "./userImages/" + userID + ".png"; RA_BRD
-
+    const [userImage, setUserImage] = useState("/userImages/" + sessionStorage.getItem("UserImage"));     
+    console.log("\nTopNav [" + userImage + "]");
     
     var userRole = "";   
 
@@ -100,7 +100,7 @@ function TopNav(params) {
                                 width={57}
                                 onError={({ currentTarget }) => {
                                 currentTarget.onerror = null; // prevents looping
-                                currentTarget.src="./userImages/template.png";
+                                currentTarget.src= + "/userImages/template.png";
                                 }}
                             />
                         )}
