@@ -844,7 +844,7 @@ function Page_1(params) {
 function Page_2(params) {     
     const [uploadState, setUploadState] = useState(uploadStates.IDLE); 
     const [files, setFiles] = useState([]);     
-    const [preview, setPreview] = useState("/userImages/" + params.UserImage); 
+    const [preview, setPreview] = useState("/../front-end/userImages/" + params.UserImage); 
     console.log("\nUserImage" + preview); 
 
     //
