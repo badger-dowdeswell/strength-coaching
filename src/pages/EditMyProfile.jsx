@@ -930,7 +930,8 @@ function Page_2(params) {
                         height={150}                        
                         onError={({currentTarget}) => {
                                    currentTarget.onerror = null; // prevents looping
-                                   currentTarget.src="/userImages/template.png";
+                                   currentTarget.src="/../front-end/userImages/template.png";
+                                   
                                 }}
                     />
                 </div>
