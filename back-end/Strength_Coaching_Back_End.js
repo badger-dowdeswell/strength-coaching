@@ -3,7 +3,7 @@
 // =========================================
 // This back-end server has been implemented with Express with Node.js. This provides the
 // API Routes needed between the React Front-End of the Strength Coaching Online
-// application and the ProgreSQL database that stores the database.
+// application and the ProgreSQL database that stores the database. 
 //
 // Documentation
 // =============
