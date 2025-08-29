@@ -25,6 +25,7 @@ import { editingStates, uploadStates, pages } from "./Constants";
 import { Salutations, Countries} from "./components/LookUpLists";
 import { formatDate, decodeISOdate, validateDate } from "./DateLib";
 import Modal from "./components/Modal";
+import eye from "./images/password_eye.png";
 
 import Axios from 'axios';
 const axios = Axios;
@@ -40,7 +41,8 @@ export default function EditMyProfile() {
     const [IsChanged, setIsChanged] = useState(false);    
     
     const [UserID, setUserID] = useState();
-    const [UserAuthority, setUserAuthority] = useState();    
+    const [UserAuthority, setUserAuthority] = useState(); 
+    const [Password, setPassword] = useState("");   
     const [Salutation, setSalutation] = useState();    
     const [FirstName, setFirstName] = useState("");    
     const [LastName, setLastName] = useState("");    
@@ -57,6 +59,13 @@ export default function EditMyProfile() {
     const [Country, setCountry] = useState("");
     const [DateOfBirth, setDateOfBirth] = useState("");    
     const [UserImage, setUserImage] = useState();
+
+    // Used to control the visibility of the password by switching the
+    // input type between "text" and "password".
+    const [PasswordVisibility, setPasswordVisibility] = useState("password"); 
+    const [PasswordError, setPasswordError] = useState("");
+    const [PasswordCopy, setPasswordCopy] = useState("");
+    const [PasswordCopyError, setPasswordCopyError] = useState("");
             
     //
     // Authentication and Navigation()
@@ -280,16 +289,44 @@ export default function EditMyProfile() {
             errors.page = 1;
         } 
 
+        console.log("Password [" + Password + "] [" + PasswordCopy + "]");
+        if (!(Password === "") || !(PasswordCopy === "")) {
+            // The user is trying to change their password
+            if (Password.trim() === "") {
+                errors.Password = "A password must be entered";                
+                errors.page = 2;
+            } else {
+                errors.Password = "";
+            }
+            
+            if (PasswordCopy.trim() === "") {
+                errors.PasswordCopy = "A copy of your password must be entered";                
+                errors.page = 2;
+            } else {
+                errors.PasswordCopy = "";
+            }  
+
+            if (Password.trim() !== PasswordCopy.trim()) {
+                errors.Password = "The passwords do not match";
+                errors.PasswordCopy = "The passwords do not match";                
+                errors.page = 2;
+            }        
+        } else {
+            errors.Password = "";
+            errors.PasswordCopy = "";
+        }    
+
+        setErrors(errors);
+        if (errors.page > 0) {
+            setTabColor(currentPage, errors.page);
+            setCurrentPage(errors.page);
+        }   
+        
         if (errors.page === 0) {
             setEditingState(editingStates.UPDATING);
         } else {
             setEditingState(editingStates.EDITING);    
         }
-        setErrors(errors);
-        if (errors.page > 0) {
-            setTabColor(currentPage, errors.page);
-            setCurrentPage(errors.page);
-        }        
     }; 
     
     //
@@ -325,8 +362,7 @@ export default function EditMyProfile() {
             } else if (response.status === 404) {
               setEditingState(editingStates.NOT_FOUND);
             }            
-        } catch (err) {
-            //console.log("getUser() error: " + err.status);
+        } catch (err) {            
             setEditingState(editingStates.NOT_FOUND);        
         }        
     };
@@ -338,6 +374,7 @@ export default function EditMyProfile() {
         axios.put(baseURL + "updateUser?JWT=" + JWT, {
             user_ID: UserID,
             user_authority: UserAuthority,
+            password: Password,
             salutation: Salutation,
             first_name: FirstName,
             last_name: LastName,            
@@ -468,6 +505,10 @@ export default function EditMyProfile() {
                             userID={userID}
                             UserImage={UserImage} setUserImage={setUserImage}
                             JWT={JWT}
+                            Password={Password} setPassword={setPassword}                            
+                            PasswordCopy={PasswordCopy} setPasswordCopy={setPasswordCopy}                             
+                            PasswordVisibility={PasswordVisibility} setPasswordVisibility={setPasswordVisibility}
+                            errors={errors} setErrors={setErrors}
                             IsChanged={IsChanged} setIsChanged={setIsChanged}
                         />
                     )};    
@@ -482,9 +523,9 @@ export default function EditMyProfile() {
                         />
                     )};  
 
-                    <div className="flex flex-row flex-auto">
+                    <div className="flex flex-row justify-center">                        
                         <button className="bg-cyan-600 text-white font-bold text-sm py-2 px-2 rounded
-                                           mb-6 mt-2 ml-56"
+                                           mb-6 mt-2"
                             id="Update"
                             style={{ width: "100px" }}
                             onClick={() => {
@@ -511,7 +552,7 @@ export default function EditMyProfile() {
                                 }    
                             }}>
                             Cancel
-                        </button> 
+                        </button>                         
                     </div>
                 </div>    
             </div> 
@@ -915,10 +956,10 @@ function Page_2(params) {
             setUploadState(uploadStates.ERROR);            
         })
     }
-    
+        
     return (
         <div>
-            <p className="text-white text-center font-bold text-xl mt-1 mb-5">Change my Profile Picture</p>
+            <p className="text-white text-center font-bold text-xl mb-5 center">Change my Profile Picture</p>
 
             <div className="flex flex-col">
                 <div className="flex flex-row">
@@ -931,8 +972,7 @@ function Page_2(params) {
                             height={150}                        
                             onError={({currentTarget}) => {
                                     currentTarget.onerror = null; // prevents looping
-                                    currentTarget.src="/../front-end/userImages/template.png";
-                                    
+                                    currentTarget.src="/../front-end/userImages/template.png";                                    
                                     }}
                         />
                     </div> 
@@ -950,7 +990,7 @@ function Page_2(params) {
                             <div>
                                 <form onSubmit={encodeFile}
                                     id="submit">                 
-                                    <label className="bg-cyan-600 text-white font-bold text-sm py-3 px-3 rounded ml-10 h-10"                    
+                                    <label className="bg-cyan-600 text-white font-bold text-sm py-3 px-3 rounded ml-12 h-10"                    
                                         htmlFor="ChoosePicture">                        
                                         Choose picture    
                                     </label>       
@@ -961,7 +1001,7 @@ function Page_2(params) {
                                         onChange={changeFiles}                                     
                                     /> 
                                     <button className="bg-cyan-600 text-white font-bold text-sm py-2 px-2 rounded ml-5 h-10 w-32"
-                                            id="submit"                                
+                                            id="upload"                                
                                             type = "submit"                                                       
                                             onChange={(e) => {setUploadState(uploadStates.IDLE);
                                                             selectFile(e)}}>
@@ -987,8 +1027,74 @@ function Page_2(params) {
             </div>
 
             <div>
-                <p className="text-white text-center font-bold text-xl mt-14 mb-5">Change my Password</p>
+                <p className="text-white text-center font-bold text-xl mt-24 center mb-1">Change my Password</p>
             </div>            
+                
+            <div className="flex flex-row">
+                <p className="ml-5 mb-1 mt-3 w-64 text-white text-left">    
+                    Enter your new password               
+                </p>  
+
+                <p className="ml-[91px]  mb-1 mt-3 w-64 text-white text-left">    
+                    Reenter your new password
+                </p>                
+            </div>    
+
+            <div className="flex flex-row">                           
+                <input className="ml-5 mt-1 w-[280px] pl-1"
+                        id = "Password"
+                        type = {params.PasswordVisibility}
+                        placeholder = ""
+                        autoComplete = "new-password"
+                        value = {params.Password}
+                        onChange = {(e) => {params.setPassword(e.target.value.trim());
+                                            params.setIsChanged(true);}
+                        }
+                />
+                <img className="mr-5 ml-0 mt-1 h-6 w-7"
+                    src={eye}
+                    alt="/"
+                    onClick={() => {
+                        if (params.PasswordVisibility === "password") {
+                            params.setPasswordVisibility("text");
+                        } else {
+                            params.setPasswordVisibility("password");
+                        }
+                    }}
+                />
+
+                <input className="ml-5 mt-1 w-[280px] pl-1"
+                    id = "PasswordCopy"
+                    type = {params.PasswordVisibility}
+                    placeholder = ""
+                    autoComplete = "new-password"
+                    value = {params.PasswordCopy}
+                    onChange = {(e) => {params.setPasswordCopy(e.target.value.trim());
+                                        params.setIsChanged(true);}                                          
+                    }
+                />
+                <img className="mr-5 ml-0 mt-1 h-6 w-7"
+                    src={eye}
+                    alt="/"
+                    onClick={() => {
+                        if (params.PasswordVisibility === "password") {
+                            params.setPasswordVisibility("text");
+                        } else {
+                            params.setPasswordVisibility("password");
+                        }
+                    }}
+                />
+            </div> 
+
+            <div className="flex flex-row">     
+                <p className="ml-5 mb-[32px] mt-2 text-cyan-300 text-left text-sm">
+                    {params.errors.Password} &nbsp;
+                </p> 
+            
+                <p className="ml-[300px] mb-[32px] mt-2 text-cyan-300 text-left text-sm">
+                    {params.errors.PasswordCopy} &nbsp;
+                </p> 
+            </div>               
         </div>         
     );
 } 

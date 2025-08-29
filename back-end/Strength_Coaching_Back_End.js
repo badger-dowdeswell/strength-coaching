@@ -537,8 +537,7 @@ app.put('/api/updateUser', (request, response) => {
     const JWT = request.query.JWT;    
 
     if (!verifyJWT(JWT)) {
-        response.status(403).send("Not authorised");
-        //logmsg("User is not authorised");
+        response.status(403).send("Not authorised");        
     } else {
         const sqlUpdateCmd = 'DO $$\n' +
             'BEGIN \n' +
@@ -566,19 +565,19 @@ app.put('/api/updateUser', (request, response) => {
                'ROLLBACK\n; ' +
             'END; $$\n';
         
-        //logmsg("/api/updateUser \n" + sqlUpdateCmd + "\n");
+        logmsg("/api/updateUser \n" + sqlUpdateCmd + "\n");
 
         db.query(
             sqlUpdateCmd, (err, result) => {                 
                 if (!err) {
                     response.status(200).send("/api/updateUser: user updated.");
-                    //logmsg("user updated");
+                    logmsg("user updated.");
                     //logmsg("/api/updateUser() \n" +
                     //       "query: " + sqlUpdateCmd);
                 } else {
                     response.status(500).send("/api/updateUser: Unexpected error " + err.message);
-                    //logmsg("/api/updateUser() returned an unexpected error :" + err.message + "\n" +
-                    //       "query: " + sqlUpdateCmd);
+                    logmsg("/api/updateUser() returned an unexpected error :" + err.message + "\n" +
+                           "query: " + sqlUpdateCmd);
                 }
             }
         );
