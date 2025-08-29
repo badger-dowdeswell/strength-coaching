@@ -4,7 +4,7 @@
 // This page allows the client to edit their own private profile as a user on Strength Research Online.
 // They must be authenticated and logged in to access their own details and change them. A different
 // page MaintainClients is used by administrators and trainers to view and change the profiles of
-// all their clients from one central page.
+// all their clients from one central page. Test
 //
 // Revision History
 // ================
