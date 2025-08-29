@@ -176,7 +176,7 @@ const transporter = nodemailer.createTransport({
 // ========
 // Writes a date and time stamped log message to record errors.
 //
-// RA_Badger - need to add data and time and write to log file...
+// RA_Badger - need to add data and time and write to a permanent log file...
 //
 function logmsg(msg) {
     console.log("\n" + msg);

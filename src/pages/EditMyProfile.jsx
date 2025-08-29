@@ -1103,7 +1103,7 @@ function Page_2(params) {
                     {params.errors.Password} &nbsp;
                 </p> 
             
-                <p className="ml-[300px] mb-[32px] mt-2 text-cyan-300 text-left text-sm">
+                <p className="ml-[160px] mb-[32px] mt-2 text-cyan-300 text-left text-sm">
                     {params.errors.PasswordCopy} &nbsp;
                 </p> 
             </div>               
