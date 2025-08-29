@@ -94,11 +94,13 @@
 // 12.08.2025 BRD Added support for the User table field user_image.
 // 13.08.2025 BRD Added the uploadFile api to allow images and other resources to be posted
 //                to the server via the back-end and saved in predefined locations.
+// 29.08.2025 BRD Changes to the updateUser API to allow the user to supply a new password during
+//                the update which gets encrypted and stored.
 //
 import express from 'express';
 const app = express();
 
-import path from "path";  //RA_BRD is this used?
+//import path from "path";  //RA_BRD is this used?
 
 // Multi-File Upload (multer) configuration for image and other resource files uploaded
 // to this server. User images are stored in the front-end/userImages directory. They can
@@ -533,16 +535,26 @@ app.get('/api/duplicateEmail', async (request, response) => {
 // Updates the data for an existing user record. It uses a transaction 
 // with a commit and rollback in the event of an issue.
 //
-app.put('/api/updateUser', (request, response) => {
+app.put('/api/updateUser', async(request, response) => {
     const JWT = request.query.JWT;    
 
     if (!verifyJWT(JWT)) {
         response.status(403).send("Not authorised");        
     } else {
-        const sqlUpdateCmd = 'DO $$\n' +
+        var sqlUpdateCmd = 'DO $$\n' +
             'BEGIN \n' +
                 'UPDATE "User" SET ' +
-                ' "user_authority" = ' + "'" + request.body.user_authority + "' , " +
+                ' "user_authority" = ' + "'" + request.body.user_authority + "' , ";
+
+        var password = request.body.password.trim();
+        if (password !== "") {
+            // The user has provided a new password to update their record.
+            //logmsg("Password changed...[" + password + "] - encrypting it.\n");
+            var hashedPassword = await encryptPassword((password.replace(/'/g, "''")));
+            sqlUpdateCmd = sqlUpdateCmd + ' "password" = ' + "'" + hashedPassword + "' , ";
+        } 
+        
+        sqlUpdateCmd = sqlUpdateCmd +         
                 ' "salutation" = ' + "'" + request.body.salutation + "' , " +
                 ' "first_name" = ' + "'" + request.body.first_name.replace(/'/g, "''") + "' , " +
                 ' "last_name" = ' + "'" + request.body.last_name.replace(/'/g, "''") + "' , " +
@@ -565,19 +577,17 @@ app.put('/api/updateUser', (request, response) => {
                'ROLLBACK\n; ' +
             'END; $$\n';
         
-        logmsg("/api/updateUser \n" + sqlUpdateCmd + "\n");
+        //logmsg("/api/updateUser \n" + sqlUpdateCmd + "\n");
 
         db.query(
             sqlUpdateCmd, (err, result) => {                 
                 if (!err) {
                     response.status(200).send("/api/updateUser: user updated.");
-                    logmsg("user updated.");
-                    //logmsg("/api/updateUser() \n" +
-                    //       "query: " + sqlUpdateCmd);
+                    //logmsg("user updated.");                    
                 } else {
                     response.status(500).send("/api/updateUser: Unexpected error " + err.message);
-                    logmsg("/api/updateUser() returned an unexpected error :" + err.message + "\n" +
-                           "query: " + sqlUpdateCmd);
+                    //logmsg("/api/updateUser() returned an unexpected error :" + err.message + "\n" +
+                    //       "query: " + sqlUpdateCmd);
                 }
             }
         );

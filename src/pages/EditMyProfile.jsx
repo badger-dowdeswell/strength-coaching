@@ -14,6 +14,8 @@
 // 05.04.2025 BRD Added the custom modal dialog functionalty for cancelling changes.
 // 30.06.2025 BRD Added functionality to check for possible duplicate Alias or PIN numbers while
 //                editing client profiles.
+// 29.08.2025 BRD Completed the addition of image uploads for the Picture and Password page as well
+//                as allowing the user to change and verify their password.
 //
 import './Main.css';
 
@@ -370,7 +372,17 @@ export default function EditMyProfile() {
     //
     // updateUser()
     // ============
-    const updateUser = () => {        
+    // Note that this function passes in either the new, changed, user's password if they
+    // have entered and verified one or a blank password. The function getUser() never
+    // retrieves their password during editing, so the password will always be blank unless
+    // they have changed it. 
+    // The back-end API always checks to see if a password has been supplied. If it is not
+    // blank, it encrypts it, and then stores it. Note this is secure since the API must be
+    // supplied with a valid JWT or else it will not update their record.
+    //
+    // const createUser = async () => {
+
+    const updateUser = async () => {        
         axios.put(baseURL + "updateUser?JWT=" + JWT, {
             user_ID: UserID,
             user_authority: UserAuthority,
