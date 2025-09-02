@@ -227,18 +227,28 @@ export default function Registration() {
     }, [registrationState]);
 
     //
-    // emailUser
-    // =========
+    // emailUser()
+    // ===========
     // Sends an email to the address the new user specified. The email contains
     // an introductory message and the verification code they need to enter
-    // to continue. MARK: RA_BADGER
+    // to continue. 
     //
-    function emailUser() {
+    async function emailUser() {
         console.log("Emailing user " + EmailAddress + " " + VerificationCode);
 
-        axios.put(baseURL + "sendMail", {            
-            email_address: EmailAddress, 
-            verification_code: VerificationCode            
+        const html_body = "<p>Thank you for registering a new Strength Coaching Online account.</p>" +                          
+                          "<p>Please enter this verification code into the registration page:</p>" +                           
+                          "<h1 style='text-align: center; font-size: 25px;'>" + VerificationCode + "</h1>" +  
+                          "<p>The verification code is valid for the next 20 minutes.</p>" +                           
+                          "<p>I look forward to working with you to help you get strong.</p>" +
+                          "<p>Kind regards,</p>" +
+                          "</p>Luke Selway</p>";
+
+        await axios.put(baseURL + "sendMail", {
+            sender_email_address: "info@strengthresearch.online",            
+            recipient_email_address: EmailAddress, 
+            subject: "Your Strength Coaching Online account registration code",             
+            html_body: html_body           
         })
         .then((response) => {
             if (response.status === 200) {

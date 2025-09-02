@@ -155,11 +155,6 @@ const PORT = process.env.TCP_PORT;
 // allows the API to encode the email content and then access SMTP functions
 // to send the email.
 //
-// https://help.zoho.com/portal/en/community/topic/zoho-nodemailer
-// 
-// https://medium.com/@bluedesk09/sending-email-with-zoho-nodejs-nodemailer-62de7fffc8ac 
-//
-// https://dev.to/aacitelli/sending-email-from-nodejs-via-zoho-smtp-4j39 
 //
 const transporter = nodemailer.createTransport({
     host: process.env.SMTP_HOST,
@@ -601,20 +596,14 @@ app.put('/api/updateUser', async(request, response) => {
 // to users. The configuration for the email service, user information, and account passwords are
 // configured in the environment file sr.env.
 //
-app.put('/api/sendMail', async(request, response) => {
-    logmsg("\n/api/sendMail\n");
-    const senderEmail = "info@strengthresearch.online";
-    const subject = "Your Strength Coaching Online Verification Code"; 
-    const html_body = "<p>This is the plain-text body message</p>";
-
-    logmsg("email_address: " + request.body.email_address);
-    logmsg("verification_code: " + request.body.verification_code);
-
+app.put('/api/sendMail', async(request, response) => {  
+    
+    // Configure the mail transport from the parameters sent in the API request
     const mailOptions = {
-        from: senderEmail, 
-        to: request.body.email_address,
-        subject: subject, 
-        html: html_body 
+        from: request.body.sender_email_address, 
+        to: request.body.recipient_email_address,
+        subject: request.body.subject, 
+        html: request.body.html_body 
     };
 
     transporter.sendMail(mailOptions, function(err, info) {
@@ -627,7 +616,6 @@ app.put('/api/sendMail', async(request, response) => {
         } 
     });                 
 }); 
-
 
 //
 // uploadFile()
