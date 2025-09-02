@@ -83,8 +83,7 @@
 //                when searching by email address. It can also search by the user
 //                alias now.
 // 01.02.2025 BRD Created the createUser API.
-// 23.03.2025 BRD Added the getUser API.
-// 13.05.2025 BRD Added the API to send emails using Nodemailer.
+// 23.03.2025 BRD Added the getUser API.// 
 // 15.05.2025 BRD Created environment management functionality using a .env file.
 // 15.05.2025 BRD Updated to Nod.js v24.0.2 to improve environment support. The new
 //                release no longer requires additional packages to be imported since
@@ -96,6 +95,7 @@
 //                to the server via the back-end and saved in predefined locations.
 // 29.08.2025 BRD Changes to the updateUser API to allow the user to supply a new password during
 //                the update which gets encrypted and stored.
+// 02.09.2025 BRD Added the API to send emails using Nodemailer.
 //
 import express from 'express';
 const app = express();
@@ -597,13 +597,37 @@ app.put('/api/updateUser', async(request, response) => {
 // 
 // sendMail()
 // ==========
+// This is a general-purpose email client that sends plain-text or HTML-formatted email messages
+// to users. The configuration for the email service, user information, and account passwords are
+// configured in the environment file sr.env.
+//
 app.put('/api/sendMail', async(request, response) => {
     logmsg("\n/api/sendMail\n");
+    const senderEmail = "info@strengthresearch.online";
+    const subject = "Your Strength Coaching Online Verification Code"; 
+    const html_body = "<p>This is the plain-text body message</p>";
 
     logmsg("email_address: " + request.body.email_address);
     logmsg("verification_code: " + request.body.verification_code);
-    response.status(200).send("/api/sendMail: email sent.");
-});    
+
+    const mailOptions = {
+        from: senderEmail, 
+        to: request.body.email_address,
+        subject: subject, 
+        html: html_body 
+    };
+
+    transporter.sendMail(mailOptions, function(err, info) {
+        if (err) {
+            logmsg("/api/sendMail: email could not be sent. " + err + " " + info);
+            response.status(500).send("/api/sendMail: email could not be sent.");
+        } else {
+            logmsg("/api/sendMail: email sent.");
+            response.status(200).send("/api/sendMail: email sent. " + err + " " + info);
+        } 
+    });                 
+}); 
+
 
 //
 // uploadFile()
@@ -631,5 +655,4 @@ app.post('/api/uploadFile', upload.array("photos"), (request, response) => {
         console.log("/api/uploadFile: Received file(s): ", request.files);
         response.status(200).json({files: request.files });
     }      
-}); 
-
+});
