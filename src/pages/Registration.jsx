@@ -136,12 +136,13 @@ export default function Registration() {
                 if (error) {
                     setRegistrationState(registrationStates.PAGE_1);
                 } else {                
-                    // check if this email address is already in use
+                    // check if this email address is already in use                    
                     checkEmail(EmailAddress);                      
                 }
                 break;  
                 
-            case registrationStates.SEND_EMAIL:
+            case registrationStates.EMAILING_USER:
+                console.log("In registrationStates.EMAILING_USER");
                 emailUser();               
                 break;
             
@@ -155,11 +156,7 @@ export default function Registration() {
                 if (VerificationCode.trim() === "") {
                     setVerificationCodeError("Please enter the code you received.");
                     setRegistrationState(registrationStates.PAGE_2);
-                    error = true;
-                } else if (VerificationCodeEntered === "12125") {
-                    // MARK: RA_Badger - Temporary debug until the email functionality is working
-                    setVerificationCodeError("");
-                    setRegistrationState(registrationStates.PAGE_3); 
+                    error = true;                
                 } else if (VerificationCode.trim() !== VerificationCodeEntered) {
                     setVerificationCodeError("The registration code entered is not valid.");
                     setRegistrationState(registrationStates.PAGE_2);
@@ -267,8 +264,8 @@ export default function Registration() {
     }
     
     //
-    // checkEmail
-    // ==========
+    // checkEmail()
+    // ============
     // Verifies that the email address that the user wants to register for
     // their use is not already in use by another user.
     //
@@ -281,13 +278,13 @@ export default function Registration() {
                 setRegistrationState(registrationStates.PAGE_1)                
             } else if (response.status === 404) {
                 // That email address is not in use. 
-                setEmailAddressError("");                                  
-                setRegistrationState(registrationStates.SEND_EMAIL)           
+                setEmailAddressError("");       
+                setRegistrationState(registrationStates.EMAILING_USER);           
             }
         }).catch(err => {
           // The email address was not found.
           setEmailAddressError("");
-          setRegistrationState(registrationStates.SEND_EMAIL);
+          setRegistrationState(registrationStates.EMAILING_USER);
         });     
     }
 
@@ -361,7 +358,12 @@ export default function Registration() {
                             setRegistrationState={setRegistrationState}
                             navigate={navigate}
                         />
-                    )};
+                    )}; 
+
+                    {(registrationState === registrationStates.EMAILING_USER) && ( 
+                        <Emailing 
+                        />
+                    )};    
         
                     {(registrationState === registrationStates.PAGE_2) && (
                         <Page_2
@@ -470,6 +472,23 @@ function Page_1(params) {
                 </button>
             </div>
       </div>
+    );
+}
+
+//
+// Emailing
+// ========
+// 
+function Emailing() {
+    return (
+        <div>
+            <div className="h-[350px] w-[80px]"> 
+                <p className="text-white font-bold text-xl ml-24 mt-0 w-40">Registration</p>
+                <p className=" ml-10 mb-1 mt-2 w-64 text-white text-left">
+                    Sending an email with a verification code to your email address...
+                </p>
+            </div>
+        </div>
     );
 }
 
