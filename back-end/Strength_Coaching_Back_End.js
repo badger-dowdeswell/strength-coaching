@@ -164,12 +164,12 @@ const PORT = process.env.TCP_PORT;
 const transporter = nodemailer.createTransport({
     host: process.env.SMTP_HOST,
     port: process.env.SMTP_PORT,
-    secure: false,
+    secure: true,
     auth: {
         user: process.env.SMTP_USER,
         pass: process.env.SMTP_PASSWORD,
     },
-}) 
+}); 
 
 //
 // logmsg()
@@ -593,6 +593,17 @@ app.put('/api/updateUser', async(request, response) => {
         );
     }
 }); 
+
+// 
+// sendMail()
+// ==========
+app.put('/api/sendMail', async(request, response) => {
+    logmsg("\n/api/sendMail\n");
+
+    logmsg("email_address: " + request.body.email_address);
+    logmsg("verification_code: " + request.body.verification_code);
+    response.status(200).send("/api/sendMail: email sent.");
+});    
 
 //
 // uploadFile()

@@ -139,13 +139,16 @@ export default function Registration() {
                     // check if this email address is already in use
                     checkEmail(EmailAddress);                      
                 }
-                break;            
+                break;  
+                
+            case registrationStates.SEND_EMAIL:
+                emailUser();               
+                break;
             
             case registrationStates.PAGE_2:
                 // This is the next stage that allows the user to enter the registration
                 // code that was emailed to them during the previous stage. 
-                setEmailAddressError("");     
-                emailUser();               
+                setEmailAddressError("");
                 break;
 
             case registrationStates.VERIFY_PAGE_2:
@@ -232,6 +235,25 @@ export default function Registration() {
     //
     function emailUser() {
         console.log("Emailing user " + EmailAddress + " " + VerificationCode);
+
+        axios.put(baseURL + "sendMail", {            
+            email_address: EmailAddress, 
+            verification_code: VerificationCode            
+        })
+        .then((response) => {
+            if (response.status === 200) {
+                console.log("email sent");
+                setRegistrationState(registrationStates.PAGE_2);
+                         
+            } else if (response.status === 500) {
+                console.log("emailUser error: 500 " + response);                
+                setRegistrationState(registrationStates.PAGE_1);                
+            }    
+        })
+        .catch(err => {
+            console.log("emailUser error: " + err.message);
+            setRegistrationState(registrationStates.PAGE_1); 
+        })  
     }
     
     //
@@ -250,12 +272,12 @@ export default function Registration() {
             } else if (response.status === 404) {
                 // That email address is not in use. 
                 setEmailAddressError("");                                  
-                setRegistrationState(registrationStates.PAGE_2)           
+                setRegistrationState(registrationStates.SEND_EMAIL)           
             }
         }).catch(err => {
           // The email address was not found.
           setEmailAddressError("");
-          setRegistrationState(registrationStates.PAGE_2);
+          setRegistrationState(registrationStates.SEND_EMAIL);
         });     
     }
 
