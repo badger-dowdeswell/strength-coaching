@@ -28,7 +28,7 @@ import TopNav from "./components/TopNav";
 
 import Registration_Person from "./images/Registration_Person.png";
 import eye from "./images/password_eye.png";
-
+import Spinning from "./images/spinning_progress.gif";
 var default_user_image = "template.png"; // This ensures that there is an image to display
                                          // after the user signs-in for the first time before
                                          // they upload their own image.
@@ -141,9 +141,7 @@ export default function Registration() {
                 }
                 break;  
                 
-            case registrationStates.EMAILING_USER:
-                console.log("In registrationStates.EMAILING_USER");
-                emailUser();               
+            case registrationStates.EMAILING_USER:                              
                 break;
             
             case registrationStates.PAGE_2:
@@ -361,7 +359,8 @@ export default function Registration() {
                     )}; 
 
                     {(registrationState === registrationStates.EMAILING_USER) && ( 
-                        <Emailing 
+                        <Emailing
+                            emailUser={emailUser} 
                         />
                     )};    
         
@@ -479,15 +478,45 @@ function Page_1(params) {
 // Emailing
 // ========
 // 
-function Emailing() {
+// <div className="relative flex items-center justify-center mt-5 ml-12">
+//                    <img className="rounded h-auto w-auto"
+//                        src={Spinning}
+//                        alt="/"                                             
+//                   />
+//                </div> 
+//<div className="h-[305px] w-[80px]"> 
+function Emailing(params) {
+    params.emailUser();
+
     return (
-        <div>
-            <div className="h-[350px] w-[80px]"> 
-                <p className="text-white font-bold text-xl ml-24 mt-0 w-40">Registration</p>
-                <p className=" ml-10 mb-1 mt-2 w-64 text-white text-left">
-                    Sending an email with a verification code to your email address...
-                </p>
+        <div>           
+            <p className="text-white font-bold text-xl ml-24 mt-0 w-40">Sending email</p>
+            <p className=" ml-10 mb-8 mt-5 w-64 text-white text-left">
+                Sending an email with a verification code to your email address...
+            </p> 
+        
+            <div className="flex items-center justify-center">
+                <img className="rounded w-[100px]"
+                    src={Spinning}
+                    alt="/"
+                />                                                   
             </div>
+
+            <div className="flex flex-row mt-20">
+                <button className="bg-cyan-600 text-white font-bold text-sm py-2 px-2 rounded
+                                mt-2 ml-12"
+                    id = "Back"
+                    style = {{ width: "100px" }}>  
+                    &lt; Back
+                </button>
+
+                <button className="bg-cyan-600 text-white font-bold text-sm py-2 px-2 rounded
+                            mt-2 ml-5"
+                    id = "Next"
+                    style = {{ width: "100px" }}>      
+                    Next &gt;
+                </button>               
+            </div>    
         </div>
     );
 }
@@ -512,11 +541,11 @@ function Page_2(params) {
             <p className=" ml-5 mb-1 mt-2 w-64 text-white text-left">
                 A verification code has been sent to your email address.
             </p>
-            <p className=" ml-5 mb-1 mt-5 w-64 text-white text-left">
-                Please enter the code you received.
+            <p className=" ml-5 mb-3 mt-5 w-64 text-white text-left">
+                Please enter the code you received:
             </p>
 
-            <input className="ml-5 mt-1 w-24 pl-1"
+            <input className="ml-20 mt-1 w-40  pl-1"
                 id = "VerificationCode"
                 type = "text"
                 placeholder = ""
@@ -524,19 +553,19 @@ function Page_2(params) {
                 value = {params.VerificationCodeEntered}
                 onChange = {(e) => params.setVerificationCodeEntered(e.target.value)}
             />
-            <p className="ml-5 mb-2 mt-2 text-cyan-300 text-left text-sm">
+            <p className="ml-5 mb-3 mt-3 text-cyan-300 text-left text-sm">
                 {params.VerificationCodeError}&nbsp;
             </p>
 
             <p className="ml-5 mb-1 mt-0 w-64 text-white text-left">
-                If you did not receive an email, click Back and check your
+                If you did not receive an email, click <b>Back</b> and check your
                 email address. A new code will be then be sent to the email
-                address you entered.
+                address you enter.
             </p>
 
             <div className="flex flex-row">
                 <button className="bg-cyan-600 text-white font-bold text-sm py-2 px-2 rounded
-                                  mt-5 ml-5"
+                                  mt-2 ml-12"
                     id = "Back"
                     style = {{ width: "100px" }}                    
                     onClick = {() => {params.setRegistrationState(registrationStates.PAGE_1);}} >      
@@ -544,7 +573,7 @@ function Page_2(params) {
                 </button>
 
                 <button className="bg-cyan-600 text-white font-bold text-sm py-2 px-2 rounded
-                              mt-5 ml-14"
+                              mt-2 ml-5"
                     id = "Next"
                     style = {{ width: "100px" }}                    
                     onClick={() => {params.setRegistrationState(registrationStates.VERIFY_PAGE_2);}} >      
@@ -565,15 +594,15 @@ function Page_2(params) {
 function Page_3(params) {
     return (
         <div className = "mb-1">
-            <p className="text-white text-center text-xl mt-0">
+            <p className="text-white text-center font-bold text-xl mt-0">
                 Setting your password
             </p>
 
             <p className="ml-5 mb-1 mt-3 w-72 text-white text-left">
-                Your Strength Research Online profile has been created. 
+                Your Strength Coaching Online profile has been created. 
             </p>
 
-            <p className="ml-5 mb-1 mt-3 w-64 text-white text-left">    
+            <p className="ml-5 mb-1 mt-3 w-70 text-white text-left">    
                 Enter the password you want to use                
             </p>        
             <div className="flex flex-row">            
@@ -623,13 +652,13 @@ function Page_3(params) {
                     }}
                 />
             </div>    
-            <p className="ml-5 mb-2 mt-2 text-cyan-300 text-left text-sm">
+            <p className="ml-5 mb-0 mt-2 text-cyan-300 text-left text-sm">
                 {params.PasswordCopyError}&nbsp;
             </p>
 
             <div className="flex flex-row mt-5">
                 <button className="bg-cyan-600 text-white font-bold text-sm py-2 px-2 rounded
-                                  mt-5 ml-5"
+                                  mt-1 ml-12"
                     id = "Back"
                     style = {{ width: "100px" }}
                     onClick = {() => {params.setRegistrationState(registrationStates.PAGE_2);}} >      
@@ -637,7 +666,7 @@ function Page_3(params) {
                 </button>
 
                 <button className="bg-cyan-600 text-white font-bold text-sm py-2 px-2 rounded
-                              mt-5 ml-14"
+                              mt-2 ml-5"
                     id = "Sign_In"
                     style = {{ width: "100px" }}
                     onClick={() => {params.setRegistrationState(registrationStates.VERIFY_PAGE_3);}} >      

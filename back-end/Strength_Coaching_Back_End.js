@@ -48,7 +48,7 @@
 // In this example, the port is open via process specified in the PID which is 44866 in 
 // this case. Shut it down with a kill and restart the backend normally:
 //
-//    kill -9 :3010
+//    kill -9 :44866
 //    npm run dev
 //
 // Interesting stuff to investigate later
@@ -606,15 +606,18 @@ app.put('/api/sendMail', async(request, response) => {
         html: request.body.html_body 
     };
 
-    transporter.sendMail(mailOptions, function(err, info) {
-        if (err) {
-            logmsg("/api/sendMail: email could not be sent. " + err + " " + info);
-            response.status(500).send("/api/sendMail: email could not be sent.");
-        } else {
-            logmsg("/api/sendMail: email sent.");
-            response.status(200).send("/api/sendMail: email sent. " + err + " " + info);
-        } 
-    });                 
+    //setTimeout(() => {    
+
+        transporter.sendMail(mailOptions, function(err, info) {
+            if (err) {
+                logmsg("/api/sendMail: email could not be sent. " + err + " " + info);
+                response.status(500).send("/api/sendMail: email could not be sent.");
+            } else {
+                logmsg("/api/sendMail: email sent.");
+                response.status(200).send("/api/sendMail: email sent. " + err + " " + info);
+            } 
+        });   
+    //}, 10000 );             
 }); 
 
 //
