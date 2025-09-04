@@ -12,6 +12,7 @@
 // 19.07.2025 BRD Changed the default user_authority of new users to be U for
 //                regular clients.
 // 30.07.2025 BRD Cloned for Strength Coaching from the Strength Research application.
+// 02.09.2025 BRD Added the code to send the registration code to the user via email.
 //
 import "./Main.css";
 

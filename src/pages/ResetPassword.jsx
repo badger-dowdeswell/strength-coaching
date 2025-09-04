@@ -13,6 +13,8 @@
 // 26.02.2025 BRD Original version.
 // 01.08.2025 BRD Converted the Strength Research component to now work 
 //                with Strength Coaching.
+// 03.09.2025 BRD Added the code to send the password reset link to the user
+//                via email.
 //
 import "./Main.css";
 
@@ -75,11 +77,19 @@ export default function ResetPassword() {
     // they entered. The set of possible states is defined in the resetStates
     // object declared above.
     //
-    const [resetState, setResetState] = useState(resetStates.PAGE_1);
+    const [resetState, setResetState] = useState(resetStates.UNDEFINED);
     useEffect(() => {    
         //var error = false; 
 
         switch (resetState) {
+            case resetStates.UNDEFINED:
+                let location = useLocation();
+    let token = new URLSearchParams(location.search).get('vt');
+    // http://localhost:3000/ResetPassword?vt=dfdfdfdf_HAHHA
+    console.log("URL [" + location.pathname + "] [" + token + "]"); 
+
+                break;
+
             case resetStates.PAGE_1:
                 // This is the initial stage that allows the user to enter their email address
                 // so that a verification code can be sent to them.
@@ -107,11 +117,11 @@ export default function ResetPassword() {
             <TopNav title="" userName="" userRole="" />
 
             <div className="flex absolute top-24 bottom-0
-                    items-center justify-center
-                    left-0 right-0 bg-gray-800 overflow-hidden">
-            
+                            items-center justify-center
+                            left-0 right-0 bg-gray-800 overflow-hidden">
+                            
                 <div className="flex flex-col box-border border-2 rounded-lg
-                                h-200 w-80">
+                                h-82 w-80">
                                 
                     {(resetState === resetStates.PAGE_1) && (
                         <Page_1
@@ -152,7 +162,7 @@ function Page_1(params) {
         <div>
             <p className="text-white text-center text-xl mt-5">Reset my password</p>
 
-            <p className=" ml-5 mb-1 mt-3 text-white text-left">Email address</p>
+            <p className=" ml-5 mb-1 mt-3 text-white text-left">Your current email address</p>
             <input className="ml-5 mr-5 mt-1 w-64 pl-1"
                 id="EmailAddress"
                 type="text"
