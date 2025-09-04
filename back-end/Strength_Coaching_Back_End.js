@@ -606,18 +606,15 @@ app.put('/api/sendMail', async(request, response) => {
         html: request.body.html_body 
     };
 
-    //setTimeout(() => {    
-
-        transporter.sendMail(mailOptions, function(err, info) {
-            if (err) {
-                logmsg("/api/sendMail: email could not be sent. " + err + " " + info);
-                response.status(500).send("/api/sendMail: email could not be sent.");
-            } else {
-                logmsg("/api/sendMail: email sent.");
-                response.status(200).send("/api/sendMail: email sent. " + err + " " + info);
-            } 
-        });   
-    //}, 10000 );             
+    transporter.sendMail(mailOptions, function(err, info) {
+        if (err) {
+            logmsg("/api/sendMail: email could not be sent. " + err + " " + info);
+            response.status(500).send("/api/sendMail: email could not be sent.");
+        } else {
+            logmsg("/api/sendMail: email sent.");
+            response.status(200).send("/api/sendMail: email sent. " + err + " " + info);
+        } 
+    });    
 }); 
 
 //
@@ -637,13 +634,13 @@ app.put('/api/sendMail', async(request, response) => {
 app.post('/api/uploadFile', upload.array("photos"), (request, response) => {
     const JWT = request.query.JWT;
     const image = request.image;
-    logmsg("/api/uploadFile: executing.") 
+    //logmsg("/api/uploadFile: executing.") 
     
     if (!verifyJWT(JWT)) {
         logmsg("/api/uploadFile: User is not authorised");
         response.status(403).send("Not authorised");        
     } else {
-        console.log("/api/uploadFile: Received file(s): ", request.files);
+        //logmsg("/api/uploadFile: Received file(s): ", request.files);
         response.status(200).json({files: request.files });
     }      
 });

@@ -29,7 +29,7 @@ import TopNav from "./components/TopNav";
 
 import Registration_Person from "./images/Registration_Person.png";
 import eye from "./images/password_eye.png";
-import Spinning from "./images/spinning_progress.gif";
+import Spinner from "./images/loader.gif";
 var default_user_image = "template.png"; // This ensures that there is an image to display
                                          // after the user signs-in for the first time before
                                          // they upload their own image.
@@ -103,8 +103,7 @@ export default function Registration() {
     const [registrationState, setRegistrationState] = useState(registrationStates.PAGE_1);
     useEffect(() => {    
         var error = false;
-        // console.log("registrationState " + registrationState);
-
+        
         switch (registrationState) {
             case registrationStates.PAGE_1:
                 // This is the initial stage that allows the user to enter their email address,
@@ -229,9 +228,7 @@ export default function Registration() {
     // an introductory message and the verification code they need to enter
     // to continue. 
     //
-    async function emailUser() {
-        console.log("Emailing user " + EmailAddress + " " + VerificationCode);
-
+    async function emailUser() {  
         const html_body = "<p>Thank you for registering a new Strength Coaching Online account.</p>" +                          
                           "<p>Please enter this verification code into the registration page:</p>" +                           
                           "<h1 style='text-align: center; font-size: 25px;'>" + VerificationCode + "</h1>" +  
@@ -248,16 +245,16 @@ export default function Registration() {
         })
         .then((response) => {
             if (response.status === 200) {
-                console.log("email sent");
+                //console.log("email sent");
                 setRegistrationState(registrationStates.PAGE_2);
                          
             } else if (response.status === 500) {
-                console.log("emailUser error: 500 " + response);                
+                //console.log("emailUser error: 500 " + response);                
                 setRegistrationState(registrationStates.PAGE_1);                
             }    
         })
         .catch(err => {
-            console.log("emailUser error: " + err.message);
+            //console.log("emailUser error: " + err.message);
             setRegistrationState(registrationStates.PAGE_1); 
         })  
     }
@@ -291,7 +288,7 @@ export default function Registration() {
     // createUser
     // ==========
     // Create a new user in the user table. The user_ID is automatically generated
-    // and returned by the express api. It is returned in the response and can be
+    // and returned by the Express api. It is returned in the response and can be
     // used during subsequent updates.
     //    
     const createUser = async () => {
@@ -308,19 +305,15 @@ export default function Registration() {
             user_image: default_user_image
         })
         .then((response) => {
-            if (response.status === 200) {
-                console.log("createUser response 200");
-                console.log("UserID " + response.data.user_ID);
+            if (response.status === 200) {                
                 setUserID(response.data.user_ID);
                 status = true;              
-            } else if (response.status === 500) {
-                console.log("createUser response 500 " + response);                
+            } else if (response.status === 500) {                               
                 setRegistrationState(registrationStates.PAGE_1);
                 status = false;
             }    
         })
-        .catch(err => {
-            console.log("createUser error: " + err.message);  
+        .catch(err => {            
             status = false;      
         })
         return status;
@@ -405,10 +398,10 @@ export default function Registration() {
 }
 
 //
-// Page_1
-// ======
-// This component lets the user who is registering enter their email address,
-// their first name, and their last name.
+// Page_1()
+// ========
+// This component lets the potential user who is registering enter their 
+// email address, their first name, and their last name.
 //
 function Page_1(params) {
     return (
@@ -476,16 +469,10 @@ function Page_1(params) {
 }
 
 //
-// Emailing
-// ========
-// 
-// <div className="relative flex items-center justify-center mt-5 ml-12">
-//                    <img className="rounded h-auto w-auto"
-//                        src={Spinning}
-//                        alt="/"                                             
-//                   />
-//                </div> 
-//<div className="h-[305px] w-[80px]"> 
+// Emailing()
+// ==========
+// Reports the progress of the sending of the email.
+//
 function Emailing(params) {
     params.emailUser();
 
@@ -498,7 +485,7 @@ function Emailing(params) {
         
             <div className="flex items-center justify-center">
                 <img className="rounded w-[100px]"
-                    src={Spinning}
+                    src={Spinner}
                     alt="/"
                 />                                                   
             </div>
@@ -523,15 +510,14 @@ function Emailing(params) {
 }
 
 //
-// Page_2
-// ======
+// Page_2()
+// ========
 // This component lets the user enter the registration code they
 // have received via an email sent in the previous registration
 // stage.
 //
-function Page_2(params) {
-    // MARK: RA_Badger: Debug only so remove once the email is working.
-    console.log("Verification code " + params.VerificationCode)
+function Page_2(params) {    
+    // console.log("Verification code " + params.VerificationCode)
 
     return (
         <div className = "mb-1">
@@ -586,8 +572,8 @@ function Page_2(params) {
 }
 
 //
-// Page_3
-// ======
+// Page_3()
+// ========
 // This component lets the user enter and confirm their password.
 // This is the final stage after completing the first and second
 // registration steps on Pages 1 and 2.
