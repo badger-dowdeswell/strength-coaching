@@ -48,7 +48,7 @@
 // In this example, the port is open via process specified in the PID which is 44866 in 
 // this case. Shut it down with a kill and restart the backend normally:
 //
-//    kill -9 :44866
+//    kill -9 44866
 //    npm run dev
 //
 // Interesting stuff to investigate later
@@ -153,13 +153,25 @@ const PORT = process.env.TCP_PORT;
 // The back-end provides email support through a custom API that uses
 // the Nodemailer (nodemailer.com) library. The transporter object object
 // allows the API to encode the email content and then access SMTP functions
-// to send the email.
+// to send the email. Additional documentation about authentication is here:
 //
+//   https://nodemailer.com/smtp and https://dkimvalidator.com/ 
+//
+// dig TXT zmail_domainkey strengthresearch.online 
 //
 const transporter = nodemailer.createTransport({
     host: process.env.SMTP_HOST,
     port: process.env.SMTP_PORT,
     secure: true,
+    dkim: {
+        domainName: "strengthresearch.online",
+        keySelector: "zmail_domainkey"        
+    },
+    tls: {
+        ciphers: "SSLv3",
+        // do not fail if the server certificate is invalid.
+        rejectUnauthorized: false,
+    },
     auth: {
         user: process.env.SMTP_USER,
         pass: process.env.SMTP_PASSWORD,
