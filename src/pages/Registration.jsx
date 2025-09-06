@@ -13,10 +13,12 @@
 //                regular clients.
 // 30.07.2025 BRD Cloned for Strength Coaching from the Strength Research application.
 // 02.09.2025 BRD Added the code to send the registration code to the user via email.
+// 05.09.2025 BRD Added cool autofocus feature to the first input field on
+//                the page.
 //
 import "./Main.css";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { getBaseURL } from "./getBaseURL";
 
@@ -71,6 +73,13 @@ export default function Registration() {
     const [FirstNameError, setFirstNameError] = useState("");
     const [LastName, setLastName] = useState("");
     const [LastNameError, setLastNameError] = useState("");
+
+    const autofocusID = useRef(null);
+    useEffect(() => {
+        if (autofocusID.current) {
+            autofocusID.current.focus();
+        }    
+    },[]);
 
     // This generates a one-time five-digit registration code for
     // each person who is registering to become a user. 
@@ -348,7 +357,7 @@ export default function Registration() {
                             setLastName={setLastName}
                             LastNameError={LastNameError}
                             setRegistrationState={setRegistrationState}
-                            navigate={navigate}
+                            navigate={navigate}                            
                         />
                     )}; 
 
@@ -365,7 +374,7 @@ export default function Registration() {
                             VerificationCodeEntered={VerificationCodeEntered}
                             setVerificationCodeEntered={setVerificationCodeEntered}
                             VerificationCodeError={VerificationCodeError}
-                            setRegistrationState={setRegistrationState}
+                            setRegistrationState={setRegistrationState}                            
                         />
                     )};    
             
@@ -379,7 +388,7 @@ export default function Registration() {
                             PasswordCopy={PasswordCopy}
                             setPasswordCopy = {setPasswordCopy}
                             PasswordCopyError = {PasswordCopyError}
-                            setRegistrationState={setRegistrationState}                                    
+                            setRegistrationState={setRegistrationState}                                                     
                         />
                     )};
                 </div>
@@ -404,6 +413,15 @@ export default function Registration() {
 // email address, their first name, and their last name.
 //
 function Page_1(params) {
+    // Set the focus automatically to the first input field after
+    // the component has rendered properly.
+    const autofocusID = useRef(null);
+    useEffect(() => {
+        if (autofocusID.current) {
+            autofocusID.current.focus();
+        }    
+    },[]);
+
     return (
         <div>
             <p className="text-white text-center font-bold text-xl mt-5">Registration</p>
@@ -411,6 +429,7 @@ function Page_1(params) {
             <p className=" ml-7 mb-1 mt-3 text-white text-left">Email address</p>
             <input className="ml-7 mr-5 mt-1 w-64 pl-1"   
                 id="EmailAddress"
+                ref={autofocusID}
                 type="text"
                 placeholder=""
                 autoComplete="new-password"
@@ -516,8 +535,15 @@ function Emailing(params) {
 // have received via an email sent in the previous registration
 // stage.
 //
-function Page_2(params) {    
-    // console.log("Verification code " + params.VerificationCode)
+function Page_2(params) { 
+    // Set the focus automatically to the first input field after
+    // the component has rendered properly.
+    const autofocusID = useRef(null);
+    useEffect(() => {
+        if (autofocusID.current) {
+            autofocusID.current.focus();
+        }    
+    },[]);
 
     return (
         <div className = "mb-1">
@@ -534,6 +560,7 @@ function Page_2(params) {
 
             <input className="ml-20 mt-1 w-40  pl-1"
                 id = "VerificationCode"
+                ref={autofocusID}                
                 type = "text"
                 placeholder = ""
                 autoComplete = "new-password"
@@ -579,6 +606,15 @@ function Page_2(params) {
 // registration steps on Pages 1 and 2.
 //
 function Page_3(params) {
+    // Set the focus automatically to the first input field after
+    // the component has rendered properly.
+    const autofocusID = useRef(null);
+    useEffect(() => {
+        if (autofocusID.current) {
+            autofocusID.current.focus();
+        }    
+    },[]);
+
     return (
         <div className = "mb-1">
             <p className="text-white text-center font-bold text-xl mt-0">
@@ -595,6 +631,7 @@ function Page_3(params) {
             <div className="flex flex-row">            
                 <input className="ml-5 mt-1 w-72 pl-1"
                        id = "Password"
+                       ref={autofocusID}
                        type = {params.PasswordVisibility}
                        placeholder = ""
                        autoComplete = "new-password"

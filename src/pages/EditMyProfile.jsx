@@ -21,7 +21,7 @@ import './Main.css';
 
 import TopNav from "./components/TopNav";
 import { getBaseURL } from "./getBaseURL";
-import { useEffect, useState, useReducer } from "react";
+import { useEffect, useState, useRef} from "react";
 import { useNavigate } from "react-router-dom";
 import { editingStates, uploadStates, pages } from "./Constants";
 import { Salutations, Countries} from "./components/LookUpLists";
@@ -591,6 +591,19 @@ function setTabColor(currentPage, newTab) {
 // The first tabbed dialog page allows fields like names and addresses to be edited.
 //
 function Page_1(params) { 
+    //
+    // autofocus()
+    // ===========
+    // Sets the focus to the first input field automatically. This requires
+    // that just one input element per page has a ref={autoFocusID}.
+    //
+    const autofocusID = useRef(null);
+    useEffect(() => {
+        if (autofocusID.current) {
+            autofocusID.current.focus();
+        }    
+    },[]);
+
     return (
         <div>
             <p className="text-white text-center font-bold text-xl mt-5">My Contact Information</p>
@@ -600,6 +613,7 @@ function Page_1(params) {
                     <select
                         className="ml-5 mr-5 mt-1 w-48 pl-0 h-6"
                         id="Salutation"
+                        ref={autofocusID}
                         value={params.Salutation}
                         onChange={(e) => {
                             if (params.editingState === editingStates.EDITING) {

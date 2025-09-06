@@ -13,10 +13,12 @@
 // 01.08.2025 BRD Converted the Strength Research component to now work 
 //                with Strength Coaching.
 // 12.08.2025 BRD Added support for user images specifed in the User table.
+// 05.09.2025 BRD Added cool autofocus feature to the first input field on
+//                the page.
 //
 import "./Main.css";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { getBaseURL } from "./getBaseURL";
 import { editingStates } from "./Constants";
@@ -52,6 +54,19 @@ function SignIn() {
     // Used to control the visibility of the password by switching the
     // input type between "text" and "password".
     const [PasswordVisibility, setPasswordVisibility] = useState("password");
+
+    //
+    // autofocus()
+    // ===========
+    // Sets the focus to the first input field automatically. This requires
+    // that just one input element per page has a ref={autoFocusID}.
+    //
+    const autofocusID = useRef(null);
+    useEffect(() => {
+        if (autofocusID.current) {
+            autofocusID.current.focus();
+        }    
+    },[]);
 
     //
     // Editing state control
@@ -215,10 +230,11 @@ function SignIn() {
                     <input className="ml-5 mr-5 mt-1 pl-1"
                         id="UserID"
                         type="text"
+                        ref={autofocusID}
                         placeholder="nnnn or email address"
                         autoComplete="new-password"
                         value={UserID}
-                        onChange={(e) => setUserID(e.target.value)}
+                        onChange={(e) => setUserID(e.target.value)}                        
                     />
                     <p className=" ml-5 mb-1 mt-2 text-cyan-300 text-left text-sm">
                         {UserIDError}&nbsp;
