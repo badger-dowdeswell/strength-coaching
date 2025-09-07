@@ -23,6 +23,11 @@ import './Main.css';
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import {validateEmail} from "./components/UtilLib";
+import { getBaseURL } from "./getBaseURL";
+
+import Axios from 'axios';
+const axios = Axios;
+const baseURL = getBaseURL();
 
 import TopNav from "./components/TopNav";
 
@@ -875,24 +880,59 @@ function Page_44(params) {
 // This is the "Coffee with Coach Emails" page.
 //
 function Page_5(params) { 
-    const [PasswordError, setPasswordError] = useState("");
-    const [AgreementError, setAgreementError] = useState("");  
+    const [EmailAddressError, setEmailAddressError] = useState("");
+    const [AgreementError, setAgreementError] = useState("");     
 
-
+    //
+    // verify() 
+    // ========
+    // Verify the email that is to be added to the mailing list and
+    // that the user has checked the agreement box.
+    //
     function verify() {
-        if (!validateEmail(params.coffeeWithCoachEmailAddress)) {
-            console.log("Invalid");
-            setPasswordError("That email address is not valid.");
+        var isVerified = false;        
+        if (validateEmail(params.coffeeWithCoachEmailAddress)) {            
+            setEmailAddressError("");      
+            isVerified = true;            
         } else {
-            setPasswordError("");
-            console.log("Valid");
+            setEmailAddressError("That email address is not valid.");                                 
         }
-        if ((params.coffeeWithCoachEmailAddress) && (!params.Agree)) {
-            setAgreementError("Please tick the agreement box.");
+        if (isVerified && !params.Agree) {
+            setAgreementError("Please tick the agreement box."); 
+            isVerified = false;           
         } else {
             setAgreementError("");
         }
+        return isVerified;
     }
+
+    //
+    // sendEmail()
+    // ===========    
+    async function sendEmail() {
+        const html_body = "<p>Please add this person to the Coffee with Coach Email distribution list:</p>" +                          
+                          "<p>" + params.coffeeWithCoachEmailAddress + "</p>"                           
+        
+        await axios.put(baseURL + "sendMail", {
+            sender_email_address: "info@strengthresearch.online",                        
+            recipient_email_address: "badger@rockweather.com", 
+            subject: "Coffee with Coach Email List request",             
+            html_body: html_body           
+        })
+        .then((response) => {
+            if (response.status === 200) {
+                //console.log("emailUser 200 " + response); 
+                setAgreementError("Thank you. You have been added to the distribtion list"); 
+            } else if (response.status === 500) {
+                //console.log("emailUser error: 500 " + response);                
+                setAgreementError("An error has occured when adding you to the distribtion list");             
+            }    
+        })
+        .catch(err => { 
+            //console.log("emailUser err " + err);            
+            setAgreementError("An error has occured when adding you to the distribtion list");  
+        })
+    } 
 
     return (        
         <div>                         
@@ -936,7 +976,7 @@ function Page_5(params) {
                             onChange={(e) => params.setCoffeeWithCoachEmailAddress(e.target.value)}
                         />
                         <p className=" ml-5 mb-1 mt-2 text-cyan-300 text-left text-sm">
-                            {PasswordError}&nbsp;
+                            {EmailAddressError}&nbsp;
                         </p> 
 
                         <div className="flex flex-row">  
@@ -968,8 +1008,12 @@ function Page_5(params) {
                                                 mt-2 ml-5"
                                     id="Sign_Up"
                                     style={{ width: "140px"}}
-                                    onClick={() => {verify(params.coffeeWithCoachEmailAddress);
+                                    onClick={() =>  {if (verify() && params.Agree) {                                                    
+                                                        sendEmail();
+                                                    } else {
+                                                        setAgreementError("Please enter an email address and tick the agreement box."); 
                                                     }
+                                            }
                                     }>                                    
                                 SIGN UP
                             </button>
@@ -978,7 +1022,11 @@ function Page_5(params) {
                                                                 mt-2 ml-5"
                                     id="More"
                                     style={{ width: "100px"}}
-                                    onClick={() => {params.setPageNumber(6)}}>
+                                    onClick={() => {params.setCoffeeWithCoachEmailAddress("");                                        
+                                                    params.setAgree(false);
+                                                    params.setPageNumber(6);
+                                                   }
+                                            }>
                                 Next &gt; 
                             </button>
                         </div>  

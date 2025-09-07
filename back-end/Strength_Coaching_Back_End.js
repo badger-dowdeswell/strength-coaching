@@ -100,6 +100,8 @@
 import express from 'express';
 const app = express();
 
+const version = 1.03;
+
 //import path from "path";  //RA_BRD is this used?
 
 // Multi-File Upload (multer) configuration for image and other resource files uploaded
@@ -214,7 +216,7 @@ const db = new Pool({
 //
 app.listen(PORT, () => {     
     var dt = new Date();
-    logmsg("\nThe Strength Research Online Back-End version " + process.env.VER +
+    logmsg("\nThe Strength Research Online Back-End version " + version +
            " is now listening on port " + PORT + ". It was started at " +
             dt.toLocaleTimeString() + " on " + dt.toLocaleDateString() + 
             " using local environment sr.env.\n");
