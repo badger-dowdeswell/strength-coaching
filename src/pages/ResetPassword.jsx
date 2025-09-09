@@ -58,14 +58,20 @@ const resetStates = {
  };
 
 //
-// ResetPassword
-// =============
+// ResetPassword()
+// ===============
 export default function ResetPassword() {
     let navigate = useNavigate();
 
     const [UserID, setUserID] = useState("");
     const [EmailAddress, setEmailAddress] = useState("");
     const [EmailAddressError, setEmailAddressError] = useState("");
+
+
+    //            let location = useLocation();
+    //let token = new URLSearchParams(location.search).get('vt');
+    // http://localhost:3000/ResetPassword?vt=dfdfdfdf_HAHHA
+    //console.log("URL [" + location.pathname + "] [" + token + "]"); 
 
     //
     // Reset Password State Control
@@ -78,21 +84,13 @@ export default function ResetPassword() {
     // object declared above.
     //
     const [resetState, setResetState] = useState(resetStates.UNDEFINED);
-    useEffect(() => {    
-        //var error = false; 
-
+    useEffect(() => { 
         switch (resetState) {
-            case resetStates.UNDEFINED:
-                let location = useLocation();
-    let token = new URLSearchParams(location.search).get('vt');
-    // http://localhost:3000/ResetPassword?vt=dfdfdfdf_HAHHA
-    console.log("URL [" + location.pathname + "] [" + token + "]"); 
-
+            case resetStates.UNDEFINED: 
+                setResetState(resetStates.PAGE_1);               
                 break;
 
-            case resetStates.PAGE_1:
-                // This is the initial stage that allows the user to enter their email address
-                // so that a verification code can be sent to them.
+            case resetStates.PAGE_1:                
                 break;
 
             case resetStates.VERIFY_PAGE_1:
@@ -146,24 +144,36 @@ export default function ResetPassword() {
     );
 }
 
+// let location = useLocation();
+//    let token = new URLSearchParams(location.search).get('vt');
+//    // http://localhost:3000/ResetPassword?vt=dfdfdfdf_HAHHA
+//    console.log("URL [" + location.pathname + "] [" + token + "]"); 
+
 //
 // Page_1
 // ======
 // This component lets the user who is resetting their password enter their 
-// email address. 
+// email address. This is the initial stage that allows the client to be identified
+// by looking up their email. If the email address matches that of an existing user,
+// their user_status is set to R to indicate that they are resetting their password.
+// While they are in that state, the client cannot log in. An authentication token 
+// is created that forms part of a reset-password page link. This is then sent to 
+// them in an email.                 
 // 
 function Page_1(params) {
-    let location = useLocation();
-    let token = new URLSearchParams(location.search).get('vt');
-    // http://localhost:3000/ResetPassword?vt=dfdfdfdf_HAHHA
-    console.log("URL [" + location.pathname + "] [" + token + "]"); 
-
+    
     return (
         <div>
             <p className="text-white text-center text-xl mt-5">Reset my password</p>
 
-            <p className=" ml-5 mb-1 mt-3 text-white text-left">Your current email address</p>
-            <input className="ml-5 mr-5 mt-1 w-64 pl-1"
+            <p className=" ml-5 mb-1 mt-3 text-white text-left">
+                Enter your email address below.<br></br><br></br>
+            <p></p>    
+                An email with a link to reset your<br></br>
+                password will then be sent to you. The email will also contain a verification
+                code that you will need to key into the password reset page
+            </p>
+            <input className="ml-5 mr-5 mt-4 w-64 pl-1"
                 id="EmailAddress"
                 type="text"
                 placeholder=""
@@ -174,33 +184,7 @@ function Page_1(params) {
             <p className=" ml-5 mb-0 mt-2 text-cyan-300 text-left text-sm">
                 {params.EmailAddressError}&nbsp;
             </p>
-
-            <p className=" ml-5 mb-1 mt-2 text-white text-left">First name</p>
-            <input className="ml-5 mr-5 mt-1 w-64 pl-1"
-                id="FirstName"                
-                type="text"
-                placeholder=""
-                autoComplete="new-password"
-                value={params.FirstName}
-                onChange={(e) => params.setFirstName(e.target.value)}
-            />
-            <p className=" ml-5 mb-1 mt-2 text-cyan-300 text-left text-sm">
-                {params.FirstNameError}&nbsp;
-            </p>
-
-            <p className=" ml-5 mb-1 mt-2 text-white text-left">Last name</p>
-            <input className="ml-5 mr-5 mt-1 w-64 pl-1"
-                id="LastName"
-                type="text"
-                placeholder=""
-                autoComplete="new-password"
-                value={params.LastName}
-                onChange={(e) => {params.setLastName(e.target.value);}}
-            />
-            <p className=" ml-5 mb-1 mt-2 text-cyan-300 text-left text-sm">
-                {params.LastNameError}&nbsp;
-            </p>
-
+          
             <button className="bg-cyan-600 text-white font-bold text-sm py-2 px-2 rounded
                             mt-3 ml-28 mb-0"
                 id="Next"
