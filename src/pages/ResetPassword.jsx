@@ -50,9 +50,8 @@ const resetStates = {
     VERIFY_PAGE_2: 5,
     PAGE_3: 6,
     VERIFY_PAGE_3: 7,
-    CREATING_USER: 8,
-    CREATED_USER: 9,
-    REGISTERED: 10,
+    USER_EXISTS: 8,
+    USER_DOES_NOT_EXIST: 9,    
     ERROR: 500,
  };
 
@@ -96,9 +95,18 @@ export default function ResetPassword() {
                 verifyEmail();                
                 break;  
                 
-            case resetStates.EMAILING_USER:
-                console.log("\nEmailing user ...");
-                break;       
+            case resetStates.USER_EXISTS:
+                console.log("\nUser with that email address was found. Generating email...");
+                emailResetLink(EmailAddress);
+                lockUser(UserID);
+                break; 
+                
+            case resetStates.USER_DOES_NOT_EXIST:
+                // Do nothing. The page will tell
+                // them that that address will get
+                // an email sent to it, but it won't.
+                console.log("\nUser with that email address was not found");
+                break;    
 
             default:
                 break;     
@@ -123,9 +131,9 @@ export default function ResetPassword() {
         } else {    
             if (!/\S+@\S+\.\S+/.test(EmailAddress)) {
                 setEmailAddressError("The email address entered is not valid.");
-                setResetState(resetStates.PAGE_1);
+                setResetState(resetStates.resetStates.PAGE_1);
             } else {
-                console.log("\nReady to verify..");
+                console.log("\nReady to verify..");                
                 checkUserExists(EmailAddress);
             }      
         }
@@ -143,14 +151,29 @@ export default function ResetPassword() {
             if (response.status === 200) {  
                 setUserID(response.data.user_ID);   
                 console.log("checkUserExists() found user " + response.data.user_ID);                  
-                setResetState(resetStates.EMAILING_USER);  
+                setResetState(resetStates.USER_EXISTS);  
             }                    
         } catch (err) {
             // No user is registered with that email.
-            setUserID("");              
-            console.log("checkUserExists() user not found " + err.status); 
-            setResetState(resetStates.EMAILING_USER);  
+            setUserID("");   
+            setResetState(resetStates.USER_DOES_NOT_EXIST);  
         } 
+    };
+
+    //
+    // emailResetLink()
+    // ================
+    // Email a password reset link to the user.
+    //
+    function emailResetLink(email_address) {
+        console.log("Emailing user at " + email_address);
+    };
+
+    //
+    // lockUser()
+    // ==========
+    function lockUser(user_ID) {
+        console.log("Locking user " + user_ID);
     };
 
     //
@@ -180,7 +203,7 @@ export default function ResetPassword() {
                         />
                     )}; 
 
-                    {(resetState === resetStates.EMAILING_USER) && (
+                    {((resetState === resetStates.USER_EXISTS) || (resetState === resetStates.USER_DOES_NOT_EXIST)) && (
                         <Page_2 
                             EmailAddress={EmailAddress} 
                             setResetState={setResetState}                                                            

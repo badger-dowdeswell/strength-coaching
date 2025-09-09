@@ -96,6 +96,10 @@
 // 29.08.2025 BRD Changes to the updateUser API to allow the user to supply a new password during
 //                the update which gets encrypted and stored.
 // 02.09.2025 BRD Added the API to send emails using Nodemailer.
+// 09.09.2025 BRD Deprecated the second copy of the /api/getUser API. The Node/Express documentation
+//                explains that Express routes are matched sequentially, so the first matching route
+//                in the program will always handle the request. The second API of the same name does
+//                not generate an error but it will never be called.
 //
 import express from 'express';
 const app = express();
@@ -332,6 +336,7 @@ app.get('/api/authenticateUser', async(request, response) => {
 // must receive a valid JWT for the current session before it executes.
 //
 app.get('/api/getUser', async (request, response) => {    
+    logmsg("\napi/getUser with JWT\n");
     const JWT = request.query.JWT;
     if (!verifyJWT(JWT)) {
         //logmsg("api/getUser JWT does not verify");
@@ -409,32 +414,37 @@ app.put('/api/createUser', async (request, response) => {
 });
 
 //
-// getUser()
-// =========
+// getUser without JWT()
+// =====================
+// RA_BRD - this is not called by any front-end process. Deprecate it after further testing
+//          since there is already another getUser API defined before this. It turns out that
+//          Express routes are matched sequentially, and the first matching route will always 
+//          handle the request. That suggests that this API will never be called.
+//
 // API to return an individual user's information based on their user_ID. Users may
 // be administrators, trainers, or their clients.// 
 //
-app.get('/api/getUser', async (request, response) => {
-    const user_ID = request.query.user_ID;    
-    const sqlSelectCmd = 'SELECT * FROM "User" WHERE "user_ID" = ' + "'" + user_ID + "';";
-    //logmsg("api/getUser\n" + sqlSelectCmd + "\n");
-    db.query(sqlSelectCmd, (err, result) => {
-        if (!err) {
-            if (result.rows[0] !== undefined) {
-                //console.log("/api/getUser: user found");
-                response.setHeader("Content-Type", "application/json");
-                response.status(200).json(result.rows[0]);
-            } else {
-                //console.log("/api/getUser: user was not found");
-                response.status(404).send('User was not found');
-            }
-        } else {
-            response.status(500).send('Returned error' + err);
-            //logmsg("/api/getUser returned error :" + err + "\n");
-            //logmsg(sqlSelectCmd);
-        }
-    });
-});
+// app.get('/api/getUser', async (request, response) => {
+//     const user_ID = request.query.user_ID;    
+//     const sqlSelectCmd = 'SELECT * FROM "User" WHERE "user_ID" = ' + "'" + user_ID + "';";
+//     logmsg("api/getUser without JWT\n" + sqlSelectCmd + "\n");
+//     db.query(sqlSelectCmd, (err, result) => {
+//         if (!err) {
+//             if (result.rows[0] !== undefined) {
+//                 //console.log("/api/getUser: user found");
+//                 response.setHeader("Content-Type", "application/json");
+//                 response.status(200).json(result.rows[0]);
+//             } else {
+//                 //console.log("/api/getUser: user was not found");
+//                 response.status(404).send('User was not found');
+//             }
+//         } else {
+//             response.status(500).send('Returned error' + err);
+//             //logmsg("/api/getUser returned error :" + err + "\n");
+//             //logmsg(sqlSelectCmd);
+//         }
+//     });
+// });
 
 //
 // getUserByEmail()
