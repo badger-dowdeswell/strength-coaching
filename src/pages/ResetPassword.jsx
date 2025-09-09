@@ -64,8 +64,9 @@ export default function ResetPassword() {
     const [UserID, setUserID] = useState("");
     const [EmailAddress, setEmailAddress] = useState("");
     const [EmailAddressError, setEmailAddressError] = useState("");
-
-
+    const [ResetLink, setResetLink] = useState("reset link");
+    const [VerificationCode, setVerificationCode] = useState("");
+           
     //            let location = useLocation();
     //let token = new URLSearchParams(location.search).get('vt');
     // http://localhost:3000/ResetPassword?vt=dfdfdfdf_HAHHA
@@ -97,8 +98,8 @@ export default function ResetPassword() {
                 
             case resetStates.USER_EXISTS:
                 console.log("\nUser with that email address was found. Generating email...");
-                emailResetLink(EmailAddress);
                 lockUser(UserID);
+                emailResetLink(EmailAddress);                
                 break; 
                 
             case resetStates.USER_DOES_NOT_EXIST:
@@ -161,21 +162,52 @@ export default function ResetPassword() {
     };
 
     //
-    // emailResetLink()
-    // ================
-    // Email a password reset link to the user.
-    //
-    function emailResetLink(email_address) {
-        console.log("Emailing user at " + email_address);
-    };
-
-    //
     // lockUser()
     // ==========
     function lockUser(user_ID) {
         console.log("Locking user " + user_ID);
+        setVerificationCode((Math.floor(Math.random() * (9 * (Math.pow(10, 4)))) +
+                            (Math.pow(10, 4))).toString());
     };
 
+    //
+    // emailResetLink()
+    // ================
+    // Sends an email to the address the new user specified. The email contains
+    // an introductory message and the verification code they need to enter
+    // to continue. 
+    //
+    async function emailResetLink(email_address) {          
+        const html_body = "<p>A request to change your password was made on Strength Coaching Online. If it was you, then " +
+                          "please click on " +        
+                          '<a href="http://localhost:3000/ResetPassword/?' + ResetLink + '">' +
+                          "this link " + "</a>" + 
+                          "to go to the Reset my Password page on Strength Coaching Online.</p>" +                                                      
+                          "<p>Please enter this verification code into the registration page:</p>" +                           
+                          "<h1 style='text-align: center; font-size: 25px;'>" + VerificationCode + "</h1>" +  
+                          "<p>The verification code is valid for the next 20 minutes.</p>" + 
+                          "<p>If this was not you or you need further assistance, please contact the support team by emailing info@strengthcoacing.online.</p>" +                          
+                          "<p>Kind regards,</p>" +
+                          "</p>Luke Selway</p>";
+
+        await axios.put(baseURL + "sendMail", {
+            sender_email_address: "info@strengthresearch.online",            
+            recipient_email_address: email_address, 
+            subject: "Your Strength Coaching Online Password Reset Link",             
+            html_body: html_body           
+        })
+        .then((response) => {
+            if (response.status === 200) {
+                console.log("email sent");                                         
+            } else if (response.status === 500) {
+                console.log("emailUser error: 500 " + response); 
+            }    
+        })
+        .catch(err => {
+            console.log("emailUser error: " + err.message);            
+        })  
+    };
+    
     //
     // RESET PASSWORD PAGES
     // ====================

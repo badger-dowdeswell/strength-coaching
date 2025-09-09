@@ -336,7 +336,7 @@ app.get('/api/authenticateUser', async(request, response) => {
 // must receive a valid JWT for the current session before it executes.
 //
 app.get('/api/getUser', async (request, response) => {    
-    logmsg("\napi/getUser with JWT\n");
+    //logmsg("\napi/getUser with JWT\n");
     const JWT = request.query.JWT;
     if (!verifyJWT(JWT)) {
         //logmsg("api/getUser JWT does not verify");
