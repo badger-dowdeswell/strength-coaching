@@ -27,7 +27,6 @@ const axios = Axios;
 
 const baseURL = getBaseURL();
 
-import SideNav from "./components/SideNav";
 import TopNav from "./components/TopNav";
 
 import Reset_Person from "./images/Reset_Person.png";
@@ -93,10 +92,13 @@ export default function ResetPassword() {
             case resetStates.PAGE_1:                
                 break;
 
-            case resetStates.VERIFY_PAGE_1:
-                // Verify the email address exists and then
-                // email the verification code to them.
-                break;    
+            case resetStates.VERIFY_PAGE_1:                
+                verifyEmail();                
+                break;  
+                
+            case resetStates.EMAILING_USER:
+                console.log("\nEmailing user ...");
+                break;       
 
             default:
                 break;     
@@ -105,10 +107,57 @@ export default function ResetPassword() {
     }, [resetState]);
 
     //
+    // verifyEmail()
+    // =============
+    // Verify the email address exists and then email the verification code to them.
+    // If the email is not found, inform them that you have sent the email anyway since
+    // they may be a hacker. However, if the email address is malformed or blank, tell 
+    // the user so they can correct it.
+    //
+    function verifyEmail() {
+        console.log("\nverifyEmail() " + EmailAddress);
+
+        if (!EmailAddress.trim()) {
+            setEmailAddressError("An email address must be entered.")
+            setResetState(resetStates.PAGE_1);
+        } else {    
+            if (!/\S+@\S+\.\S+/.test(EmailAddress)) {
+                setEmailAddressError("The email address entered is not valid.");
+                setResetState(resetStates.PAGE_1);
+            } else {
+                console.log("\nReady to verify..");
+                checkUserExists(EmailAddress);
+            }      
+        }
+    };
+
+    //
+    // checkUserExists() 
+    // =================
+    // Verifys that the user exists by loading their client record using their email address as a key.
+    //
+    const checkUserExists = async (email_address) => {
+        console.log("\ncheckUserExists " + email_address);
+        try {
+            let response = await axios.get(baseURL + "getUserByEmail?email_address=" + email_address);
+            if (response.status === 200) {  
+                setUserID(response.data.user_ID);   
+                console.log("checkUserExists() found user " + response.data.user_ID);                  
+                setResetState(resetStates.EMAILING_USER);  
+            }                    
+        } catch (err) {
+            // No user is registered with that email.
+            setUserID("");              
+            console.log("checkUserExists() user not found " + err.status); 
+            setResetState(resetStates.EMAILING_USER);  
+        } 
+    };
+
+    //
     // RESET PASSWORD PAGES
     // ====================
-    // Displays each of the reset password pages in order to 
-    // verify the user and enter their new password.
+    // Displays each of the reset password pages in order to verify the user, email them
+    // a password reset link, and let them enter a new password.
     //
     return (        
         <div>            
@@ -125,8 +174,17 @@ export default function ResetPassword() {
                         <Page_1
                             EmailAddress={EmailAddress}
                             setEmailAddress={setEmailAddress}
-                            EmailAddressError={EmailAddressError}                                
-                            setResetState={setResetState}
+                            EmailAddressError={EmailAddressError}
+                            setResetState={setResetState}                                
+                            navigate={navigate}
+                        />
+                    )}; 
+
+                    {(resetState === resetStates.EMAILING_USER) && (
+                        <Page_2 
+                            EmailAddress={EmailAddress} 
+                            setResetState={setResetState}                                                            
+                            navigate={navigate}
                         />
                     )}; 
                 </div>            
@@ -150,8 +208,8 @@ export default function ResetPassword() {
 //    console.log("URL [" + location.pathname + "] [" + token + "]"); 
 
 //
-// Page_1
-// ======
+// Page_1()
+// ========
 // This component lets the user who is resetting their password enter their 
 // email address. This is the initial stage that allows the client to be identified
 // by looking up their email. If the email address matches that of an existing user,
@@ -160,20 +218,21 @@ export default function ResetPassword() {
 // is created that forms part of a reset-password page link. This is then sent to 
 // them in an email.                 
 // 
-function Page_1(params) {
-    
+function Page_1(params) {    
     return (
         <div>
             <p className="text-white text-center text-xl mt-5">Reset my password</p>
 
-            <p className=" ml-5 mb-1 mt-3 text-white text-left">
-                Enter your email address below.<br></br><br></br>
-            <p></p>    
-                An email with a link to reset your<br></br>
-                password will then be sent to you. The email will also contain a verification
-                code that you will need to key into the password reset page
+            <p className=" ml-5 mb-1 mt-3 text-white text-left"> 
+                An email with a link to a page where<br></br>
+                you can reset your password can be<br></br>
+                sent to you.<br></br><br></br>
+                The email will also contain a code 
+                that you can enter on the reset page.
+                <br></br><br></br>
+                Please enter your email address here:
             </p>
-            <input className="ml-5 mr-5 mt-4 w-64 pl-1"
+            <input className="ml-5 mr-5 mt-4 w-[270px] pl-1"
                 id="EmailAddress"
                 type="text"
                 placeholder=""
@@ -184,15 +243,81 @@ function Page_1(params) {
             <p className=" ml-5 mb-0 mt-2 text-cyan-300 text-left text-sm">
                 {params.EmailAddressError}&nbsp;
             </p>
-          
-            <button className="bg-cyan-600 text-white font-bold text-sm py-2 px-2 rounded
-                            mt-3 ml-28 mb-0"
-                id="Next"
-                style={{ width: "100px" }}                
-                onClick={() => {params.setRegistrationState(resetStates.VERIFY_PAGE_1);}} >
-                Next &gt;
-            </button>
-      </div>
-    );
+
+            <div className="flex flex-row">                         
+                <button className="bg-cyan-600 text-white font-bold text-sm py-2 px-2 rounded
+                                mt-2 ml-12"
+                        id="SendLink"
+                        style={{ width: "100px" }}                    
+                        onClick={() => {params.setResetState(resetStates.VERIFY_PAGE_1);}
+                        }>                    
+                    Send Link
+                </button>
+
+                <button className="bg-cyan-600 text-white font-bold text-sm py-2 px-2 rounded
+                                mt-2 ml-5"
+                        id="Cancel"
+                        style={{ width: "100px" }}
+                        onClick={() => {
+                            params.navigate("/");
+                        }}>
+                    Cancel
+                </button>
+            </div>            
+        </div>
+    );    
+}
+    
+//
+// Page_2()
+// ========
+// This component informs the user that an email has been sent to them.
+// 
+function Page_2(params) {    
+    return (
+        <div>
+            <p className="text-white text-center text-xl mt-0">Reset my password</p>
+
+            <p className="ml-5 mb-3 mt-3 text-white text-left"> 
+                An email with a link to a page where<br></br>
+                you can reset your password has been<br></br>
+                sent to:
+            </p> 
+
+            <p className="ml-5 mb-3 mt-3 text-white text-left font-bold overflow-hidden">   
+                {params.EmailAddress}
+            </p>
+
+            <p className="ml-5 mb-5 mt-3 text-white text-left">         
+                The email also contains a code that<br></br>
+                you can enter on the reset page.
+                <br></br><br></br>
+                                
+                If you did not receive an email, click <br></br>
+                <b>Back</b> and try again.
+            </p>
+            
+            <div className="flex flex-row">                         
+                <button className="bg-cyan-600 text-white font-bold text-sm py-2 px-2 rounded
+                                mt-2 ml-12"
+                        id="Back"
+                        style={{ width: "100px" }}                    
+                        onClick={() => {params.setResetState(resetStates.PAGE_1);}
+                        }>                    
+                    Back
+                </button>
+
+                <button className="bg-cyan-600 text-white font-bold text-sm py-2 px-2 rounded
+                                mt-2 ml-5"
+                        id="Next"
+                        style={{ width: "100px" }}
+                        onClick={() => {
+                            params.navigate("/");
+                        }}>
+                    Next
+                </button>
+            </div>            
+        </div>
+    );    
 }
     

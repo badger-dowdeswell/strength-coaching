@@ -256,7 +256,7 @@ function verifyJWT(JWT) {
 //
 app.get('/api/authenticateUser', async(request, response) => {
     const recvUser_ID = request.query.user_ID;
-    const recvPassword = request.query.password;
+    const recvPassword = request.query.password;    
     var query = "";
     // console.log("\n/api/authenticateUser: [" + recvUser_ID + "] [" + recvPassword + "]");
 
@@ -276,8 +276,8 @@ app.get('/api/authenticateUser', async(request, response) => {
 
     db.query(query, (err, result) => {
         if (!err) {
-            if (result.rows[0] !== undefined) {
-                //console.log("/api/authenticateUser: user found");
+            if (result.rows[0] !== undefined) {                
+                console.log("/api/authenticateUser: user found");
                 response.setHeader("Content-Type", "application/json");
                 const encryptedPassword = result.rows[0].password;
                 const user_ID = result.rows[0].user_ID;
@@ -317,7 +317,7 @@ app.get('/api/authenticateUser', async(request, response) => {
             } else {
                 //logmsg("/api/authenticateUser: user was not found");
                 response.status(404).send('User was not found');
-            }
+            } 
         } else {
             response.status(500).send('Returned error' + err);
             //logmsg("/api/authenticateUser returned error :" + err + "\n" + query);            
