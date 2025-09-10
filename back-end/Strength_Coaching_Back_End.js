@@ -37,35 +37,21 @@
 // Shutting down processes
 // =======================
 // Sometimes, the back-end Node process shuts down but does not release the port it is 
-// running on. The Linux List Open Files command lsof is one way to identify if the port
-// (which is really just another file in Linux) is still connected:
+// running on. The lsof (linux show (list) open files) command is one way to identify 
+// if the port (which is really just another file in Linux) is still connected. This
+// back-end is running on port 3010 so tell lsof to only display processes on that port:
 //
 //    sudo lsof -i :3010   which gives and output like this:
 //
 //    COMMAND     PID   USER   FD   TYPE DEVICE SIZE/OFF NODE NAME
 //    MainThrea 44866 badger   22u  IPv6 315170      0t0  TCP *:3010 (LISTEN)
 //
-// In this example, the port is open via process specified in the PID which is 44866 in 
-// this case. Shut it down with a kill and restart the backend normally:
+// In this example, the port is open via process specified in the PID 44866 as shown 
+// in the second column. Shut it down with a kill command and then restart the back-end
+// normally:
 //
 //    kill -9 44866
 //    npm run dev
-//
-// Interesting stuff to investigate later
-// ======================================
-// RA_BRD Email in React tutorial: https://www.youtube.com/watch?v=PJmz0GhE45s
-// Nodemailer:     https://www.nodemailer.com/
-//
-// MARK: RA_Badger: This is interesting... see the Express documentation at
-// https://expressjs.com/en/advanced/healthcheck-graceful-shutdown.html
-//
-//  process.on('SIGTERM', () => {
-//     console.log('SIGTERM signal received: closing HTTP server');
-//     app.close(() => {
-//       console.log('HTTP server closed')
-//     })
-//   });
-//
 //
 // Revision History
 // ================
@@ -100,6 +86,10 @@
 //                explains that Express routes are matched sequentially, so the first matching route
 //                in the program will always handle the request. The second API of the same name does
 //                not generate an error but it will never be called.
+// 10.09.2025 BRD Implemented a shutdown() process to process the SIGINT and SIGTERM commands when the
+//                Back-End is being shut down. 
+//                Added the getToken API that generates a unique token with an expiry time. This can 
+//                be used to identify a user that is trying to reset their password. 
 //
 import express from 'express';
 const app = express();
@@ -108,6 +98,9 @@ const version = 1.03;
 
 //import path from "path";  //RA_BRD is this used?
 
+//
+// multer()
+// ========
 // Multi-File Upload (multer) configuration for image and other resource files uploaded
 // to this server. User images are stored in the front-end/userImages directory. They can
 // be served as public static files from here so the front-end can display them. Vite
@@ -218,20 +211,55 @@ const db = new Pool({
 // ============
 // Reports that the back-end is listening when the server starts.
 //
-app.listen(PORT, () => {     
+const server = app.listen(PORT, () => {     
     var dt = new Date();
     logmsg("\nThe Strength Research Online Back-End version " + version +
-           " is now listening on port " + PORT + ". It was started at " +
-            dt.toLocaleTimeString() + " on " + dt.toLocaleDateString() + 
+           " is\nnow listening on port " + PORT + ". It was started on " +
+            dt.toLocaleDateString() + "\nat " + dt.toLocaleTimeString() + 
             " using local environment sr.env.\n");
 });
 
-//process.on('SIGTERM', () => {
-//    console.log('\nHTTP server closing.\n');
-//  server.close(() => {
-//    console.log('HTTP server closed.');
-//  });
-//});
+//
+// shutdown()
+// ==========
+// Intercepts the SIGTERM and SIGTERM commands and proceeds to shutdown the
+// Back-End processes gracefully. This should release any TCP ports that were
+// opened by the process.
+//
+process.on('SIGTERM', () => {
+    console.log('\nHTTP server closing.\n');
+});
+
+process.on('SIGINT', () => {
+    server.close(() => {
+    })    
+    console.log('\nHTTP server closed.');       
+    process.exit();    
+});
+
+//
+// getToken()
+// ==========
+// This function generates and returns a JSON Web Token (JWT) that contains
+// a hashed user ID and an expiry time specified by the calling function.
+// It uses the same JTW secret as the other token-generating functions in
+// this back-end. When submitted later, it can be verified using the 
+// verifyJWT() function if necessary.
+//
+app.get('/api/getToken', async(request, response) => {
+    const user_ID = request.query.user_ID;
+    const expiry_time = request.query.expiry_time
+
+    jwt.sign({user_ID}, JWT_SECRET, expiry_time , (err, token) => {
+        if (!err) {
+            const packet = {token: token};
+            response.status(200).send(packet);
+        } else {
+            //console.log(err.message);
+            response.status(500).json({err});
+        }
+    });
+});    
 
 //
 // verifyJWT()

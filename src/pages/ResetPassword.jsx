@@ -1,19 +1,19 @@
 //
 // RESET MY PASSWORD
 // =================
-// This page allows users to reset their password using a verification
+// This page allows q client to reset their password using a verification
 // code that is emailed to them. 
 // 
 // The email is sent to the email address they enter, but only if that 
 // email address can be found in the database. This helps stop hackers
-// trying to change the password of an exising user without their approval.
+// trying to change the password of an exising client without their approval.
 // 
 // Revision History
 // ================
 // 26.02.2025 BRD Original version.
 // 01.08.2025 BRD Converted the Strength Research component to now work 
 //                with Strength Coaching.
-// 03.09.2025 BRD Added the code to send the password reset link to the user
+// 03.09.2025 BRD Added the code to send the password reset link to the client
 //                via email.
 //
 import "./Main.css";
@@ -35,25 +35,21 @@ import eye from "./images/password_eye.png";
 //
 // resetStates
 // ===========
-// The password reset process operates as a state machine. This allows it to move
-// stage-by-stage forwards and backwards, waiting at appropriate times for an
-// async process to return a value before transitioning to a new stage. The
-// current state is held in resetState, which always contains one of the
-// pre-defined resetStates enumerated constants.
+// 
 //
 const resetStates = {
     UNDEFINED: 0,
     PAGE_1: 1,
     VERIFY_PAGE_1: 2, 
-    EMAILING_USER: 3,
+    EMAILING_CLIENT: 3,
     PAGE_2: 4,
     VERIFY_PAGE_2: 5,
     PAGE_3: 6,
     VERIFY_PAGE_3: 7,
-    USER_EXISTS: 8,
-    USER_DOES_NOT_EXIST: 9,    
+    CLIENT_EXISTS: 8,
+    CLIENT_DOES_NOT_EXIST: 9,    
     ERROR: 500,
- };
+};
 
 //
 // ResetPassword()
@@ -64,10 +60,12 @@ export default function ResetPassword() {
     const [UserID, setUserID] = useState("");
     const [EmailAddress, setEmailAddress] = useState("");
     const [EmailAddressError, setEmailAddressError] = useState("");
-    const [ResetLink, setResetLink] = useState("reset link");
+    const [ResetLink, setResetLink] = useState("");
     const [VerificationCode, setVerificationCode] = useState("");
-           
-    //            let location = useLocation();
+  
+    //let location = useLocation();
+    //console.log("\nLocation " + location.pathname + " " + window.location.href);
+
     //let token = new URLSearchParams(location.search).get('vt');
     // http://localhost:3000/ResetPassword?vt=dfdfdfdf_HAHHA
     //console.log("URL [" + location.pathname + "] [" + token + "]"); 
@@ -75,38 +73,54 @@ export default function ResetPassword() {
     //
     // Reset Password State Control
     // ============================
-    // This section defines the state machine that controls the reset password process.
+    // The password reset process operates as a State Machine. This allows it to move
+    // stage-by-stage forwards and backwards, waiting at appropriate times for an
+    // async process to return a value before transitioning to a new stage. The
+    // current state is held in resetState, which always contains one of the
+    // pre-defined resetStates enumerated constants.
+    //    
     // The useState Hook ensures that the environment gets updated and re-configured 
     // each time the state changes. This can trigger page transitions, reads and writes 
-    // from the database, or the display errors that require the user to correct what 
+    // from the database, or display errors that require the client to correct what 
     // they entered. The set of possible states is defined in the resetStates
-    // object declared above.
-    //
-    const [resetState, setResetState] = useState(resetStates.UNDEFINED);
+    // enumerated list declared above.
+    //        
+    const [resetState, setResetState] = useState(resetStates.UNDEFINED); 
     useEffect(() => { 
         switch (resetState) {
             case resetStates.UNDEFINED: 
+                // This is the initial state transition 
                 setResetState(resetStates.PAGE_1);               
                 break;
 
-            case resetStates.PAGE_1:                
+            case resetStates.PAGE_1:
+                // Display the first page that explains to the
+                // client what they need to do. It requests their
+                // registered email address.                
                 break;
 
-            case resetStates.VERIFY_PAGE_1:                
+            case resetStates.VERIFY_PAGE_1:
+                // Verifies that the email entered belongs to
+                // a registered client.                
                 verifyEmail();                
                 break;  
                 
-            case resetStates.USER_EXISTS:
-                console.log("\nUser with that email address was found. Generating email...");
-                lockUser(UserID);
-                emailResetLink(EmailAddress);                
+            case resetStates.CLIENT_EXISTS:
+                // A client with that email address was found. Lock their account
+                // and generate the password reset tokens.
+                lockClient(UserID);
                 break; 
                 
-            case resetStates.USER_DOES_NOT_EXIST:
+            case resetStates.EMAILING_CLIENT:
+                // Email the client
+                emailResetLink(EmailAddress);
+                break;  
+
+            case resetStates.CLIENT_DOES_NOT_EXIST:
                 // Do nothing. The page will tell
                 // them that that address will get
                 // an email sent to it, but it won't.
-                console.log("\nUser with that email address was not found");
+                console.log("\nNo client with that email address was found");
                 break;    
 
             default:
@@ -121,7 +135,7 @@ export default function ResetPassword() {
     // Verify the email address exists and then email the verification code to them.
     // If the email is not found, inform them that you have sent the email anyway since
     // they may be a hacker. However, if the email address is malformed or blank, tell 
-    // the user so they can correct it.
+    // the client so they can correct it.
     //
     function verifyEmail() {
         console.log("\nverifyEmail() " + EmailAddress);
@@ -135,52 +149,66 @@ export default function ResetPassword() {
                 setResetState(resetStates.resetStates.PAGE_1);
             } else {
                 console.log("\nReady to verify..");                
-                checkUserExists(EmailAddress);
+                checkClientExists(EmailAddress);
             }      
         }
     };
 
     //
-    // checkUserExists() 
-    // =================
-    // Verifys that the user exists by loading their client record using their email address as a key.
+    // checkClientExists() 
+    // ===================
+    // Verifys that the client exists by loading their client record using their email address as a key.
     //
-    const checkUserExists = async (email_address) => {
+    const checkClientExists = async (email_address) => {
         console.log("\ncheckUserExists " + email_address);
         try {
             let response = await axios.get(baseURL + "getUserByEmail?email_address=" + email_address);
             if (response.status === 200) {  
                 setUserID(response.data.user_ID);   
-                console.log("checkUserExists() found user " + response.data.user_ID);                  
-                setResetState(resetStates.USER_EXISTS);  
+                console.log("checkUserExists() found client " + response.data.user_ID);                  
+                setResetState(resetStates.CLIENT_EXISTS);  
             }                    
         } catch (err) {
-            // No user is registered with that email.
+            // No client is registered with that email.
             setUserID("");   
-            setResetState(resetStates.USER_DOES_NOT_EXIST);  
+            setResetState(resetStates.CLIENT_DOES_NOT_EXIST);  
         } 
     };
 
+
     //
-    // lockUser()
-    // ==========
-    function lockUser(user_ID) {
-        console.log("Locking user " + user_ID);
+    // lockClient()
+    // ============
+    async function lockClient(user_ID) {
+        console.log("Locking client " + user_ID);
         setVerificationCode((Math.floor(Math.random() * (9 * (Math.pow(10, 4)))) +
                             (Math.pow(10, 4))).toString());
+        const expiry_time = {expiresIn: '1d'};  
+
+        try {
+            let response = await axios.get(baseURL + "getToken?user_ID=" + user_ID + 
+                                           "@expiry_time=" + expiry_time);
+            if (response.status === 200) { 
+                console.log("Token = " + response.data.token); 
+                setResetLink(response.data.token);
+                setResetState(resetStates.EMAILING_CLIENT);
+            }                    
+        } catch (err) { 
+        } 
     };
 
     //
     // emailResetLink()
     // ================
-    // Sends an email to the address the new user specified. The email contains
-    // an introductory message and the verification code they need to enter
-    // to continue. 
+    // Sends an email to the address the client specified. The email contains
+    // an explanation of how to reset their password. 
     //
-    async function emailResetLink(email_address) {          
-        const html_body = "<p>A request to change your password was made on Strength Coaching Online. If it was you, then " +
-                          "please click on " +        
-                          '<a href="http://localhost:3000/ResetPassword/?' + ResetLink + '">' +
+    async function emailResetLink(email_address) {
+        const URL = window.location.href;
+
+        const html_body = "<p>A request to change your password was made on Strength Coaching Online.</p>" + 
+                           "<p>If it was you, then please click on " +        
+                          '<a href="' + URL + '/?vt=' + ResetLink + '">' +
                           "this link " + "</a>" + 
                           "to go to the Reset my Password page on Strength Coaching Online.</p>" +                                                      
                           "<p>Please enter this verification code into the registration page:</p>" +                           
@@ -211,8 +239,9 @@ export default function ResetPassword() {
     //
     // RESET PASSWORD PAGES
     // ====================
-    // Displays each of the reset password pages in order to verify the user, email them
-    // a password reset link, and let them enter a new password.
+    // Displays each of the reset password pages in order to verify the client, email them
+    // a password reset link, and then let them enter a new password when they click on the
+    // link sent to them.
     //
     return (        
         <div>            
@@ -235,7 +264,8 @@ export default function ResetPassword() {
                         />
                     )}; 
 
-                    {((resetState === resetStates.USER_EXISTS) || (resetState === resetStates.USER_DOES_NOT_EXIST)) && (
+                    {((resetState === resetStates.CLIENT_EXISTS) || (resetState === resetStates.CLIENT_DOES_NOT_EXIST)) 
+                       || (resetState === resetStates.EMAILING_CLIENT) && (
                         <Page_2 
                             EmailAddress={EmailAddress} 
                             setResetState={setResetState}                                                            
@@ -265,9 +295,9 @@ export default function ResetPassword() {
 //
 // Page_1()
 // ========
-// This component lets the user who is resetting their password enter their 
+// This component lets the client who is resetting their password enter their 
 // email address. This is the initial stage that allows the client to be identified
-// by looking up their email. If the email address matches that of an existing user,
+// by looking up their email. If the email address matches that of an existing client,
 // their user_status is set to R to indicate that they are resetting their password.
 // While they are in that state, the client cannot log in. An authentication token 
 // is created that forms part of a reset-password page link. This is then sent to 
@@ -326,7 +356,7 @@ function Page_1(params) {
 //
 // Page_2()
 // ========
-// This component informs the user that an email has been sent to them.
+// This component informs the client that an email has been sent to them.
 // 
 function Page_2(params) {    
     return (
