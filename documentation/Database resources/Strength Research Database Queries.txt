@@ -61,6 +61,14 @@ COMMENT ON TABLE public."User"
 Verification rules are applied in the React maintenance application in the front-end ensure that only valid combinations of these attributes are allowed to be specified for each user.
 ';
 
+select "user_ID", "user_status", "registration_token", "verification_code", "first_name", "last_name", 
+"alias", "email_address", "user_image" from "User";
+
+#delete from "User" where "user_ID" = '13'
+
+
+
+
 
 //
 // User Table Queries

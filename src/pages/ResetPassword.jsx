@@ -220,8 +220,9 @@ export default function ResetPassword() {
     // ============
     // 
     //
-    async function lockClient(user_ID) {
+    async function lockClient(user_ID) {        
         console.log("Locking client " + user_ID);
+        
         
         // try {
         //     let response = await axios.get(baseURL + "getToken?user_ID=" + user_ID + 
@@ -244,7 +245,7 @@ export default function ResetPassword() {
     //
     async function emailResetLink(email_address) {
         const URL = window.location.href;
-
+        
         const html_body = "<p>A request to change your password was made on Strength Coaching Online.</p>" + 
                            "<p>If it was you, then please click on " +        
                           '<a href="' + URL + '/?vt=' + ResetLink + '">' +
