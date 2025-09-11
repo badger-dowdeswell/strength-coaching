@@ -24,7 +24,8 @@ CREATE TABLE public."User" (
    "user_authority" char,
    "password" character varying(70),
    "user_status" char,
-   "registration_token" character varying(70),
+   "registration_token" character varying(500),
+   "verification_code" character varying(10),
    "token_date_time" date,
    "last_sign_in_date" date,
    "salutation" character varying(10),
@@ -45,8 +46,9 @@ CREATE TABLE public."User" (
    "state" character varying(30),   
    "country" character varying(25),
    "date_of_birth" date,   
-   "gym_name" character varying(30)  
-);    
+   "gym_name" character varying(30),
+   "user_image" character varying(50) 
+  );    
    
 ALTER TABLE public."User" OWNER TO badger;
 

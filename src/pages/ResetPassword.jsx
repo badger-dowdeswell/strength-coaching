@@ -35,19 +35,19 @@ import eye from "./images/password_eye.png";
 //
 // resetStates
 // ===========
-// 
-//
 const resetStates = {
     UNDEFINED: 0,
     PAGE_1: 1,
-    VERIFY_PAGE_1: 2, 
-    EMAILING_CLIENT: 3,
-    PAGE_2: 4,
-    VERIFY_PAGE_2: 5,
-    PAGE_3: 6,
-    VERIFY_PAGE_3: 7,
-    CLIENT_EXISTS: 8,
-    CLIENT_DOES_NOT_EXIST: 9,    
+    VERIFY_PAGE_1: 2,     
+    PAGE_2: 3,
+    VERIFY_PAGE_2: 4, 
+    CLIENT_EXISTS: 5,
+    CLIENT_DOES_NOT_EXIST: 6,
+    GENERATE_TOKEN: 7,
+    LOCK_CLIENT: 8,
+    EMAIL_CLIENT: 9,
+    PAGE_3: 10,
+    VERIFY_PAGE_3: 11,
     ERROR: 500,
 };
 
@@ -62,7 +62,16 @@ export default function ResetPassword() {
     const [EmailAddressError, setEmailAddressError] = useState("");
     const [ResetLink, setResetLink] = useState("");
     const [VerificationCode, setVerificationCode] = useState("");
-  
+
+    const [Password, setPassword] = useState("");
+    const [PasswordError, setPasswordError] = useState("");
+    const [PasswordCopy, setPasswordCopy] = useState("");
+    const [PasswordCopyError, setPasswordCopyError] = useState("");
+
+    // Used to control the visibility of the password by switching the
+    // input type between "text" and "password".
+    const [PasswordVisibility, setPasswordVisibility] = useState("password");
+      
     //let location = useLocation();
     //console.log("\nLocation " + location.pathname + " " + window.location.href);
 
@@ -103,25 +112,30 @@ export default function ResetPassword() {
                 // Verifies that the email entered belongs to
                 // a registered client.                
                 verifyEmail();                
-                break;  
-                
-            case resetStates.CLIENT_EXISTS:
-                // A client with that email address was found. Lock their account
-                // and generate the password reset tokens.
-                lockClient(UserID);
                 break; 
                 
+            case resetStates.CLIENT_DOES_NOT_EXIST:
+                // Do nothing. The page will tell them that that address will get
+                // an email sent to it, but it won't.
+                console.log("\nNo client with that email address was found");
+                break;    
+                
+            case resetStates.CLIENT_EXISTS:
+                // A client with that email address was found. Generate the token they
+                // need and generate the password reset token.
+                generateToken(UserID);
+                break; 
+
+            case resetStates.LOCK_CLIENT: 
+                lockClient(UserID);   
+                break; 
+
             case resetStates.EMAILING_CLIENT:
                 // Email the client
                 emailResetLink(EmailAddress);
                 break;  
 
-            case resetStates.CLIENT_DOES_NOT_EXIST:
-                // Do nothing. The page will tell
-                // them that that address will get
-                // an email sent to it, but it won't.
-                console.log("\nNo client with that email address was found");
-                break;    
+            
 
             default:
                 break;     
@@ -166,7 +180,7 @@ export default function ResetPassword() {
             if (response.status === 200) {  
                 setUserID(response.data.user_ID);   
                 console.log("checkUserExists() found client " + response.data.user_ID);                  
-                setResetState(resetStates.CLIENT_EXISTS);  
+                setResetState(resetStates.CLIENT_EXISTS);    
             }                    
         } catch (err) {
             // No client is registered with that email.
@@ -175,11 +189,13 @@ export default function ResetPassword() {
         } 
     };
 
-
     //
-    // lockClient()
-    // ============
-    async function lockClient(user_ID) {
+    // generateToken()
+    // ===============
+    // Creates the verification code they need to enter on the next page
+    // and the token sent in the email to access the page and verify them.
+    //
+    async function generateToken(user_ID) {
         console.log("Locking client " + user_ID);
         setVerificationCode((Math.floor(Math.random() * (9 * (Math.pow(10, 4)))) +
                             (Math.pow(10, 4))).toString());
@@ -191,10 +207,33 @@ export default function ResetPassword() {
             if (response.status === 200) { 
                 console.log("Token = " + response.data.token); 
                 setResetLink(response.data.token);
-                setResetState(resetStates.EMAILING_CLIENT);
+                setResetState(resetStates.LOCK_CLIENT);
             }                    
         } catch (err) { 
+            console.log("Token error:" + err);
+            setResetState(resetStates.PAGE_1);
         } 
+    };
+
+    //
+    // lockClient()
+    // ============
+    // 
+    //
+    async function lockClient(user_ID) {
+        console.log("Locking client " + user_ID);
+        
+        // try {
+        //     let response = await axios.get(baseURL + "getToken?user_ID=" + user_ID + 
+        //                                    "@expiry_time=" + expiry_time);
+        //     if (response.status === 200) { 
+        //         console.log("Token = " + response.data.token); 
+        //         setResetLink(response.data.token);
+        //         setResetState(resetStates.EMAILING_CLIENT);
+        //     }                    
+        // } catch (err) { 
+        //     console.log("Token error:" + err);
+        // } 
     };
 
     //
@@ -265,13 +304,28 @@ export default function ResetPassword() {
                     )}; 
 
                     {((resetState === resetStates.CLIENT_EXISTS) || (resetState === resetStates.CLIENT_DOES_NOT_EXIST)) 
-                       || (resetState === resetStates.EMAILING_CLIENT) && (
+                       || (resetState === resetStates.EMAILING_CLIENT) || (resetState === resetStates.LOCK_CLIENT) && (
                         <Page_2 
                             EmailAddress={EmailAddress} 
                             setResetState={setResetState}                                                            
                             navigate={navigate}
                         />
                     )}; 
+
+                    {(resetState === resetStates.PAGE_3) && (
+                        <Page_3
+                            PasswordVisibility={PasswordVisibility}   
+                            setPasswordVisibility={setPasswordVisibility}                              
+                            Password={Password}
+                            setPassword = {setPassword}
+                            PasswordError = {PasswordError}                                    
+                            PasswordCopy={PasswordCopy}
+                            setPasswordCopy = {setPasswordCopy}
+                            PasswordCopyError = {PasswordCopyError}
+                            setResetState={setRegistrationState} 
+                        />
+                    )}; 
+
                 </div>            
                                     
                 <div className="relative flex items-center justify-center mt-0 ml-3">
@@ -312,8 +366,8 @@ function Page_1(params) {
                 An email with a link to a page where<br></br>
                 you can reset your password can be<br></br>
                 sent to you.<br></br><br></br>
-                The email will also contain a code 
-                that you can enter on the reset page.
+                The email will include a verification<br></br>
+                code that you must enter on the page.
                 <br></br><br></br>
                 Please enter your email address here:
             </p>
@@ -405,4 +459,104 @@ function Page_2(params) {
         </div>
     );    
 }
+
+//
+// Page_3()
+// ========
+// This page is displayed when the user clicks on the link in the email sent to them.
+// 
+function Page_3(params) {   
+    // Set the focus automatically to the first input field after
+    // the component has rendered properly.
+    const autofocusID = useRef(null);
+    useEffect(() => {
+        if (autofocusID.current) {
+            autofocusID.current.focus();
+        }    
+    },[]);
     
+    return (
+        <div className = "mb-1">
+            <p className="text-white text-center font-bold text-xl mt-0">
+                Setting your password
+            </p>
+
+            <p className="ml-5 mb-1 mt-3 w-72 text-white text-left">
+                Your Strength Coaching Online profile has been created. 
+            </p>
+
+            <p className="ml-5 mb-1 mt-3 w-70 text-white text-left">    
+                Enter the password you want to use                
+            </p>        
+            <div className="flex flex-row">            
+                <input className="ml-5 mt-1 w-72 pl-1"
+                        id = "Password"
+                        ref={autofocusID}
+                        type = {params.PasswordVisibility}
+                        placeholder = ""
+                        autoComplete = "new-password"
+                        value = {params.Password}
+                        onChange = {(e) => params.setPassword(e.target.value)}
+                />
+                <img className="mr-5 ml-0 mt-1 h-6 w-7"
+                    src={eye}
+                    alt="/"
+                    onClick={() => {
+                        if (params.PasswordVisibility === "password") {
+                            params.setPasswordVisibility("text");
+                        } else {
+                            params.setPasswordVisibility("password");
+                        }
+                    }}
+                />
+            </div>    
+            <p className="ml-5 mb-2 mt-2 text-cyan-300 text-left text-sm">
+                {params.PasswordError}&nbsp;
+            </p>            
+
+            <p className=" ml-5 mb-1 mt-2 text-white text-left">Please enter the same password again</p>
+            <div className="flex flex-row">    
+                <input className="ml-5 mt-1 w-72 pl-1"
+                    id = "PasswordCopy"
+                    type = {params.PasswordVisibility}
+                    placeholder = ""
+                    autoComplete = "new-password"
+                    value = {params.PasswordCopy}
+                    onChange = {(e) => params.setPasswordCopy(e.target.value)}
+                />
+                <img className="mr-5 ml-0 mt-1 h-6 w-7"
+                    src={eye}
+                    alt="/"
+                    onClick={() => {
+                        if (params.PasswordVisibility === "password") {
+                            params.setPasswordVisibility("text");
+                        } else {
+                            params.setPasswordVisibility("password");
+                        }
+                    }}
+                />
+            </div>    
+            <p className="ml-5 mb-0 mt-2 text-cyan-300 text-left text-sm">
+                {params.PasswordCopyError}&nbsp;
+            </p>
+
+            <div className="flex flex-row mt-5">
+                <button className="bg-cyan-600 text-white font-bold text-sm py-2 px-2 rounded
+                                    mt-1 ml-12"
+                    id = "Back"
+                    style = {{ width: "100px" }}
+                    onClick = {() => {params.setRegistrationState(registrationStates.PAGE_2);}} >      
+                    &lt; Back
+                </button>
+
+                <button className="bg-cyan-600 text-white font-bold text-sm py-2 px-2 rounded
+                                mt-2 ml-5"
+                    id = "Sign_In"
+                    style = {{ width: "100px" }}
+                    onClick={() => {params.setRegistrationState(registrationStates.VERIFY_PAGE_3);}} >      
+                    Sign In
+                </button>
+            </div>
+        </div>
+    );
+}
