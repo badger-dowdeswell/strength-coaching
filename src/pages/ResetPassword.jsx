@@ -18,7 +18,7 @@
 //
 import "./Main.css";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { getBaseURL } from "./getBaseURL";
 
@@ -60,8 +60,9 @@ export default function ResetPassword() {
     const [UserID, setUserID] = useState("");
     const [EmailAddress, setEmailAddress] = useState("");
     const [EmailAddressError, setEmailAddressError] = useState("");
-    const [ResetLink, setResetLink] = useState("");
+    const [RegistrationToken, setRegistrationToken] = useState("");
     const [VerificationCode, setVerificationCode] = useState("");
+    const [VerificationCodeError, setVerificationCodeError] = useState("");
 
     const [Password, setPassword] = useState("");
     const [PasswordError, setPasswordError] = useState("");
@@ -72,10 +73,10 @@ export default function ResetPassword() {
     // input type between "text" and "password".
     const [PasswordVisibility, setPasswordVisibility] = useState("password");
       
-    //let location = useLocation();
+    let location = useLocation();
     //console.log("\nLocation " + location.pathname + " " + window.location.href);
 
-    //let token = new URLSearchParams(location.search).get('vt');
+    let token = new URLSearchParams(location.search).get('vt');
     // http://localhost:3000/ResetPassword?vt=dfdfdfdf_HAHHA
     //console.log("URL [" + location.pathname + "] [" + token + "]"); 
 
@@ -98,8 +99,17 @@ export default function ResetPassword() {
     useEffect(() => { 
         switch (resetState) {
             case resetStates.UNDEFINED: 
-                // This is the initial state transition 
-                setResetState(resetStates.PAGE_1);               
+                let token = new URLSearchParams(location.search).get('rt');
+                console.log(token);
+                if (token !== null) {
+                    // The page has been launched from an link with an embedded URL token. 
+                    console.log("page 3...");
+                    setRegistrationToken(token)
+                    setResetState(resetStates.PAGE_3);                
+                } else {
+                    // This is the initial state transition 
+                    setResetState(resetStates.PAGE_1);
+                }       
                 break;
 
             case resetStates.PAGE_1:
@@ -211,7 +221,7 @@ export default function ResetPassword() {
                                            "@expiry_time=" + expiry_time);
             if (response.status === 200) { 
                 console.log("Token = " + response.data.token); 
-                setResetLink(response.data.token);
+                setRegistrationToken(response.data.token);
                 setResetState(resetStates.LOCK_CLIENT);
             }                    
         } catch (err) { 
@@ -223,6 +233,9 @@ export default function ResetPassword() {
     //
     // lockClient()
     // ============    
+    // Lock the clients record so that they can reset their password. Until they
+    // have completed the next step using the information emailed to them, they
+    // will not be able to log in.
     //
     async function lockClient(user_ID) {        
         console.log("Locking client " + user_ID);
@@ -231,7 +244,7 @@ export default function ResetPassword() {
             user_ID: user_ID,           
             password: "",
             user_status: "R",
-            registration_token: ResetLink, 
+            registration_token: RegistrationToken, 
             verification_code: VerificationCode 
         })
         .then((response) => {
@@ -239,8 +252,7 @@ export default function ResetPassword() {
                 console.log("\nlockClient - status 200");                
                 setResetState(resetStates.EMAIL_CLIENT);                     
             } else if (response.status === 500) { 
-                console.log("\nlockClient - status 500");                                 
-                //setRegistrationState(registrationStates.EMAIL_CLIENT);                
+                console.log("\nlockClient - status 500"); 
             }    
         })
         .catch(err => {
@@ -259,7 +271,7 @@ export default function ResetPassword() {
         
         const html_body = "<p>A request to change your password was made on Strength Coaching Online.</p>" + 
                            "<p>If it was you, then please click on " +        
-                          '<a href="' + URL + '/?vt=' + ResetLink + '">' +
+                          '<a href="' + URL + '/?rt=' + RegistrationToken + '">' +
                           "this link " + "</a>" + 
                           "to go to the Reset my Password page on Strength Coaching Online.</p>" +                                                      
                           "<p>Please enter this verification code into the registration page:</p>" +                           
@@ -326,7 +338,10 @@ export default function ResetPassword() {
 
                     {(resetState === resetStates.PAGE_3) && (
                         <Page_3
-                            PasswordVisibility={PasswordVisibility}   
+                            VerificationCode = {VerificationCode}
+                            setVerificationCode = {setVerificationCode}
+                            VerificationCodeError = {VerificationCodeError}                            
+                            PasswordVisibility = {PasswordVisibility}   
                             setPasswordVisibility={setPasswordVisibility}                              
                             Password={Password}
                             setPassword = {setPassword}
@@ -334,7 +349,7 @@ export default function ResetPassword() {
                             PasswordCopy={PasswordCopy}
                             setPasswordCopy = {setPasswordCopy}
                             PasswordCopyError = {PasswordCopyError}
-                            setResetState={setRegistrationState} 
+                            setResetState={setResetState} 
                         />
                     )}; 
 
@@ -490,25 +505,36 @@ function Page_3(params) {
     return (
         <div className = "mb-1">
             <p className="text-white text-center font-bold text-xl mt-0">
-                Setting your password
+                Resetting your password
             </p>
 
-            <p className="ml-5 mb-1 mt-3 w-72 text-white text-left">
-                Your Strength Coaching Online profile has been created. 
+            <p className="ml-5 mb-1 mt-4 w-72 text-white text-left">
+                Enter the verification code 
             </p>
+            <input className="ml-5 mb-1 mt-1 w-[275px] pl-1"
+                   id = "VerificationCode"
+                   ref={autofocusID}
+                   type = "text"
+                   placeholder = ""
+                   autoComplete = "new-password"
+                   value = {params.VerificationCode}
+                   onChange = {(e) => params.setVerificationCode(e.target.value)}
+            />
+            <p className="ml-5 mb-2 mt-2 text-cyan-300 text-left text-sm">
+                {params.PasswordError}&nbsp;
+            </p>   
 
             <p className="ml-5 mb-1 mt-3 w-70 text-white text-left">    
-                Enter the password you want to use                
+                Enter your new password                
             </p>        
             <div className="flex flex-row">            
-                <input className="ml-5 mt-1 w-72 pl-1"
-                        id = "Password"
-                        ref={autofocusID}
-                        type = {params.PasswordVisibility}
-                        placeholder = ""
-                        autoComplete = "new-password"
-                        value = {params.Password}
-                        onChange = {(e) => params.setPassword(e.target.value)}
+                <input className="ml-5 mt-1 w-[277px] pl-1"
+                       id = "Password"                        
+                       type = {params.PasswordVisibility}
+                       placeholder = ""
+                       autoComplete = "new-password"
+                       value = {params.Password}
+                       onChange = {(e) => params.setPassword(e.target.value)}
                 />
                 <img className="mr-5 ml-0 mt-1 h-6 w-7"
                     src={eye}
@@ -526,7 +552,9 @@ function Page_3(params) {
                 {params.PasswordError}&nbsp;
             </p>            
 
-            <p className=" ml-5 mb-1 mt-2 text-white text-left">Please enter the same password again</p>
+            <p className=" ml-5 mb-1 mt-1 text-white text-left">
+                Please enter your new password again
+            </p>
             <div className="flex flex-row">    
                 <input className="ml-5 mt-1 w-72 pl-1"
                     id = "PasswordCopy"
@@ -548,17 +576,17 @@ function Page_3(params) {
                     }}
                 />
             </div>    
-            <p className="ml-5 mb-0 mt-2 text-cyan-300 text-left text-sm">
+            <p className="ml-5 mb-1 mt-2 text-cyan-300 text-left text-sm">
                 {params.PasswordCopyError}&nbsp;
             </p>
 
             <div className="flex flex-row mt-5">
                 <button className="bg-cyan-600 text-white font-bold text-sm py-2 px-2 rounded
-                                    mt-1 ml-12"
+                                    mt-2 ml-12"
                     id = "Back"
                     style = {{ width: "100px" }}
                     onClick = {() => {params.setRegistrationState(registrationStates.PAGE_2);}} >      
-                    &lt; Back
+                    Cancel
                 </button>
 
                 <button className="bg-cyan-600 text-white font-bold text-sm py-2 px-2 rounded

@@ -595,34 +595,33 @@ app.put('/api/updateUser', async(request, response) => {
         var password = request.body.password.trim();
         if (password !== "") {
             // The user has provided a new password to update their record.
-            //logmsg("Password changed...[" + password + "] - encrypting it.\n");
+            // logmsg("Password is being changed...[" + password + "] - encrypting it...\n");
             var hashedPassword = await encryptPassword((password.replace(/'/g, "''")));
             sqlUpdateCmd = sqlUpdateCmd + ' "password" = ' + "'" + hashedPassword + "' , ";
         } 
         
         sqlUpdateCmd = sqlUpdateCmd +         
-                ' "salutation" = ' + "'" + request.body.salutation + "' , " +
-                ' "first_name" = ' + "'" + request.body.first_name.replace(/'/g, "''") + "' , " +
-                ' "last_name" = ' + "'" + request.body.last_name.replace(/'/g, "''") + "' , " +
-                ' "alias" = ' + "'" + request.body.alias.replace(/'/g, "''") + "' , " +
-                ' "phone_number" = ' + "'" + request.body.phone_number.replace(/'/g, "''") + "' , " +
-                ' "email_address" = ' + "'" + request.body.email_address.replace(/'/g, "''") + "' , " +
-                ' "address_1" = ' + "'" + request.body.address_1.replace(/'/g, "''") + "' , " +
-                ' "address_2" = ' + "'" + request.body.address_2.replace(/'/g, "''") + "' , " +
-                ' "address_3" = ' + "'" + request.body.address_3.replace(/'/g, "''") + "' , " +
-                ' "suburb" = ' + "'" + request.body.suburb.replace(/'/g, "''") + "' , " +
-                ' "city" = ' + "'" + request.body.city.replace(/'/g, "''") + "' , " +
-                ' "postcode" = ' + "'" + request.body.postcode.replace(/'/g, "''") + "' , " +
-                ' "state" = ' + "'" + request.body.state.replace(/'/g, "''") + "' , " +
-                ' "country" = ' + "'" + request.body.country.replace(/'/g, "''") + "' , " +
-                ' "date_of_birth" = ' + "'" + request.body.date_of_birth.replace(/'/g, "''") + "', " +
-                ' "user_image" = ' + "'" + request.body.user_image.replace(/'/g, "''") + "' " +
-                ' WHERE "user_ID" = ' + "'" + request.body.user_ID + "';\n" +                
-            'EXCEPTION\n ' +
-            'WHEN OTHERS THEN\n' +
-               'ROLLBACK\n; ' +
-            'END; $$\n';
-        
+                    ' "salutation" = ' + "'" + request.body.salutation + "' , " +
+                    ' "first_name" = ' + "'" + request.body.first_name.replace(/'/g, "''") + "' , " +
+                    ' "last_name" = ' + "'" + request.body.last_name.replace(/'/g, "''") + "' , " +
+                    ' "alias" = ' + "'" + request.body.alias.replace(/'/g, "''") + "' , " +
+                    ' "phone_number" = ' + "'" + request.body.phone_number.replace(/'/g, "''") + "' , " +
+                    ' "email_address" = ' + "'" + request.body.email_address.replace(/'/g, "''") + "' , " +
+                    ' "address_1" = ' + "'" + request.body.address_1.replace(/'/g, "''") + "' , " +
+                    ' "address_2" = ' + "'" + request.body.address_2.replace(/'/g, "''") + "' , " +
+                    ' "address_3" = ' + "'" + request.body.address_3.replace(/'/g, "''") + "' , " +
+                    ' "suburb" = ' + "'" + request.body.suburb.replace(/'/g, "''") + "' , " +
+                    ' "city" = ' + "'" + request.body.city.replace(/'/g, "''") + "' , " +
+                    ' "postcode" = ' + "'" + request.body.postcode.replace(/'/g, "''") + "' , " +
+                    ' "state" = ' + "'" + request.body.state.replace(/'/g, "''") + "' , " +
+                    ' "country" = ' + "'" + request.body.country.replace(/'/g, "''") + "' , " +
+                    ' "date_of_birth" = ' + "'" + request.body.date_of_birth.replace(/'/g, "''") + "', " +
+                    ' "user_image" = ' + "'" + request.body.user_image.replace(/'/g, "''") + "' " +
+                    ' WHERE "user_ID" = ' + "'" + request.body.user_ID + "';\n" +                
+                    'EXCEPTION\n ' +
+                    'WHEN OTHERS THEN\n' +
+                    'ROLLBACK\n; ' +
+                    'END; $$\n';
         //logmsg("/api/updateUser \n" + sqlUpdateCmd + "\n");
 
         db.query(
@@ -643,7 +642,8 @@ app.put('/api/updateUser', async(request, response) => {
 //
 // lockUser()
 // ==========
-// Locks the clients record during a password reset process when they have forgotten their password.
+// Locks the clients record during the password reset process when they have forgotten their password.
+// The API unlockUser is called to reset their password correctly and unlock their record.
 //
 app.put('/api/lockUser', async(request, response) => {
     var sqlUpdateCmd =  'DO $$\n' +
