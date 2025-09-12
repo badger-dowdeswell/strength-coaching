@@ -160,7 +160,7 @@ export default function ResetPassword() {
         } else {    
             if (!/\S+@\S+\.\S+/.test(EmailAddress)) {
                 setEmailAddressError("The email address entered is not valid.");
-                setResetState(resetStates.resetStates.PAGE_1);
+                setResetState(resetStates.PAGE_1);
             } else {
                 console.log("\nReady to verify..");                
                 checkClientExists(EmailAddress);
@@ -181,7 +181,12 @@ export default function ResetPassword() {
                 setUserID(response.data.user_ID);   
                 console.log("checkUserExists() found client " + response.data.user_ID);                  
                 setResetState(resetStates.CLIENT_EXISTS);    
-            }                    
+            } else if (response.status === 404) {
+                // No client is registered with that email.
+                console.log("Returned 404");
+                setUserID("");   
+                setResetState(resetStates.CLIENT_DOES_NOT_EXIST); 
+            }                   
         } catch (err) {
             // No client is registered with that email.
             setUserID("");   
@@ -304,8 +309,8 @@ export default function ResetPassword() {
                         />
                     )}; 
 
-                    {((resetState === resetStates.CLIENT_EXISTS) || (resetState === resetStates.CLIENT_DOES_NOT_EXIST)) 
-                       || (resetState === resetStates.EMAILING_CLIENT) || (resetState === resetStates.LOCK_CLIENT) && (
+                    {((resetState === resetStates.CLIENT_EXISTS) || (resetState === resetStates.CLIENT_DOES_NOT_EXIST) 
+                      || (resetState === resetStates.EMAIL_CLIENT) || (resetState === resetStates.LOCK_CLIENT)) && (                       
                         <Page_2 
                             EmailAddress={EmailAddress} 
                             setResetState={setResetState}                                                            

@@ -306,8 +306,9 @@ export default function Registration() {
         axios.put(baseURL + "createUser", {
             user_authority: "U",
             password: Password,
-            user_status: "A",  
-            registration_token: VerificationCode,          
+            user_status: "A",
+            registration_token: "", 
+            verification_code: VerificationCode,          
             first_name: FirstName,            
             last_name: LastName,
             email_address: EmailAddress, 
