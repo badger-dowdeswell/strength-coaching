@@ -242,7 +242,7 @@ process.on('SIGINT', () => {
 // that contains a hashed user ID and an expiry time specified
 // by the calling function. It uses the same JTW secret as the
 // other token-generating functions in this back-end. When re-
-// submitted later, it can be verified using the verifyJWT() 
+// submitted later, it can be verified using the verifyToken() 
 // function to ensure it has not timed out.
 //
 app.get('/api/getToken', async(request, response) => {
@@ -257,8 +257,22 @@ app.get('/api/getToken', async(request, response) => {
             response.status(500).json({err});
         }
     });
-});    
+});  
 
+// 
+// verifyToken()
+// =============
+app.get('/api/verifyToken', async(request, response) => {
+    logmsg('/api/verifyToken ' + request.query.registration_token);    
+    const registration_token = request.query.registration_token;    
+    if (verifyJWT(registration_token)) {
+        logmsg('/api/verifyToken verified');
+        response.status(200).send("verified");
+    } else {
+        logmsg('/api/verifyToken not verified');
+        response.status(500).send("not verified");    
+    };
+});  
 
 //
 // verifyJWT()
@@ -311,6 +325,7 @@ app.get('/api/authenticateUser', async(request, response) => {
                 console.log("/api/authenticateUser: user found");
                 response.setHeader("Content-Type", "application/json");
                 const encryptedPassword = result.rows[0].password;
+                const user_status = result.rows[0].user_status;
                 const user_ID = result.rows[0].user_ID;
                 const user_authority = result.rows[0].user_authority;
                 const first_name = result.rows[0].first_name;
@@ -328,6 +343,7 @@ app.get('/api/authenticateUser', async(request, response) => {
                         jwt.sign({user_ID}, JWT_SECRET, JWT_EXPIRES_IN , (err, token) => {
                             if (!err) {
                                 const packet = {user_ID: user_ID,
+                                                user_status: user_status,
                                                 first_name: first_name,
                                                 last_name:  last_name,
                                                 user_authority: user_authority,
@@ -439,39 +455,6 @@ app.put('/api/createUser', async (request, response) => {
         }
     });
 });
-
-//
-// getUser without JWT()
-// =====================
-// RA_BRD - this is not called by any front-end process. Deprecate it after further testing
-//          since there is already another getUser API defined before this. It turns out that
-//          Express routes are matched sequentially, and the first matching route will always 
-//          handle the request. That suggests that this API will never be called.
-//
-// API to return an individual user's information based on their user_ID. Users may
-// be administrators, trainers, or their clients.// 
-//
-// app.get('/api/getUser', async (request, response) => {
-//     const user_ID = request.query.user_ID;    
-//     const sqlSelectCmd = 'SELECT * FROM "User" WHERE "user_ID" = ' + "'" + user_ID + "';";
-//     logmsg("api/getUser without JWT\n" + sqlSelectCmd + "\n");
-//     db.query(sqlSelectCmd, (err, result) => {
-//         if (!err) {
-//             if (result.rows[0] !== undefined) {
-//                 //console.log("/api/getUser: user found");
-//                 response.setHeader("Content-Type", "application/json");
-//                 response.status(200).json(result.rows[0]);
-//             } else {
-//                 //console.log("/api/getUser: user was not found");
-//                 response.status(404).send('User was not found');
-//             }
-//         } else {
-//             response.status(500).send('Returned error' + err);
-//             //logmsg("/api/getUser returned error :" + err + "\n");
-//             //logmsg(sqlSelectCmd);
-//         }
-//     });
-// });
 
 //
 // getUserByEmail()

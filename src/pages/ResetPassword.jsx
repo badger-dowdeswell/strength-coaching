@@ -1,12 +1,14 @@
 //
 // RESET MY PASSWORD
 // =================
-// This page allows q client to reset their password using a verification
-// code that is emailed to them. 
+// This set of pages allow a client to reset their password using a
+// verification code that is emailed to them and a link to launch
+// the hidden password reset page. 
 // 
 // The email is sent to the email address they enter, but only if that 
-// email address can be found in the database. This helps stop hackers
-// trying to change the password of an exising client without their approval.
+// email address can be found in the database, verifying that they are
+// already a client. This helps stop hackers trying to change the password
+// of an exising client without their approval.
 // 
 // Revision History
 // ================
@@ -57,6 +59,14 @@ const resetStates = {
 export default function ResetPassword() {
     let navigate = useNavigate();
 
+    // Reset their credentials since they are not authenticated.
+    sessionStorage.setItem("userID", "");
+    sessionStorage.setItem("FirstName", "");
+    sessionStorage.setItem("LastName", "");
+    sessionStorage.setItem("UserAuthority", "");
+    sessionStorage.setItem("UserImage", "");
+    sessionStorage.setItem("JWT", "");            
+
     const [UserID, setUserID] = useState("");
     const [EmailAddress, setEmailAddress] = useState("");
     const [EmailAddressError, setEmailAddressError] = useState("");
@@ -97,15 +107,16 @@ export default function ResetPassword() {
     //        
     const [resetState, setResetState] = useState(resetStates.UNDEFINED); 
     useEffect(() => { 
+        var error = false;
+
         switch (resetState) {
             case resetStates.UNDEFINED: 
                 let token = new URLSearchParams(location.search).get('rt');
                 console.log(token);
                 if (token !== null) {
                     // The page has been launched from an link with an embedded URL token. 
-                    console.log("page 3...");
-                    setRegistrationToken(token)
-                    setResetState(resetStates.PAGE_3);                
+                    console.log("verifying token ...");
+                    verifyToken(token);                             
                 } else {
                     // This is the initial state transition 
                     setResetState(resetStates.PAGE_1);
@@ -143,9 +154,44 @@ export default function ResetPassword() {
             case resetStates.EMAIL_CLIENT:
                 // Email the client
                 emailResetLink(EmailAddress);
-                break;  
-
+                break; 
+                
+            case resetStates.VERIFY_PAGE_3:
+                if (VerificationCode.trim() === "") {
+                    setVerificationCodeError("A verification code must be entered");
+                    error = true;
+                } else {
+                    setVerificationCodeError("");
+                }
+                
+                if (Password.trim() === "") {
+                    setPasswordError("A password must be entered");
+                    error = true;
+                } else {
+                    setPasswordError("");
+                }
             
+                if (PasswordCopy.trim() === "") {
+                    setPasswordCopyError("A password must be entered");
+                    error = true;
+                } else {
+                    setPasswordCopyError("");
+                }
+
+                if (!error) {
+                    if (Password.trim() !== PasswordCopy.trim()) {
+                        setPasswordError("The passwords do not match");
+                        setPasswordCopyError("The passwords do not match");
+                        error = true;
+                    }
+                } 
+                
+                if (error) {
+                    setResetState(resetStates.PAGE_3);
+                } else {                      
+                    setResetState(resetStates.CREATING_USER);
+                }
+                break;                
 
             default:
                 break;     
@@ -226,6 +272,24 @@ export default function ResetPassword() {
             }                    
         } catch (err) { 
             console.log("Token error:" + err);
+            setResetState(resetStates.PAGE_1);
+        } 
+    };
+
+    //
+    // verifyToken()
+    // =============
+    async function verifyToken(registration_token) {        
+        try {
+            let response = await axios.get(baseURL + "verifyToken?registration_token=" + registration_token);                                            
+            if (response.status === 200) { 
+                console.log("VerifyToken = 200");
+                setResetState(resetStates.PAGE_3);                
+            } else {                    
+                setResetState(resetStates.PAGE_1);                
+            }                    
+        } catch (err) { 
+            console.log("verifyToken error:" + err);
             setResetState(resetStates.PAGE_1);
         } 
     };
@@ -350,6 +414,7 @@ export default function ResetPassword() {
                             setPasswordCopy = {setPasswordCopy}
                             PasswordCopyError = {PasswordCopyError}
                             setResetState={setResetState} 
+                            navigate={navigate}
                         />
                     )}; 
 
@@ -503,7 +568,7 @@ function Page_3(params) {
     },[]);
     
     return (
-        <div className = "mb-1">
+        <div className = "mb-0">
             <p className="text-white text-center font-bold text-xl mt-0">
                 Resetting your password
             </p>
@@ -511,7 +576,7 @@ function Page_3(params) {
             <p className="ml-5 mb-1 mt-4 w-72 text-white text-left">
                 Enter the verification code 
             </p>
-            <input className="ml-5 mb-1 mt-1 w-[275px] pl-1"
+            <input className="ml-5 mb-0 mt-1 w-[275px] pl-1"
                    id = "VerificationCode"
                    ref={autofocusID}
                    type = "text"
@@ -520,11 +585,11 @@ function Page_3(params) {
                    value = {params.VerificationCode}
                    onChange = {(e) => params.setVerificationCode(e.target.value)}
             />
-            <p className="ml-5 mb-2 mt-2 text-cyan-300 text-left text-sm">
-                {params.PasswordError}&nbsp;
+            <p className="ml-5 mb-1 mt-2 text-cyan-300 text-left text-sm">
+                {params.VerificationCodeError}&nbsp;
             </p>   
 
-            <p className="ml-5 mb-1 mt-3 w-70 text-white text-left">    
+            <p className="ml-5 mb-1 mt-2 w-70 text-white text-left">    
                 Enter your new password                
             </p>        
             <div className="flex flex-row">            
@@ -548,11 +613,11 @@ function Page_3(params) {
                     }}
                 />
             </div>    
-            <p className="ml-5 mb-2 mt-2 text-cyan-300 text-left text-sm">
+            <p className="ml-5 mb-1 mt-2 text-cyan-300 text-left text-sm">
                 {params.PasswordError}&nbsp;
             </p>            
 
-            <p className=" ml-5 mb-1 mt-1 text-white text-left">
+            <p className=" ml-5 mb-1 mt-0 text-white text-left">
                 Please enter your new password again
             </p>
             <div className="flex flex-row">    
@@ -576,16 +641,16 @@ function Page_3(params) {
                     }}
                 />
             </div>    
-            <p className="ml-5 mb-1 mt-2 text-cyan-300 text-left text-sm">
+            <p className="ml-5 mb-0 mt-2 text-cyan-300 text-left text-sm">
                 {params.PasswordCopyError}&nbsp;
             </p>
 
-            <div className="flex flex-row mt-5">
+            <div className="flex flex-row mt-1">
                 <button className="bg-cyan-600 text-white font-bold text-sm py-2 px-2 rounded
                                     mt-2 ml-12"
                     id = "Back"
                     style = {{ width: "100px" }}
-                    onClick = {() => {params.setRegistrationState(registrationStates.PAGE_2);}} >      
+                    onClick = {() => {params.navigate("/");}} >      
                     Cancel
                 </button>
 
@@ -593,7 +658,7 @@ function Page_3(params) {
                                 mt-2 ml-5"
                     id = "Sign_In"
                     style = {{ width: "100px" }}
-                    onClick={() => {params.setRegistrationState(registrationStates.VERIFY_PAGE_3);}} >      
+                    onClick={() => {params.setResetState(resetStates.VERIFY_PAGE_3);}} >      
                     Sign In
                 </button>
             </div>

@@ -173,11 +173,7 @@ export default function Registration() {
                 }
                 break;
 
-            case registrationStates.PAGE_3:
-                // This page is displayed when the new user is ready to be 
-                // created after they have entered their registration code 
-                // correctly. It allows them to set their password and then
-                // navigate to the sign in page for the first time.
+            case registrationStates.PAGE_3:                
                 break;
 
             case registrationStates.VERIFY_PAGE_3:

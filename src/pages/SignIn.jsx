@@ -41,6 +41,7 @@ function SignIn() {
     const [UserID, setUserID] = useState("");
     const [JWT, setJWT] = useState("");
     const [UserAuthority, setUserAuthority] = useState("");
+    const [UserStatus, setUserStatus] = useState("");
     const [FirstName, setFirstName] = useState("");
     const [LastName, setLastName] = useState("");
     const [Password, setPassword] = useState("");
@@ -190,7 +191,8 @@ function SignIn() {
             );
             if (response.status === 200) {
                 // The user was found and their credentials were authenticated.
-                console.log("\nauthenticate(): " + response.status + "\n");
+                //console.log("\nauthenticate(): " + response.status + "\n");
+                setUserStatus(response.data.userStatus);
                 setUserID(response.data.user_ID);
                 setFirstName(response.data.first_name);
                 console.log("First_name " + response.data.first_name);
@@ -203,7 +205,7 @@ function SignIn() {
                 setEditingState(editingStates.NOT_AUTHENTICATED);
             }
         } catch (err) {
-            console.log("authenticateUser error " + err.message);
+            //console.log("authenticateUser error " + err.message);
             setEditingState(editingStates.NOT_AUTHENTICATED);
         }
     };
