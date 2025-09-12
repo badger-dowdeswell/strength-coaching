@@ -96,8 +96,6 @@ const app = express();
 
 const version = 1.03;
 
-//import path from "path";  //RA_BRD is this used?
-
 //
 // multer()
 // ========
@@ -640,6 +638,41 @@ app.put('/api/updateUser', async(request, response) => {
             }
         );
     }
+}); 
+
+//
+// lockUser()
+// ==========
+// Locks the clients record during a password reset process when they have forgotten their password.
+//
+app.put('/api/lockUser', async(request, response) => {
+    var sqlUpdateCmd =  'DO $$\n' +
+                        'BEGIN \n' +
+                            'UPDATE "User" SET ' +
+                            ' "user_status" = ' + "'" + request.body.user_status + "' , " +  
+                            ' "password" = ' + "'' , " +
+                            ' "registration_token" = ' + "'" + request.body.registration_token + "' , " +
+                            ' "verification_code" = ' + "'" + request.body.verification_code + "' " +  
+                            ' WHERE "user_ID" = ' + "'" + request.body.user_ID + "';\n" +                
+                        'EXCEPTION\n ' +
+                        'WHEN OTHERS THEN\n' +
+                        'ROLLBACK\n; ' +
+                        'END; $$\n';
+        
+    logmsg("/api/lockUser \n" + sqlUpdateCmd + "\n");
+
+    db.query(
+        sqlUpdateCmd, (err, result) => {                 
+            if (!err) {
+                response.status(200).send("/api/lockUser: user updated.");
+                logmsg("/api/lockUser user updated.");                    
+            } else {
+                response.status(500).send("/api/lockUser: Unexpected error " + err.message);
+                logmsg("/api/lockUser returned an unexpected error :" + err.message + "\n" +
+                       "query: " + sqlUpdateCmd);
+            }
+        }
+    );    
 }); 
 
 // 

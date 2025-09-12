@@ -130,7 +130,7 @@ export default function ResetPassword() {
                 lockClient(UserID);   
                 break; 
 
-            case resetStates.EMAILING_CLIENT:
+            case resetStates.EMAIL_CLIENT:
                 // Email the client
                 emailResetLink(EmailAddress);
                 break;  
@@ -222,25 +222,31 @@ export default function ResetPassword() {
 
     //
     // lockClient()
-    // ============
-    // 
+    // ============    
     //
     async function lockClient(user_ID) {        
         console.log("Locking client " + user_ID);
-        
-        
-        // try {
-        //     let response = await axios.get(baseURL + "getToken?user_ID=" + user_ID + 
-        //                                    "@expiry_time=" + expiry_time);
-        //     if (response.status === 200) { 
-        //         console.log("Token = " + response.data.token); 
-        //         setResetLink(response.data.token);
-        //         setResetState(resetStates.EMAILING_CLIENT);
-        //     }                    
-        // } catch (err) { 
-        //     console.log("Token error:" + err);
-        // } 
-    };
+
+        axios.put(baseURL + "lockUser", { 
+            user_ID: user_ID,           
+            password: "",
+            user_status: "R",
+            registration_token: ResetLink, 
+            verification_code: VerificationCode 
+        })
+        .then((response) => {
+            if (response.status === 200) {
+                console.log("\nlockClient - status 200");                
+                setResetState(resetStates.EMAIL_CLIENT);                     
+            } else if (response.status === 500) { 
+                console.log("\nlockClient - status 500");                                 
+                //setRegistrationState(registrationStates.EMAIL_CLIENT);                
+            }    
+        })
+        .catch(err => {
+            console.log("\nlockClient - err " + err);    
+        })        
+    }; 
 
     //
     // emailResetLink()
