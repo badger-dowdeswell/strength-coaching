@@ -24,6 +24,7 @@
 // 10.01.2025 BRD Re-wrote the router code so everything launches
 //                from this single StrengthCoaching file.
 //
+import { StrictMode } from 'react';
 import ReactDOM from 'react-dom/client';
 import { BrowserRouter } from 'react-router-dom';
 import { Route, Routes } from "react-router-dom";
@@ -51,19 +52,21 @@ import EditMyProfile from "./pages/EditMyProfile";
 //
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
-    <BrowserRouter>
-        <Routes>
-            <Route path="/" element={<Landing />} />            
-            <Route path="/SignIn" element={<SignIn />} />
-            <Route path="/ResetPassword" element={<ResetPassword />} /> 
-            <Route path="/Registration" element={<Registration />} />
-            <Route path="/More" element={<More />} />
-            <Route path="/Home" element={<Home />} />
-            <Route path="/Today" element={<Today />} />
-            <Route path="/MySchedule" element={<MySchedule />} />
-            <Route path="/MyProgress" element={<MyProgress />} />
-            <Route path="/MyMessages" element={<MyMessages />} />
-            <Route path="/EditMyProfile" element={<EditMyProfile />} />            
-        </Routes>
-    </BrowserRouter>
+    <StrictMode>
+        <BrowserRouter>
+            <Routes>
+                <Route path="/" element={<Landing />} />            
+                <Route path="/SignIn" element={<SignIn />} />
+                <Route path="/ResetPassword" element={<ResetPassword />} /> 
+                <Route path="/Registration" element={<Registration />} />
+                <Route path="/More" element={<More />} />
+                <Route path="/Home" element={<Home />} />
+                <Route path="/Today" element={<Today />} />
+                <Route path="/MySchedule" element={<MySchedule />} />
+                <Route path="/MyProgress" element={<MyProgress />} />
+                <Route path="/MyMessages" element={<MyMessages />} />
+                <Route path="/EditMyProfile" element={<EditMyProfile />} />            
+            </Routes>
+        </BrowserRouter>
+    </StrictMode>
 );

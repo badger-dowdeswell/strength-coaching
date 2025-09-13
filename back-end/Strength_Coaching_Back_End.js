@@ -484,6 +484,37 @@ app.get('/api/getUserByEmail', async (request, response) => {
 });
 
 //
+// getUserByVerificationCode()
+// ===========================
+// API to return an individual user's record based on their one-time verification
+// code. This is used when the user is resetting their password after forgetting it.
+// The unlockUser API blanks both their verification code and their registration_token
+// so they cannot be re-used or cause confusion later.
+//
+app.get('/api/getUserByVerificationCode', async (request, response) => {
+    const verification_code = request.query.verification_code;
+    logmsg("/api/getUserByVerificationCode " + verification_code);
+    // eslint-disable-next-line no-useless-concat
+    const sqlSelectCmd = 'SELECT * FROM "User" WHERE "verification_code" = ' + "'" + verification_code + "'";
+    db.query(sqlSelectCmd, (err, result) => {
+        if (!err) {
+            if (result.rows[0] !== undefined) {
+                console.log("/api/getUserByVerificationCode: user found");
+                response.setHeader("Content-Type", "application/json");
+                response.status(200).json(result.rows[0]);
+            } else {
+                logmsg("/api/getUserByVerificationCode: user not found");
+                response.setHeader("Content-Type", "application/json");
+                response.status(404).send('User not found');
+            }
+        } else {
+            response.status(500).send('Returned error' + err);
+            logmsg("/api/getUserByVerificationCode returned error" + err + "\n" + sqlSelectCmd);
+        }
+    });
+});
+
+//
 // duplicateAlias()
 // ================
 // Checks the alias entered by a user while editing their profile is not already in-use

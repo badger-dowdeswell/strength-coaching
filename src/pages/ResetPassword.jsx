@@ -35,9 +35,9 @@ import Reset_Person from "./images/Reset_Person.png";
 import eye from "./images/password_eye.png";
 
 //
-// resetStates
+// states
 // ===========
-const resetStates = {
+const states = {
     UNDEFINED: 0,
     PAGE_1: 1,
     VERIFY_PAGE_1: 2,     
@@ -50,6 +50,8 @@ const resetStates = {
     EMAIL_CLIENT: 9,
     PAGE_3: 10,
     VERIFY_PAGE_3: 11,
+    CLIENT_VERIFIED: 12,
+    CLIENT_NOT_VERIFIED: 13,
     ERROR: 500,
 };
 
@@ -96,67 +98,68 @@ export default function ResetPassword() {
     // The password reset process operates as a State Machine. This allows it to move
     // stage-by-stage forwards and backwards, waiting at appropriate times for an
     // async process to return a value before transitioning to a new stage. The
-    // current state is held in resetState, which always contains one of the
-    // pre-defined resetStates enumerated constants.
+    // current state is held in state, which always contains one of the
+    // pre-defined states enumerated constants.
     //    
     // The useState Hook ensures that the environment gets updated and re-configured 
     // each time the state changes. This can trigger page transitions, reads and writes 
     // from the database, or display errors that require the client to correct what 
-    // they entered. The set of possible states is defined in the resetStates
+    // they entered. The set of possible states is defined in the states
     // enumerated list declared above.
     //        
-    const [resetState, setResetState] = useState(resetStates.UNDEFINED); 
+    const [state, setState] = useState(states.UNDEFINED); 
     useEffect(() => { 
         var error = false;
 
-        switch (resetState) {
-            case resetStates.UNDEFINED: 
+        switch (state) {
+            case states.UNDEFINED: 
                 let token = new URLSearchParams(location.search).get('rt');
                 console.log(token);
                 if (token !== null) {
                     // The page has been launched from an link with an embedded URL token. 
                     console.log("verifying token ...");
+                    setRegistrationToken(token);
                     verifyToken(token);                             
                 } else {
                     // This is the initial state transition 
-                    setResetState(resetStates.PAGE_1);
+                    setState(states.PAGE_1);
                 }       
                 break;
 
-            case resetStates.PAGE_1:
+            case states.PAGE_1:
                 // Display the first page that explains to the
                 // client what they need to do. It requests their
                 // registered email address.                
                 break;
 
-            case resetStates.VERIFY_PAGE_1:
+            case states.VERIFY_PAGE_1:
                 // Verifies that the email entered belongs to
                 // a registered client.                
                 verifyEmail();                
                 break; 
                 
-            case resetStates.CLIENT_DOES_NOT_EXIST:
+            case states.CLIENT_DOES_NOT_EXIST:
                 // Do nothing. The page will tell them that that address will get
                 // an email sent to it, but it won't.
                 console.log("\nNo client with that email address was found");
                 break;    
                 
-            case resetStates.CLIENT_EXISTS:
+            case states.CLIENT_EXISTS:
                 // A client with that email address was found. Generate the token they
                 // need and generate the password reset token.
                 generateToken(UserID);
                 break; 
 
-            case resetStates.LOCK_CLIENT: 
+            case states.LOCK_CLIENT: 
                 lockClient(UserID);   
                 break; 
 
-            case resetStates.EMAIL_CLIENT:
+            case states.EMAIL_CLIENT:
                 // Email the client
                 emailResetLink(EmailAddress);
                 break; 
                 
-            case resetStates.VERIFY_PAGE_3:
+            case states.VERIFY_PAGE_3:
                 if (VerificationCode.trim() === "") {
                     setVerificationCodeError("A verification code must be entered");
                     error = true;
@@ -187,17 +190,27 @@ export default function ResetPassword() {
                 } 
                 
                 if (error) {
-                    setResetState(resetStates.PAGE_3);
+                    setState(states.PAGE_3);
                 } else {                      
-                    setResetState(resetStates.CREATING_USER);
+                    checkClientExists("", VerificationCode);
                 }
-                break;                
+                break;
+                
+            case states.CLIENT_VERIFIED:
+                // unlock the client...
+                navigate("/SignIn");
+                break;
+
+            case states.CLIENT_NOT_VERIFIED: 
+                setVerificationCodeError("That verification code is not valid.");
+                setState(states.PAGE_3); 
+                break;  
 
             default:
                 break;     
         }    
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [resetState]);
+    }, [state]);
 
     //
     // verifyEmail()
@@ -212,14 +225,14 @@ export default function ResetPassword() {
 
         if (!EmailAddress.trim()) {
             setEmailAddressError("An email address must be entered.")
-            setResetState(resetStates.PAGE_1);
+            setState(states.PAGE_1);
         } else {    
             if (!/\S+@\S+\.\S+/.test(EmailAddress)) {
                 setEmailAddressError("The email address entered is not valid.");
-                setResetState(resetStates.PAGE_1);
+                setState(states.PAGE_1);
             } else {
                 console.log("\nReady to verify..");                
-                checkClientExists(EmailAddress);
+                checkClientExists(EmailAddress, "");
             }      
         }
     };
@@ -227,27 +240,55 @@ export default function ResetPassword() {
     //
     // checkClientExists() 
     // ===================
-    // Verifys that the client exists by loading their client record using their email address as a key.
+    // Verifys that the client exists by loading their client record using either their email 
+    // address or the verification code they entered as a key.
     //
-    const checkClientExists = async (email_address) => {
-        console.log("\ncheckUserExists " + email_address);
-        try {
-            let response = await axios.get(baseURL + "getUserByEmail?email_address=" + email_address);
-            if (response.status === 200) {  
-                setUserID(response.data.user_ID);   
-                console.log("checkUserExists() found client " + response.data.user_ID);                  
-                setResetState(resetStates.CLIENT_EXISTS);    
-            } else if (response.status === 404) {
+    const checkClientExists = async (email_address, verification_code) => {
+        if (email_address.trim() !== "") {
+            console.log("\ncheckUserExists " + email_address + " " + verification_code);
+            try {
+                let response = await axios.get(baseURL + "getUserByEmail?email_address=" + email_address);
+                if (response.status === 200) {  
+                    setUserID(response.data.user_ID);   
+                    console.log("checkUserExists() found client " + response.data.user_ID);                  
+                    setState(states.CLIENT_EXISTS);    
+                } else if (response.status === 404) {
+                    // No client is registered with that email.
+                    console.log("Returned 404");
+                    setUserID("");   
+                    setState(states.CLIENT_DOES_NOT_EXIST); 
+                }                   
+            } catch (err) {
                 // No client is registered with that email.
-                console.log("Returned 404");
                 setUserID("");   
-                setResetState(resetStates.CLIENT_DOES_NOT_EXIST); 
-            }                   
-        } catch (err) {
-            // No client is registered with that email.
-            setUserID("");   
-            setResetState(resetStates.CLIENT_DOES_NOT_EXIST);  
-        } 
+                setState(states.CLIENT_DOES_NOT_EXIST);  
+            } 
+        } else if (verification_code.trim() !== "") { 
+            try {
+                let response = await axios.get(baseURL + "getUserByVerificationCode?verification_code=" + verification_code);
+                if (response.status === 200) {  
+                    setUserID(response.data.user_ID);   
+                    console.log("checkUserExists() found client " + response.data.user_ID);  
+                    if (response.data.registration_token === RegistrationToken) {
+                        setVerificationCodeError("");
+                        setState(states.CLIENT_VERIFIED);
+                    } else {
+                        setState(states.PAGE_3);       
+                    }
+                } else if (response.status === 404) {
+                    // No client is registered with that verification code.
+                    console.log("Returned 404");
+                    setUserID("");
+                    setVerificationCodeError("That verification code is not valid");
+                    setState(states.PAGE_3);   
+                }                   
+            } catch (err) {
+                // No client is registered with that verification code.
+                setUserID(""); 
+                setVerificationCodeError("That verification code is not valid");  
+                setState(states.PAGE_3);    
+            } 
+        }    
     };
 
     //
@@ -268,11 +309,11 @@ export default function ResetPassword() {
             if (response.status === 200) { 
                 console.log("Token = " + response.data.token); 
                 setRegistrationToken(response.data.token);
-                setResetState(resetStates.LOCK_CLIENT);
+                setState(states.LOCK_CLIENT);
             }                    
         } catch (err) { 
             console.log("Token error:" + err);
-            setResetState(resetStates.PAGE_1);
+            setState(states.PAGE_1);
         } 
     };
 
@@ -284,13 +325,13 @@ export default function ResetPassword() {
             let response = await axios.get(baseURL + "verifyToken?registration_token=" + registration_token);                                            
             if (response.status === 200) { 
                 console.log("VerifyToken = 200");
-                setResetState(resetStates.PAGE_3);                
+                setState(states.PAGE_3);                
             } else {                    
-                setResetState(resetStates.PAGE_1);                
+                setState(states.PAGE_1);                
             }                    
         } catch (err) { 
             console.log("verifyToken error:" + err);
-            setResetState(resetStates.PAGE_1);
+            setState(states.PAGE_1);
         } 
     };
 
@@ -314,7 +355,7 @@ export default function ResetPassword() {
         .then((response) => {
             if (response.status === 200) {
                 console.log("\nlockClient - status 200");                
-                setResetState(resetStates.EMAIL_CLIENT);                     
+                setState(states.EMAIL_CLIENT);                     
             } else if (response.status === 500) { 
                 console.log("\nlockClient - status 500"); 
             }    
@@ -381,26 +422,26 @@ export default function ResetPassword() {
                 <div className="flex flex-col box-border border-2 rounded-lg
                                 h-82 w-80">
                                 
-                    {(resetState === resetStates.PAGE_1) && (
+                    {(state === states.PAGE_1) && (
                         <Page_1
                             EmailAddress={EmailAddress}
                             setEmailAddress={setEmailAddress}
                             EmailAddressError={EmailAddressError}
-                            setResetState={setResetState}                                
+                            setState={setState}                                
                             navigate={navigate}
                         />
                     )}; 
 
-                    {((resetState === resetStates.CLIENT_EXISTS) || (resetState === resetStates.CLIENT_DOES_NOT_EXIST) 
-                      || (resetState === resetStates.EMAIL_CLIENT) || (resetState === resetStates.LOCK_CLIENT)) && (                       
+                    {((state === states.CLIENT_EXISTS) || (state === states.CLIENT_DOES_NOT_EXIST) 
+                      || (state === states.EMAIL_CLIENT) || (state === states.LOCK_CLIENT)) && (                       
                         <Page_2 
                             EmailAddress={EmailAddress} 
-                            setResetState={setResetState}                                                            
+                            setState={setState}                                                            
                             navigate={navigate}
                         />
                     )}; 
 
-                    {(resetState === resetStates.PAGE_3) && (
+                    {(state === states.PAGE_3) && (
                         <Page_3
                             VerificationCode = {VerificationCode}
                             setVerificationCode = {setVerificationCode}
@@ -413,7 +454,7 @@ export default function ResetPassword() {
                             PasswordCopy={PasswordCopy}
                             setPasswordCopy = {setPasswordCopy}
                             PasswordCopyError = {PasswordCopyError}
-                            setResetState={setResetState} 
+                            setState={setState} 
                             navigate={navigate}
                         />
                     )}; 
@@ -455,13 +496,14 @@ function Page_1(params) {
             <p className="text-white text-center text-xl mt-5">Reset my password</p>
 
             <p className=" ml-5 mb-1 mt-3 text-white text-left"> 
-                An email with a link to a page where<br></br>
-                you can reset your password can be<br></br>
-                sent to you.<br></br><br></br>
-                The email will include a verification<br></br>
-                code that you must enter on the page.
-                <br></br><br></br>
-                Please enter your email address here:
+                An email can be sent to you with a <br></br>
+                link to a page where you can reset<br></br> 
+                your password.<br></br>
+                <br></br>
+                The email will include a one-time<br></br>
+                code that you must enter. <br></br>
+                <br></br>
+                Please type your email address here:
             </p>
             <input className="ml-5 mr-5 mt-4 w-[270px] pl-1"
                 id="EmailAddress"
@@ -480,7 +522,7 @@ function Page_1(params) {
                                 mt-2 ml-12"
                         id="SendLink"
                         style={{ width: "100px" }}                    
-                        onClick={() => {params.setResetState(resetStates.VERIFY_PAGE_1);}
+                        onClick={() => {params.setState(states.VERIFY_PAGE_1);}
                         }>                    
                     Send Link
                 </button>
@@ -533,7 +575,7 @@ function Page_2(params) {
                                 mt-2 ml-12"
                         id="Back"
                         style={{ width: "100px" }}                    
-                        onClick={() => {params.setResetState(resetStates.PAGE_1);}
+                        onClick={() => {params.setState(states.PAGE_1);}
                         }>                    
                     Back
                 </button>
@@ -583,7 +625,7 @@ function Page_3(params) {
                    placeholder = ""
                    autoComplete = "new-password"
                    value = {params.VerificationCode}
-                   onChange = {(e) => params.setVerificationCode(e.target.value)}
+                   onChange = {(e) => params.setVerificationCode(e.target.value.trim())}
             />
             <p className="ml-5 mb-1 mt-2 text-cyan-300 text-left text-sm">
                 {params.VerificationCodeError}&nbsp;
@@ -599,7 +641,7 @@ function Page_3(params) {
                        placeholder = ""
                        autoComplete = "new-password"
                        value = {params.Password}
-                       onChange = {(e) => params.setPassword(e.target.value)}
+                       onChange = {(e) => params.setPassword(e.target.value.trim())}
                 />
                 <img className="mr-5 ml-0 mt-1 h-6 w-7"
                     src={eye}
@@ -627,7 +669,7 @@ function Page_3(params) {
                     placeholder = ""
                     autoComplete = "new-password"
                     value = {params.PasswordCopy}
-                    onChange = {(e) => params.setPasswordCopy(e.target.value)}
+                    onChange = {(e) => params.setPasswordCopy(e.target.value.trim())}
                 />
                 <img className="mr-5 ml-0 mt-1 h-6 w-7"
                     src={eye}
@@ -658,7 +700,7 @@ function Page_3(params) {
                                 mt-2 ml-5"
                     id = "Sign_In"
                     style = {{ width: "100px" }}
-                    onClick={() => {params.setResetState(resetStates.VERIFY_PAGE_3);}} >      
+                    onClick={() => {params.setState(states.VERIFY_PAGE_3);}} >      
                     Sign In
                 </button>
             </div>
