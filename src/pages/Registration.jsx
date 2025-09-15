@@ -84,7 +84,8 @@ export default function Registration() {
     // This generates a one-time five-digit registration code for
     // each person who is registering to become a user. 
     const [VerificationCode] = useState(((Math.floor(Math.random() * (9 * (Math.pow(10, 4)))) +
-                               (Math.pow(10, 4))).toString()));                
+                               (Math.pow(10, 4))).toString())); 
+    console.log("VerificationCode ", VerificationCode);                                         
     const [VerificationCodeEntered, setVerificationCodeEntered] = useState("");
     const [VerificationCodeError, setVerificationCodeError] = useState("");
 
@@ -149,7 +150,8 @@ export default function Registration() {
                 }
                 break;  
                 
-            case states.EMAILING_USER:                                       
+            case states.EMAILING_USER: 
+                setState(states.PAGE_2); // RA_BRD                                      
                 break;
             
             case states.PAGE_2:
@@ -233,7 +235,7 @@ export default function Registration() {
     // to continue. 
     //
     async function emailUser() {  
-        console.log("Verification code ", VerificationCode);              
+        //console.log("Verification code ", VerificationCode);              
         
         const html_body = "<p>Thank you for registering a new Strength Coaching Online account.</p>" +                          
                           "<p>Please enter this verification code into the registration page:</p>" +                           
@@ -491,7 +493,7 @@ function Page_1(params) {
 // Reports the progress of the sending of the email.
 //
 function Emailing(params) {
-    params.emailUser();
+    //params.emailUser();  RA_BRD
 
     return (
         <div>           

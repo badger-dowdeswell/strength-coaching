@@ -21,7 +21,7 @@ import "./Main.css";
 import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { getBaseURL } from "./getBaseURL";
-import { editingStates } from "./Constants";
+import { states } from "./Constants";
 
 import Axios from "axios";
 const axios = Axios;
@@ -76,10 +76,10 @@ function SignIn() {
     // process. The useState Hook ensures that the environment gets
     // re-configured each time the state changes.
     //
-    const [editingState, setEditingState] = useState(editingStates.LOADING);
+    const [state, setState] = useState(states.LOADING);
     useEffect(() => {
-        switch (editingState) {
-        case editingStates.LOADING:
+        switch (state) {
+        case states.LOADING:
             //console.log("Loading...");
             // This is the initial stage that allows the user to enter their user
             // ID or email and then supply their password. Reset their credentials
@@ -92,7 +92,7 @@ function SignIn() {
             sessionStorage.setItem("JWT", "");            
             break;
 
-        case editingStates.AUTHENTICATING:
+        case states.AUTHENTICATING:
             // The user should have entered an email address or an alias
             console.log("Authenticating ...");
             var error = false;
@@ -114,13 +114,13 @@ function SignIn() {
             }
 
             if (error) {
-                setEditingState(editingStates.LOADING);
+                setState(states.LOADING);
             } else {
                 authenticateUser(UserID, Password);
             }
             break;
 
-        case editingStates.AUTHENTICATED:
+        case states.AUTHENTICATED:
             // This is set when the user has been authenticated and can begin using the
             // adminstration services inside.
             console.log("Authenticated...");
@@ -134,7 +134,7 @@ function SignIn() {
             sessionStorage.setItem("JWT", JWT);
             return navigate("/Home");
 
-        case editingStates.NOT_AUTHENTICATED:
+        case states.NOT_AUTHENTICATED:
             console.log("Not Authenticated...");
             setSignInError(!SignInError);
             setUserIDError("");
@@ -142,33 +142,33 @@ function SignIn() {
             setSignInError("Either your user ID or password is incorrect.");
             break;
 
-        case editingStates.CHANGING_PASSWORD:
+        case states.CHANGING_PASSWORD:
             // The user is requesting to change their password from the
             // Sign-In page. RA_BRD Not implemented yet.
             break;
 
-        case editingStates.FORGOT_PASSWORD:
+        case states.FORGOT_PASSWORD:
             // The user is requesting help since they have forgotten their
             // password. RA_BRD Not implemented yet.
             return navigate("/ResetPassword");    
             
-        case editingStates.REGISTER:
+        case states.REGISTER:
             // The user is requesting to register a new account.
             return navigate("/Registration");    
             
-        case editingStates.ERROR:
+        case states.ERROR:
             //swal("Signing in",
             //   "This program has encountered a problem.\n\n" +
             //   "The details have been logged and the site administrator has been notified.\n\n" +
             //   "Please click OK to exit.");
-            setEditingState(editingStates.LOADING);
+            setState(states.LOADING);
             break;
 
         default:
             break;
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [editingState]);
+    }, [state]);
 
     //
     // authenticateUser() 
@@ -200,13 +200,13 @@ function SignIn() {
                 setUserAuthority(response.data.user_authority);
                 setUserImage(response.data.user_image);
                 setJWT(response.data.JWT);
-                setEditingState(editingStates.AUTHENTICATED);
+                setState(states.AUTHENTICATED);
             } else {
-                setEditingState(editingStates.NOT_AUTHENTICATED);
+                setState(states.NOT_AUTHENTICATED);
             }
         } catch (err) {
             //console.log("authenticateUser error " + err.message);
-            setEditingState(editingStates.NOT_AUTHENTICATED);
+            setState(states.NOT_AUTHENTICATED);
         }
     };
 
@@ -284,13 +284,13 @@ function SignIn() {
                     </div> 
 
                     <p className=" ml-5 mb-0 mt-0 text-cyan-300 text-left text-sm"
-                            onClick={() => {setEditingState(editingStates.FORGOT_PASSWORD)}
+                            onClick={() => {setState(states.FORGOT_PASSWORD)}
                         }>
                         Forgot your password? Click here to reset it...
                     </p>
 
                     <p className=" ml-5 mb-1 mt-3 text-cyan-300 text-left text-sm"
-                            onClick={() => {setEditingState(editingStates.REGISTER)}
+                            onClick={() => {setState(states.REGISTER)}
                         }>
                         Not registered? Click here to register...
                     </p>
@@ -301,7 +301,7 @@ function SignIn() {
                             id="SignIn"
                             style={{ width: "100px" }}
                             onClick={() => {
-                                setEditingState(editingStates.AUTHENTICATING);
+                                setState(states.AUTHENTICATING);
                             }}>
                             Sign In
                         </button>

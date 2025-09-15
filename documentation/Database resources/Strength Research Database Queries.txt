@@ -43,7 +43,7 @@ CREATE TABLE public."User" (
    "suburb" character varying(30),
    "city" character varying(30),
    "postcode" character varying(30),
-   "state" character varying(30),   
+   "state_province" character varying(30),   
    "country" character varying(25),
    "date_of_birth" date,   
    "gym_name" character varying(30),

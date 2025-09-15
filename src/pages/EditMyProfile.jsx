@@ -23,7 +23,7 @@ import TopNav from "./components/TopNav";
 import { getBaseURL } from "./getBaseURL";
 import { useEffect, useState, useRef} from "react";
 import { useNavigate } from "react-router-dom";
-import { editingStates, uploadStates, pages } from "./Constants";
+import { states, uploadStates, pages } from "./Constants";
 import { Salutations, Countries} from "./components/LookUpLists";
 import { formatDate, decodeISOdate, validateDate } from "./DateLib";
 import Modal from "./components/Modal";
@@ -56,8 +56,8 @@ export default function EditMyProfile() {
     const [Address3, setAddress3] = useState("");
     const [Suburb, setSuburb] = useState("");    
     const [City, setCity] = useState("");    
-    const [Postcode, setPostcode] = useState("");
-    const [State, setState] = useState("");
+    const [Postcode, setPostcode] = useState(""); 
+    const [StateProvince, setStateProvince] = useState("");   
     const [Country, setCountry] = useState("");
     const [DateOfBirth, setDateOfBirth] = useState("");    
     const [UserImage, setUserImage] = useState();
@@ -98,34 +98,34 @@ export default function EditMyProfile() {
     // re-configured appropriately each time the state changes. The currentPage 
     // state controls which page of the tabbed dialog is currently displayed.
     //
-    const [editingState, setEditingState] = useState(editingStates.LOADING);
+    const [state, setState] = useState(states.LOADING);
     const [currentPage, setCurrentPage] = useState();
 
     useEffect(() => {
-        switch (editingState) {
-        case editingStates.LOADING:
+        switch (state) {
+        case states.LOADING:
             // This is the initial stage that loads the user's profile ready
             // for editing.            
             setCurrentPage(pages.PAGE_1);                        
             getUser(userID);            
             break;  
 
-        case editingStates.EDITING:                              
+        case states.EDITING:                              
             break;  
 
-        case editingStates.VALIDATING_STAGE_1:           
+        case states.VALIDATING_STAGE_1:           
             checkDuplicateAlias(UserID, Alias);
             break;
 
-        case editingStates.VALIDATING_STAGE_2:           
+        case states.VALIDATING_STAGE_2:           
             checkDuplicateEmail(UserID, EmailAddress);
             break;
             
-        case editingStates.VALIDATING_STAGE_3:
+        case states.VALIDATING_STAGE_3:
             validate();         
             break;
     
-        case editingStates.UPDATING:            
+        case states.UPDATING:            
             //console.log("Updating..");
             //console.log("IsChanged " + IsChanged); 
             sessionStorage.setItem("FirstName", FirstName);
@@ -135,17 +135,17 @@ export default function EditMyProfile() {
             updateUser(); 
             break;
 
-        case editingStates.CANCELLING:
+        case states.CANCELLING:
             // Information may have changed so confirm that the user
             // really does wish to undo the changes they have made.
             ConfirmCancel();            
             break;
 
-        case editingStates.EXITING:
+        case states.EXITING:
             return navigate("/Home");                   
 
-        case editingStates.NOT_AUTHENTICATED:
-        case editingStates.NOT_FOUND:        
+        case states.NOT_AUTHENTICATED:
+        case states.NOT_FOUND:        
             // Either the user record could not be read or the user is not authorised
             // to access this page and its functionality. Sign them out and return
             // them to the landing page.
@@ -155,7 +155,7 @@ export default function EditMyProfile() {
             break;    
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [editingState]);
+    }, [state]);
 
     //
     // checkDuplicateAlias()
@@ -172,7 +172,7 @@ export default function EditMyProfile() {
                 if (response.status === 200) {
                     errors.Alias="That alias is already in use";                
                     errors.page = 1;   
-                    setEditingState(editingStates.EDITING);  
+                    setState(states.EDITING);  
                 }            
             } catch (err) {
                 // No other user is using that alias. That means that the query did not return anything so it returns
@@ -180,11 +180,11 @@ export default function EditMyProfile() {
                 //console.log("checkDuplicateAlias() not found " + err.status); 
                 errors.Alias = "";  
                 errors.page = 0;
-                setEditingState(editingStates.VALIDATING_STAGE_2); 
+                setState(states.VALIDATING_STAGE_2); 
             }
         } else {
             // The user has set their alias blank so move on to the second validation stage without checking it.
-            setEditingState(editingStates.VALIDATING_STAGE_2);
+            setState(states.VALIDATING_STAGE_2);
         }
     };   
 
@@ -203,7 +203,7 @@ export default function EditMyProfile() {
                 if (response.status === 200) {
                     errors.EmailAddress="That email address is in use";                
                     errors.page = 1;   
-                    setEditingState(editingStates.EDITING);  
+                    setState(states.EDITING);  
                 }            
             } catch (err) {
                 // No other user is using that email. That means that the query did not return anything so it returns
@@ -211,11 +211,11 @@ export default function EditMyProfile() {
                 //console.log("checkDuplicateEmail() not found " + err.status); 
                 errors.Alias = "";  
                 errors.page = 0;
-                setEditingState(editingStates.VALIDATING_STAGE_3); 
+                setState(states.VALIDATING_STAGE_3); 
             }
         } else {
             // The user has set their email blank so move on to the third validation stage without checking it.
-            setEditingState(editingStates.VALIDATING_STAGE_3);
+            setState(states.VALIDATING_STAGE_3);
         }
     };   
 
@@ -262,12 +262,12 @@ export default function EditMyProfile() {
             errors.page = 1;
         }
 
-        if (!Suburb.trim() && !State.trim()) {
+        if (!Suburb.trim() && !StateProvince.trim()) {
             errors.Suburb = "A suburb name is required."
             errors.page = 1;
         }
-        if (!State.trim() && !Suburb.trim()) {
-            errors.State = "A state is required."
+        if (!StateProvince.trim() && !Suburb.trim()) {
+            errors.StateProvince = "A state is required."
             errors.page = 1;
         }
 
@@ -325,9 +325,9 @@ export default function EditMyProfile() {
         }   
         
         if (errors.page === 0) {
-            setEditingState(editingStates.UPDATING);
+            setState(states.UPDATING);
         } else {
-            setEditingState(editingStates.EDITING);    
+            setState(states.EDITING);    
         }
     }; 
     
@@ -356,16 +356,16 @@ export default function EditMyProfile() {
                 setSuburb(response.data.suburb || ""); 
                 setCity(response.data.city || ""); 
                 setPostcode(response.data.postcode || ""); 
-                setState(response.data.state || "");
+                setStateProvince(response.data.state_province || "");
                 setCountry(response.data.country || ""); 
                 setDateOfBirth(formatDate("YYYY-MM-DD", decodeISOdate(response.data.date_of_birth)));
                 setUserImage(response.data.user_image || "");
-                setEditingState(editingStates.EDITING);                              
+                setState(states.EDITING);                              
             } else if (response.status === 404) {
-              setEditingState(editingStates.NOT_FOUND);
+              setState(states.NOT_FOUND);
             }            
         } catch (err) {            
-            setEditingState(editingStates.NOT_FOUND);        
+            setState(states.NOT_FOUND);        
         }        
     };
 
@@ -399,13 +399,13 @@ export default function EditMyProfile() {
             suburb: Suburb,
             city: City,
             postcode: Postcode,
-            state: State,
+            state_province: StateProvince,
             country: Country,
             date_of_birth: DateOfBirth,
             user_image: UserImage
         })
         .then((response) => {
-            setEditingState(editingStates.EXITING);
+            setState(states.EXITING);
         })
         .catch(err => {
             //console.log(".catch() updateUser() err: " + err.message);
@@ -503,12 +503,12 @@ export default function EditMyProfile() {
                             Suburb={Suburb} setSuburb={setSuburb}                                       
                             City={City} setCity={setCity}  
                             Postcode={Postcode} setPostcode={setPostcode}                               
-                            State={State} setState={setState}                                    
+                            StateProvince={StateProvince} setStateProvince={setStateProvince}                                    
                             Country={Country} setCountry={setCountry}                                      
                             DateOfBirth={DateOfBirth} setDateOfBirth={setDateOfBirth}
                             errors={errors} setErrors={setErrors}
                             IsChanged={IsChanged} setIsChanged={setIsChanged}
-                            editingState={editingState} setEditingState={setEditingState}                                                       
+                            state={state} setState={setState}                                                       
                         />
                     )};
 
@@ -543,8 +543,8 @@ export default function EditMyProfile() {
                             onClick={() => {
                                 // This stops the user clicking Update while
                                 // the ConfirmCancel dialogue is open.
-                                if (editingState == editingStates.EDITING) {
-                                    setEditingState(editingStates.VALIDATING_STAGE_1);
+                                if (state == states.EDITING) {
+                                    setState(states.VALIDATING_STAGE_1);
                                 }    
                             }}>
                             Update
@@ -558,9 +558,9 @@ export default function EditMyProfile() {
                                 if (IsChanged) {
                                     setTabColor(currentPage, pages.PAGE_1);
                                     setCurrentPage(pages.PAGE_1);
-                                    setEditingState(editingStates.CANCELLING);
+                                    setState(states.CANCELLING);
                                 } else {
-                                    setEditingState(editingStates.EXITING);            
+                                    setState(states.EXITING);            
                                 }    
                             }}>
                             Cancel
@@ -616,7 +616,7 @@ function Page_1(params) {
                         ref={autofocusID}
                         value={params.Salutation}
                         onChange={(e) => {
-                            if (params.editingState === editingStates.EDITING) {
+                            if (params.state === states.EDITING) {
                                 params.setSalutation(e.target.value);
                                 params.setIsChanged(true);
                             }    
@@ -634,7 +634,7 @@ function Page_1(params) {
                         placeholder=""                       
                         value={params.FirstName}
                         onChange={(e) => {
-                            if (params.editingState === editingStates.EDITING) {
+                            if (params.state === states.EDITING) {
                                 params.setFirstName(e.target.value);
                                 params.setIsChanged(true);
                             }    
@@ -651,7 +651,7 @@ function Page_1(params) {
                         placeholder=""
                         value={params.LastName}
                         onChange={(e) => {
-                            if (params.editingState === editingStates.EDITING) {
+                            if (params.state === states.EDITING) {
                                 params.setLastName(e.target.value);
                                 params.setIsChanged(true); 
                             }      
@@ -663,8 +663,8 @@ function Page_1(params) {
 
             {/*  Display the cancel dialogue */}
             <div>
-                {((params.editingState === editingStates.CANCELLING)) && (
-                    <ConfirmCancel setEditingState={params.setEditingState} />
+                {((params.state === states.CANCELLING)) && (
+                    <ConfirmCancel setState={params.setState} />
                 )}
             </div>   
 
@@ -680,7 +680,7 @@ function Page_1(params) {
                             placeholder=""
                             value={params.Alias}
                             onChange={(e) => {
-                                if (params.editingState === editingStates.EDITING) {
+                                if (params.state === states.EDITING) {
                                     params.setAlias(e.target.value);
                                     params.setIsChanged(true);  
                                 } 
@@ -697,7 +697,7 @@ function Page_1(params) {
                             placeholder=""
                             value={params.EmailAddress}
                             onChange={(e) => {
-                                if (params.editingState === editingStates.EDITING) {
+                                if (params.state === states.EDITING) {
                                     params.setEmailAddress(e.target.value);
                                     params.setIsChanged(true); 
                                 }      
@@ -714,7 +714,7 @@ function Page_1(params) {
                             placeholder=""
                             value={params.PhoneNumber}
                             onChange={(e) => {
-                                if (params.editingState === editingStates.EDITING) {
+                                if (params.state === states.EDITING) {
                                     params.setPhoneNumber(e.target.value);
                                     params.setIsChanged(true); 
                                 }      
@@ -733,7 +733,7 @@ function Page_1(params) {
                             placeholder=""
                             value={params.Address1}
                             onChange={(e) => {
-                                if (params.editingState === editingStates.EDITING) {
+                                if (params.state === states.EDITING) {
                                     params.setAddress1(e.target.value);
                                     params.setIsChanged(true); 
                                 }          
@@ -753,7 +753,7 @@ function Page_1(params) {
                             placeholder=""
                             value={params.Address2}
                             onChange={(e) => {
-                                if (params.editingState === editingStates.EDITING) {
+                                if (params.state === states.EDITING) {
                                     params.setAddress2(e.target.value);
                                     params.setIsChanged(true);  
                                 }     
@@ -773,7 +773,7 @@ function Page_1(params) {
                             placeholder=""
                             value={params.Address3}
                             onChange={(e) => {
-                                if (params.editingState === editingStates.EDITING) {
+                                if (params.state === states.EDITING) {
                                     params.setAddress3(e.target.value);
                                     params.setIsChanged(true);
                                 }       
@@ -793,7 +793,7 @@ function Page_1(params) {
                             placeholder=""
                             value={params.Suburb}
                             onChange={(e) => {
-                                if (params.editingState === editingStates.EDITING) {
+                                if (params.state === states.EDITING) {
                                     params.setSuburb(e.target.value);
                                     params.setIsChanged(true);
                                 }       
@@ -811,7 +811,7 @@ function Page_1(params) {
                             placeholder=""
                             value={params.City}
                             onChange={(e) => {
-                                if (params.editingState === editingStates.EDITING) {
+                                if (params.state === states.EDITING) {
                                     params.setCity(e.target.value);
                                     params.setIsChanged(true); 
                                 }      
@@ -829,7 +829,7 @@ function Page_1(params) {
                             placeholder=""
                             value={params.Postcode}
                             onChange={(e) => {
-                                if (params.editingState === editingStates.EDITING) {
+                                if (params.state === states.EDITING) {
                                     params.setPostcode(e.target.value);
                                     params.setIsChanged(true);  
                                 }     
@@ -846,15 +846,15 @@ function Page_1(params) {
                             id="State"
                             type="text"
                             placeholder=""
-                            value={params.State}
+                            value={params.StateProvince}
                             onChange={(e) => {
-                                if (params.editingState === editingStates.EDITING) {
-                                    params.setState(e.target.value);
+                                if (params.state === states.EDITING) {
+                                    params.setStateProvince(e.target.value);
                                     params.setIsChanged(true);  
                                 }     
                             }}
                         />
-                        <p className="ml-5 mb-1 mt-1 text-cyan-300 text-left text-sm">{params.errors.State}&nbsp;</p>
+                        <p className="ml-5 mb-1 mt-1 text-cyan-300 text-left text-sm">{params.errors.StateProvince}&nbsp;</p>
                     </div>
                   
                     <div>
@@ -863,7 +863,7 @@ function Page_1(params) {
                             id="Country"
                             value={params.Country}                                             
                             onChange={(e) => {
-                                if (params.editingState === editingStates.EDITING) {
+                                if (params.state === states.EDITING) {
                                     params.setCountry(e.target.value);
                                     params.setIsChanged(true); 
                                 }     
@@ -881,7 +881,7 @@ function Page_1(params) {
                             type="date"                                           
                             value = {params.DateOfBirth}  
                             onChange={(e) => {
-                                if (params.editingState === editingStates.EDITING) {
+                                if (params.state === states.EDITING) {
                                     params.setDateOfBirth(e.target.value);                            
                                     params.setIsChanged(true);
                                 }                                
@@ -912,8 +912,7 @@ function Page_2(params) {
     const [uploadState, setUploadState] = useState(uploadStates.IDLE); 
     const [files, setFiles] = useState([]);     
     const [preview, setPreview] = useState("/../front-end/userImages/" + params.UserImage); 
-    //console.log("\nUserImage" + preview); 
-
+    
     //
     // changeFiles()
     // =============
@@ -1030,7 +1029,7 @@ function Page_2(params) {
                                             id="upload"                                
                                             type = "submit"                                                       
                                             onChange={(e) => {setUploadState(uploadStates.IDLE);
-                                                            selectFile(e)}}>
+                                                              selectFile(e)}}>
                                         Upload picture    
                                     </button> 
                                 </form>    
@@ -1189,7 +1188,7 @@ function ConfirmCancel(params) {
                                 id="Yes"
                                 style={{ width: "100px" }}
                                 onClick={() => {
-                                    params.setEditingState(editingStates.EXITING);
+                                    params.setState(states.EXITING);
                                 }}>
                                 Yes
                             </button>    
@@ -1199,7 +1198,7 @@ function ConfirmCancel(params) {
                                 id="No"
                                 style={{ width: "100px" }}
                                 onClick={() => {                                    
-                                    params.setEditingState(editingStates.EDITING);
+                                    params.setState(states.EDITING);
                                 }}>
                                 No
                             </button> 
@@ -1211,39 +1210,3 @@ function ConfirmCancel(params) {
     );      
 }
 
-//
-// RA_Badger User image code
-// =========================
-// {/* <div>        
-//     <p className=" ml-5 mb-1 mt-1 text-white text-left">
-//         Your profile picture
-//     </p>
-//     <img className="ml-5 mb-1 mt-1 rounded"
-//         src={userImage}
-//         alt="/"
-//         height={185}
-//         width={190}
-//     />
-// </div>
-
-// <img className="mr-5 mt-2 -ml-10 h-6 w-7"
-//                         src={eye}
-//                         alt="/"                                                        
-//                     />
-
-// <div>
-//                     <p className=" ml-5 mb-1 mt-1 text-white text-left">Date of birth</p>
-//                     <input className="ml-5 mr-4 mt-1 w-48 pl-0"
-//                         id="DateOfBirth"
-//                         type="text"                                             
-//                         value={formatDate("DD MMMM YYYY", params.DateOfBirth)} 
-//                         onFocus={() => editFormat("DateOfBirth", params.DateOfBirth)}                           
-//                         onChange={(e) => {
-//                             params.setDateOfBirth(e.target.value);                            
-//                             params.setIsChanged(true);
-//                         }}
-//                     /> 
-//                     <p className=" ml-5 mb-1 mt-1 text-cyan-300 text-left text-sm">{params.errors.DateOfBirth}&nbsp;</p>
-//                 </div>
-
- 

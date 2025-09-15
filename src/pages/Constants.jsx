@@ -12,31 +12,31 @@
 // Documentation
 // =============
 //
-// Using the Editing states
-// ========================
-// These constants are used to track the editing state of a record during maintenance.
-// They are the discrete values used by the state machine implemented as a useState
-// hook. The example below shows the way the editingState is configured initially
-// in the React page:
+// Using the states
+// ================
+// These constants are used to track the state of a record update or a process during
+// during maintenance. They are the discrete values used by the state machine implemented
+// as a useState hook. The example below shows the way the state variable is configured
+// initially for a typical React page:
 //
-// const [editingState, setEditingState] = useState(editingStates.SELECTING);
+// const [state, setState] = useState(states.SELECTING);
 //
 // The state change actions are then typically managed by a useEffect hook:
 //
 // useEffect(() => {
-//    switch (editingState) {
-//        case editingStates.LOADING:
+//    switch (state) {
+//        case states.LOADING:
 //           ... action code;
 //           break;
 //
-//        case editingStates.EDITING:
+//        case states.EDITING:
 //           ... action code;
 //           break;
 
 import { IDLE_BLOCKER } from "react-router-dom"
 
 //
-export const editingStates = {
+export const states = {
     UNDEFINED: 0,
     SELECTING: 1,
     LOADING: 2,
@@ -76,7 +76,8 @@ export const pages = {
     PAGE_1: 1,
     PAGE_2: 2,
     PAGE_3: 3,
-    PAGE_4: 4
+    PAGE_4: 4,
+    PAGE_5: 5
 }    
 
 //

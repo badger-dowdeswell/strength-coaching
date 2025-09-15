@@ -436,22 +436,22 @@ app.put('/api/createUser', async (request, response) => {
                                   "'" + (request.body.user_image.replace(/'/g, "''")) + "') " +
                          'RETURNING "user_ID"';
 
-    //console.log("api/createUser\n" + sqlSelectCmd + "\n");
+    console.log("api/createUser\n" + sqlSelectCmd + "\n");
     
     db.query(sqlSelectCmd, (err, result) => {
         if (!err) {
             if (result.rows[0] !== undefined) {
-                //logmsg("/api/createUser: user created. User_ID is " + result.rows[0].user_ID);
+                logmsg("/api/createUser: user created. User_ID is " + result.rows[0].user_ID);
                 const packet = {user_ID: result.rows[0].user_ID};
                 //console.log(packet);
                 response.status(200).send(packet);
             } else {
-                //logmsg("/api/createUser: user was not created");
+                logmsg("/api/createUser: user was not created");
                 response.status(404).send("User was not created");
             }
         } else {
             response.sendStatus(500);
-            //logmsg("/api/createUser returned error :" + err + "\n" + sqlSelectCmd);
+            logmsg("/api/createUser returned error :" + err + "\n" + sqlSelectCmd);
         }
     });
 });
@@ -627,7 +627,7 @@ app.put('/api/updateUser', async(request, response) => {
                     ' "suburb" = ' + "'" + request.body.suburb.replace(/'/g, "''") + "' , " +
                     ' "city" = ' + "'" + request.body.city.replace(/'/g, "''") + "' , " +
                     ' "postcode" = ' + "'" + request.body.postcode.replace(/'/g, "''") + "' , " +
-                    ' "state" = ' + "'" + request.body.state.replace(/'/g, "''") + "' , " +
+                    ' "state_province" = ' + "'" + request.body.state_province.replace(/'/g, "''") + "' , " +
                     ' "country" = ' + "'" + request.body.country.replace(/'/g, "''") + "' , " +
                     ' "date_of_birth" = ' + "'" + request.body.date_of_birth.replace(/'/g, "''") + "', " +
                     ' "user_image" = ' + "'" + request.body.user_image.replace(/'/g, "''") + "' " +
