@@ -37,15 +37,15 @@ var default_user_image = "template.png"; // This ensures that there is an image 
                                          // they upload their own image.
 
 //
-// RegistrationStates
-// ==================
+// States
+// ======
 // The registration process operates as a state machine. This allows it to move
 // stage-by-stage forwards and backwards, waiting at appropriate times for an
 // async process to return a value before transitioning to a new stage. The
-// current state is held in registrationState, which always contains one of the
-// pre-defined registrationStates constants.
+// current state is held in the variable state, which always contains one of the
+// pre-defined states constants.
 //
-const registrationStates = {
+const states = {
    UNDEFINED: 0,
    PAGE_1: 1,
    VERIFY_PAGE_1: 2, 
@@ -83,9 +83,8 @@ export default function Registration() {
 
     // This generates a one-time five-digit registration code for
     // each person who is registering to become a user. 
-    const [VerificationCode]
-           = useState((Math.floor(Math.random() * (9 * (Math.pow(10, 4)))) +
-                      (Math.pow(10, 4))).toString());
+    const [VerificationCode] = useState(((Math.floor(Math.random() * (9 * (Math.pow(10, 4)))) +
+                               (Math.pow(10, 4))).toString()));                
     const [VerificationCodeEntered, setVerificationCodeEntered] = useState("");
     const [VerificationCodeError, setVerificationCodeError] = useState("");
 
@@ -106,20 +105,20 @@ export default function Registration() {
     // updated and re-configured each time the state changes. This
     // can trigger page transitions, read and write from the database,
     // or display errors and make the user correct what they entered.
-    // The set of possible states is defined in the registrationStates
+    // The set of possible states is defined in the states
     // object declared above.
     //
-    const [registrationState, setRegistrationState] = useState(registrationStates.PAGE_1);
+    const [state, setState] = useState(states.PAGE_1);
     useEffect(() => {    
         var error = false;
         
-        switch (registrationState) {
-            case registrationStates.PAGE_1:
+        switch (state) {
+            case states.PAGE_1:
                 // This is the initial stage that allows the user to enter their email address,
                 // first name, and last name.
                 break;
 
-            case registrationStates.VERIFY_PAGE_1:
+            case states.VERIFY_PAGE_1:
                 if (EmailAddress.trim() === "") {
                     setEmailAddressError("An email address must be entered");
                     error = true;
@@ -143,40 +142,40 @@ export default function Registration() {
                 }
 
                 if (error) {
-                    setRegistrationState(registrationStates.PAGE_1);
+                    setState(states.PAGE_1);
                 } else {                
                     // check if this email address is already in use                    
                     checkEmail(EmailAddress);                      
                 }
                 break;  
                 
-            case registrationStates.EMAILING_USER:                              
+            case states.EMAILING_USER:                                       
                 break;
             
-            case registrationStates.PAGE_2:
+            case states.PAGE_2:
                 // This is the next stage that allows the user to enter the registration
                 // code that was emailed to them during the previous stage. 
                 setEmailAddressError("");
                 break;
 
-            case registrationStates.VERIFY_PAGE_2:
+            case states.VERIFY_PAGE_2:
                 if (VerificationCode.trim() === "") {
                     setVerificationCodeError("Please enter the code you received.");
-                    setRegistrationState(registrationStates.PAGE_2);
+                    setState(states.PAGE_2);
                     error = true;                
                 } else if (VerificationCode.trim() !== VerificationCodeEntered) {
                     setVerificationCodeError("The registration code entered is not valid.");
-                    setRegistrationState(registrationStates.PAGE_2);
+                    setState(states.PAGE_2);
                 } else {
                     setVerificationCodeError("");
-                    setRegistrationState(registrationStates.PAGE_3);
+                    setState(states.PAGE_3);
                 }
                 break;
 
-            case registrationStates.PAGE_3:                
+            case states.PAGE_3:                
                 break;
 
-            case registrationStates.VERIFY_PAGE_3:
+            case states.VERIFY_PAGE_3:
                 if (Password.trim() === "") {
                     setPasswordError("A password must be entered");
                     error = true;
@@ -200,23 +199,23 @@ export default function Registration() {
                 } 
                 
                 if (error) {
-                    setRegistrationState(registrationStates.PAGE_3);
+                    setState(states.PAGE_3);
                 } else {                      
-                    setRegistrationState(registrationStates.CREATING_USER);
+                    setState(states.CREATING_USER);
                 }
                 break;
 
-            case registrationStates.CREATING_USER:                             
+            case states.CREATING_USER:                             
                 if (createUser()) {                                     
-                    setRegistrationState(registrationStates.REGISTERED);    
+                    setState(states.REGISTERED);    
                 } else {
                     // MARK: RA_Badger. Need to determine what to do here if
                     // something goes wrong while creating the new user.
-                    setRegistrationState(registrationStates.PAGE_3);        
+                    setState(states.PAGE_3);        
                 }                 
                 break;    
 
-            case registrationStates.REGISTERED:
+            case states.REGISTERED:
                 // Registration has been completed successfully.
                 return navigate("/SignIn");    
 
@@ -224,7 +223,7 @@ export default function Registration() {
                 break;
         }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [registrationState]);
+    }, [state]);
 
     //
     // emailUser()
@@ -234,6 +233,8 @@ export default function Registration() {
     // to continue. 
     //
     async function emailUser() {  
+        console.log("Verification code ", VerificationCode);              
+        
         const html_body = "<p>Thank you for registering a new Strength Coaching Online account.</p>" +                          
                           "<p>Please enter this verification code into the registration page:</p>" +                           
                           "<h1 style='text-align: center; font-size: 25px;'>" + VerificationCode + "</h1>" +  
@@ -251,16 +252,16 @@ export default function Registration() {
         .then((response) => {
             if (response.status === 200) {
                 //console.log("email sent");
-                setRegistrationState(registrationStates.PAGE_2);
+                setState(states.PAGE_2);
                          
             } else if (response.status === 500) {
                 //console.log("emailUser error: 500 " + response);                
-                setRegistrationState(registrationStates.PAGE_1);                
+                setState(states.PAGE_1);                
             }    
         })
         .catch(err => {
             //console.log("emailUser error: " + err.message);
-            setRegistrationState(registrationStates.PAGE_1); 
+            setState(states.PAGE_1); 
         })  
     }
     
@@ -276,16 +277,16 @@ export default function Registration() {
         ).then (response => {            
             if (response.status === 200) {                  
                 setEmailAddressError("That email address is already registered.")                 
-                setRegistrationState(registrationStates.PAGE_1)                
+                setState(states.PAGE_1)                
             } else if (response.status === 404) {
                 // That email address is not in use. 
                 setEmailAddressError("");       
-                setRegistrationState(registrationStates.EMAILING_USER);           
+                setState(states.EMAILING_USER);           
             }
         }).catch(err => {
           // The email address was not found.
           setEmailAddressError("");
-          setRegistrationState(registrationStates.EMAILING_USER);
+          setState(states.EMAILING_USER);
         });     
     }
 
@@ -315,7 +316,7 @@ export default function Registration() {
                 setUserID(response.data.user_ID);
                 status = true;              
             } else if (response.status === 500) {                               
-                setRegistrationState(registrationStates.PAGE_1);
+                setState(states.PAGE_1);
                 status = false;
             }    
         })
@@ -342,7 +343,7 @@ export default function Registration() {
             
                 <div className="flex flex-col box-border border-2 rounded-lg
                                 h-200 w-80">
-                    {(registrationState === registrationStates.PAGE_1) && (
+                    {(state === states.PAGE_1) && (
                         <Page_1
                             EmailAddress={EmailAddress}
                             setEmailAddress={setEmailAddress}
@@ -353,29 +354,29 @@ export default function Registration() {
                             LastName={LastName}
                             setLastName={setLastName}
                             LastNameError={LastNameError}
-                            setRegistrationState={setRegistrationState}
+                            setState={setState}
                             navigate={navigate}                            
                         />
                     )}; 
 
-                    {(registrationState === registrationStates.EMAILING_USER) && ( 
+                    {(state === states.EMAILING_USER) && ( 
                         <Emailing
                             emailUser={emailUser} 
                         />
                     )};    
         
-                    {(registrationState === registrationStates.PAGE_2) && (
+                    {(state === states.PAGE_2) && (
                         <Page_2
                             VerificationCode={VerificationCode}
                             EmailAddress={EmailAddress}
                             VerificationCodeEntered={VerificationCodeEntered}
                             setVerificationCodeEntered={setVerificationCodeEntered}
                             VerificationCodeError={VerificationCodeError}
-                            setRegistrationState={setRegistrationState}                            
+                            setState={setState}                            
                         />
                     )};    
             
-                    {registrationState === registrationStates.PAGE_3 && (
+                    {state === states.PAGE_3 && (
                         <Page_3 
                             PasswordVisibility={PasswordVisibility}   
                             setPasswordVisibility={setPasswordVisibility}                              
@@ -385,7 +386,7 @@ export default function Registration() {
                             PasswordCopy={PasswordCopy}
                             setPasswordCopy = {setPasswordCopy}
                             PasswordCopyError = {PasswordCopyError}
-                            setRegistrationState={setRegistrationState}                                                     
+                            setState={setState}                                                     
                         />
                     )};
                 </div>
@@ -468,7 +469,7 @@ function Page_1(params) {
                                  mt-2 ml-12 mb-0"
                     id="Next"
                     style={{ width: "100px" }}                
-                    onClick={() => {params.setRegistrationState(registrationStates.VERIFY_PAGE_1);}} >
+                    onClick={() => {params.setState(states.VERIFY_PAGE_1);}} >
                     Next &gt;
                 </button>
 
@@ -579,7 +580,7 @@ function Page_2(params) {
                                   mt-2 ml-12"
                     id = "Back"
                     style = {{ width: "100px" }}                    
-                    onClick = {() => {params.setRegistrationState(registrationStates.PAGE_1);}} >      
+                    onClick = {() => {params.setState(states.PAGE_1);}} >      
                     &lt; Back
                 </button>
 
@@ -587,7 +588,7 @@ function Page_2(params) {
                               mt-2 ml-5"
                     id = "Next"
                     style = {{ width: "100px" }}                    
-                    onClick={() => {params.setRegistrationState(registrationStates.VERIFY_PAGE_2);}} >      
+                    onClick={() => {params.setState(states.VERIFY_PAGE_2);}} >      
                     Next &gt;
                 </button>
             </div>
@@ -682,7 +683,7 @@ function Page_3(params) {
                                   mt-1 ml-12"
                     id = "Back"
                     style = {{ width: "100px" }}
-                    onClick = {() => {params.setRegistrationState(registrationStates.PAGE_2);}} >      
+                    onClick = {() => {params.setState(states.PAGE_2);}} >      
                     &lt; Back
                 </button>
 
@@ -690,7 +691,7 @@ function Page_3(params) {
                               mt-2 ml-5"
                     id = "Sign_In"
                     style = {{ width: "100px" }}
-                    onClick={() => {params.setRegistrationState(registrationStates.VERIFY_PAGE_3);}} >      
+                    onClick={() => {params.setState(states.VERIFY_PAGE_3);}} >      
                     Sign In
                 </button>
             </div>
