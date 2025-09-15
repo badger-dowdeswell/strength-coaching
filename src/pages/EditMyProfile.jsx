@@ -23,7 +23,7 @@ import TopNav from "./components/TopNav";
 import { getBaseURL } from "./getBaseURL";
 import { useEffect, useState, useRef} from "react";
 import { useNavigate } from "react-router-dom";
-import { states, uploadStates, pages } from "./Constants";
+import { states, pages } from "./Constants";
 import { Salutations, Countries} from "./components/LookUpLists";
 import { formatDate, decodeISOdate, validateDate } from "./DateLib";
 import Modal from "./components/Modal";
@@ -909,7 +909,7 @@ function Page_1(params) {
 // The second tabbed-dialog page allows the user to upload their profile picture and to change their password.
 //
 function Page_2(params) {     
-    const [uploadState, setUploadState] = useState(uploadStates.IDLE); 
+    const [uploadState, setUploadState] = useState(states.IDLE); 
     const [files, setFiles] = useState([]);     
     const [preview, setPreview] = useState("/../front-end/userImages/" + params.UserImage); 
     
@@ -942,7 +942,7 @@ function Page_2(params) {
             //console.log("\nUploading...")
             const formData = new FormData();
             formData.append('image', e.target.files);
-            setUploadState(uploadStates.UPLOADING);  
+            setUploadState(states.UPLOADING);  
         }
     }
     
@@ -974,11 +974,11 @@ function Page_2(params) {
         .then((response) => {
             console.log("Uploaded file. " + filename ); 
             params.setUserImage(files[0].name);   
-            setUploadState(uploadStates.UPLOADED);             
+            setUploadState(states.UPLOADED);             
         })                
         .catch(err => {
             console.log("uploadFile error " + err);            
-            setUploadState(uploadStates.ERROR);            
+            setUploadState(states.ERROR);            
         })
     }
         
@@ -1022,25 +1022,25 @@ function Page_2(params) {
                                     <input className="hidden"
                                         id="ChoosePicture"               
                                         type="file"  
-                                        onClick={(e) => {setUploadState(uploadStates.IDLE)}}                      
+                                        onClick={(e) => {setUploadState(states.IDLE)}}                      
                                         onChange={changeFiles}                                     
                                     /> 
                                     <button className="bg-cyan-600 text-white font-bold text-sm py-2 px-2 rounded ml-5 h-10 w-32"
                                             id="upload"                                
                                             type = "submit"                                                       
-                                            onChange={(e) => {setUploadState(uploadStates.IDLE);
+                                            onChange={(e) => {setUploadState(states.IDLE);
                                                               selectFile(e)}}>
                                         Upload picture    
                                     </button> 
                                 </form>    
                             </div>
                             <div>                                  
-                                {uploadState === uploadStates.UPLOADED && ( 
+                                {uploadState === states.UPLOADED && ( 
                                     <p className="mt-0 ml-4 text-sm text-cyan-600">
                                         Image was uploaded<br></br> successfully.
                                     </p>
                                 )} 
-                                {uploadState !== uploadStates.UPLOADED && ( 
+                                {uploadState !== states.UPLOADED && ( 
                                     <p className="mt-0 ml-4 text-sm text-cyan-600">
                                         &nbsp;
                                     </p>
@@ -1135,7 +1135,6 @@ function Page_3(params) {
             <p className="text-white text-center font-bold text-xl mt-1 mb-44">Agreement</p>
 
             <p className="text-white text-center text-sm mt-5 mb-60">This page will display an agreement.</p>
-
         </div>    
     );
 } 

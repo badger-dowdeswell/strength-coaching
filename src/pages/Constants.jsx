@@ -8,10 +8,12 @@
 // 14.01.2025 BRD Original version adapted from Dancesport for
 //                Strength Research.
 // 30.04.2025 BRD Added constants for pages in tabbed dialogue components.
+// 05.09.2025 BRD Rationalised the set of constants and gave them a shorter
+//                name of "states" so that programs now use "state" rather 
+//                than "editingState" or "registrationState".   
 //
-// Documentation
+// DOCUMENTATION
 // =============
-//
 // Using the states
 // ================
 // These constants are used to track the state of a record update or a process during
@@ -32,39 +34,46 @@
 //        case states.EDITING:
 //           ... action code;
 //           break;
-
-import { IDLE_BLOCKER } from "react-router-dom"
-
 //
 export const states = {
     UNDEFINED: 0,
-    SELECTING: 1,
-    LOADING: 2,
-    NOT_FOUND: 3,
-    ADDING: 4,
-    EDITING: 5,
-    CANCELLING: 6,
-    UPDATING: 7,
-    DELETING: 8,
-    EXITING: 9,
-    NOT_AUTHENTICATED: 10,
-    AUTHENTICATING: 11,
-    AUTHENTICATED: 12,
-    FORGOT_PASSWORD: 13,
-    CHANGING_PASSWORD: 14,
-    VALIDATING: 15,  
-    VALIDATING_STAGE_1: 16,
-    VALIDATING_STAGE_2: 17,  
-    VALIDATING_STAGE_3: 18,
-    REGISTER: 25,
-    ERROR: 500
-}
+    IDLE: 1,
+    SELECTING: 2,
+    LOADING: 3,
+    UPLOADING: 4,
+    UPLOADED: 5,
 
-export const uploadStates = {
-    IDLE: 0,
-    UPLOADING: 1,
-    UPLOADED: 2,
-    ERROR: 3
+    NOT_AUTHENTICATED: 13,
+    AUTHENTICATING: 14,
+    AUTHENTICATED: 15,
+    
+    NOT_FOUND: 6,
+    ADDING: 7,
+    EDITING: 8,
+    CANCELLING: 9,
+    UPDATING: 10,
+    DELETING: 11,
+    EMAILING:22,
+    FORGOT_PASSWORD: 16,
+    CHANGING_PASSWORD: 17,
+    EXITING: 12,
+        
+    VALIDATING: 18,  
+    VALIDATING_STAGE_1: 19,
+    VALIDATING_STAGE_2: 20,  
+    VALIDATING_STAGE_3: 21, 
+
+    PAGE_1: 100,
+    VERIFY_PAGE_1: 101, 
+    PAGE_2: 103,
+    VERIFY_PAGE_2: 104,
+    PAGE_3: 105,
+    VERIFY_PAGE_3: 106,
+    CREATING_USER: 107,
+    CREATED_USER: 108,
+    REGISTERED: 110,
+
+    ERROR: 500
 }
 
 //
@@ -95,3 +104,10 @@ export const dialogs = {
     SHOW_DIALOG: 3,
     HIDE_DIALOG: 4
 }
+
+//export const uploadStates = {
+//    IDLE: 0,
+//    UPLOADING: 1,
+//    UPLOADED: 2,
+//    ERROR: 3
+//}

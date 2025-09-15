@@ -21,6 +21,7 @@ import "./Main.css";
 import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { getBaseURL } from "./getBaseURL";
+import { states } from "./Constants";
 
 import Axios from "axios";
 const axios = Axios;
@@ -36,29 +37,20 @@ var default_user_image = "template.png"; // This ensures that there is an image 
                                          // after the user signs-in for the first time before
                                          // they upload their own image.
 
-//
-// States
-// ======
-// The registration process operates as a state machine. This allows it to move
-// stage-by-stage forwards and backwards, waiting at appropriate times for an
-// async process to return a value before transitioning to a new stage. The
-// current state is held in the variable state, which always contains one of the
-// pre-defined states constants.
-//
-const states = {
-   UNDEFINED: 0,
-   PAGE_1: 1,
-   VERIFY_PAGE_1: 2, 
-   EMAILING_USER: 3,
-   PAGE_2: 4,
-   VERIFY_PAGE_2: 5,
-   PAGE_3: 6,
-   VERIFY_PAGE_3: 7,
-   CREATING_USER: 8,
-   CREATED_USER: 9,
-   REGISTERED: 10,
-   ERROR: 500,
-};
+// const states = {
+//    UNDEFINED: 0,
+//    PAGE_1: 1,
+//    VERIFY_PAGE_1: 2, 
+//    EMAILING_USER: 3,
+//    PAGE_2: 4,
+//    VERIFY_PAGE_2: 5,
+//    PAGE_3: 6,
+//    VERIFY_PAGE_3: 7,
+//    CREATING_USER: 8,
+//    CREATED_USER: 9,
+//    REGISTERED: 10,
+//    ERROR: 500,
+// };
 
 //
 // Registration
@@ -84,8 +76,7 @@ export default function Registration() {
     // This generates a one-time five-digit registration code for
     // each person who is registering to become a user. 
     const [VerificationCode] = useState(((Math.floor(Math.random() * (9 * (Math.pow(10, 4)))) +
-                               (Math.pow(10, 4))).toString())); 
-    console.log("VerificationCode ", VerificationCode);                                         
+                               (Math.pow(10, 4))).toString()));                                        
     const [VerificationCodeEntered, setVerificationCodeEntered] = useState("");
     const [VerificationCodeError, setVerificationCodeError] = useState("");
 
@@ -150,8 +141,7 @@ export default function Registration() {
                 }
                 break;  
                 
-            case states.EMAILING_USER: 
-                setState(states.PAGE_2); // RA_BRD                                      
+            case states.EMAILING:                                                      
                 break;
             
             case states.PAGE_2:
@@ -234,9 +224,7 @@ export default function Registration() {
     // an introductory message and the verification code they need to enter
     // to continue. 
     //
-    async function emailUser() {  
-        //console.log("Verification code ", VerificationCode);              
-        
+    async function emailUser() {                  
         const html_body = "<p>Thank you for registering a new Strength Coaching Online account.</p>" +                          
                           "<p>Please enter this verification code into the registration page:</p>" +                           
                           "<h1 style='text-align: center; font-size: 25px;'>" + VerificationCode + "</h1>" +  
@@ -253,16 +241,16 @@ export default function Registration() {
         })
         .then((response) => {
             if (response.status === 200) {
-                //console.log("email sent");
+                console.log("email sent");
                 setState(states.PAGE_2);
                          
             } else if (response.status === 500) {
-                //console.log("emailUser error: 500 " + response);                
+                console.log("emailUser error: 500 " + response.data);                
                 setState(states.PAGE_1);                
             }    
         })
         .catch(err => {
-            //console.log("emailUser error: " + err.message);
+            console.log("emailUser error: " + err.message);
             setState(states.PAGE_1); 
         })  
     }
@@ -283,12 +271,12 @@ export default function Registration() {
             } else if (response.status === 404) {
                 // That email address is not in use. 
                 setEmailAddressError("");       
-                setState(states.EMAILING_USER);           
+                setState(states.EMAILING);           
             }
         }).catch(err => {
           // The email address was not found.
           setEmailAddressError("");
-          setState(states.EMAILING_USER);
+          setState(states.EMAILING);
         });     
     }
 
@@ -361,7 +349,7 @@ export default function Registration() {
                         />
                     )}; 
 
-                    {(state === states.EMAILING_USER) && ( 
+                    {(state === states.EMAILING) && ( 
                         <Emailing
                             emailUser={emailUser} 
                         />
@@ -493,7 +481,7 @@ function Page_1(params) {
 // Reports the progress of the sending of the email.
 //
 function Emailing(params) {
-    //params.emailUser();  RA_BRD
+    params.emailUser();
 
     return (
         <div>           
