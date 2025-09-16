@@ -38,8 +38,8 @@ var default_user_image = "template.png"; // This ensures that there is an image 
                                          // they upload their own image.
 
 //
-// Registration
-// ============
+// REGISTRATION()
+// ==============
 export default function Registration() {
     let navigate = useNavigate();
 
@@ -58,8 +58,8 @@ export default function Registration() {
         }    
     },[]);
 
-    // This generates a one-time five-digit registration code for
-    // each person who is registering to become a user. 
+    // This generates a one-time five-digit registration code for each person who is 
+    // registering to become a user. 
     const [VerificationCode] = useState(((Math.floor(Math.random() * (9 * (Math.pow(10, 4)))) +
                                (Math.pow(10, 4))).toString()));                                        
     const [VerificationCodeEntered, setVerificationCodeEntered] = useState("");
@@ -70,20 +70,18 @@ export default function Registration() {
     const [PasswordCopy, setPasswordCopy] = useState("");
     const [PasswordCopyError, setPasswordCopyError] = useState("");
 
-    // Used to control the visibility of the password by switching the
-    // input type between "text" and "password".
+    // Used to control the visibility of the password by switching the input type 
+    // between "text" and "password".
     const [PasswordVisibility, setPasswordVisibility] = useState("password");
     
     //
     // Registration State Control
     // ==========================
-    // This section defines the state machine that controls the sign-in
-    // process. The useState Hook ensures that the environment gets
-    // updated and re-configured each time the state changes. This
-    // can trigger page transitions, read and write from the database,
-    // or display errors and make the user correct what they entered.
-    // The set of possible states is defined in the states
-    // object declared above.
+    // This section defines the state machine that controls the sign-in process. The
+    // useState Hook ensures that the environment gets updated and re-configured each
+    // time the state changes. This can trigger page transitions, read and write from
+    // the database, or display errors and make the user correct what they entered.
+    // The set of possible states is defined in the states object declared above.
     //
     const [state, setState] = useState(states.PAGE_1);
     useEffect(() => {    
@@ -91,8 +89,8 @@ export default function Registration() {
         
         switch (state) {
             case states.PAGE_1:
-                // This is the initial stage that allows the user to enter their email address,
-                // first name, and last name.
+                // This is the initial stage that allows the user to enter their email
+                // address, first name, and last name.
                 break;
 
             case states.VERIFY_PAGE_1:
@@ -206,9 +204,8 @@ export default function Registration() {
     //
     // emailUser()
     // ===========
-    // Sends an email to the address the new user specified. The email contains
-    // an introductory message and the verification code they need to enter
-    // to continue. 
+    // Sends an email to the address the new user specified. The email contains an introductory 
+    // message and the verification code they need to enter to continue. 
     //
     async function emailUser() {                  
         const html_body = "<p>Thank you for registering a new Strength Coaching Online account.</p>" +                          
@@ -244,8 +241,8 @@ export default function Registration() {
     //
     // checkEmail()
     // ============
-    // Verifies that the email address that the user wants to register for
-    // their use is not already in use by another user.
+    // Verifies that the email address that the user wants to register for their use is not 
+    // already in use by another user.
     //
     async function checkEmail(email_address) {           
         await axios.get(
@@ -267,10 +264,10 @@ export default function Registration() {
     }
 
     //
-    // createUser
-    // ==========
-    // Create a new user in the user table. The user_ID is automatically generated
-    // and returned by the Express api. It is returned in the response and can be
+    // createUser()
+    // ============
+    // Create a new client in the User table. The user_ID is automatically generated
+    // and returned by the Express API. It is returned in the response and can be
     // used during subsequent updates.
     //    
     const createUser = async () => {
@@ -305,12 +302,8 @@ export default function Registration() {
     //
     // REGISTRATION PAGES
     // ==================
-    // Displays each of the registration pages in order to enter
-    // and verify the information supplied.
-    //
-    //  <Emailing
-    //    emailUser={emailUser} 
-    //  />
+    // Displays each of the registration pages in order to enter and verify the 
+    // information supplied by the new client.    
     //
     return (        
         <div>                           
@@ -469,9 +462,7 @@ function Page_1(params) {
 // ==========
 // Reports the progress of the sending of the email.
 //
-function Emailing(params) {
-    //params.emailUser();
-
+function Emailing() { 
     return (
         <div>           
             <p className="text-white font-bold text-xl ml-24 mt-0 w-40">Sending email</p>
@@ -508,9 +499,8 @@ function Emailing(params) {
 //
 // Page_2()
 // ========
-// This component lets the user enter the registration code they
-// have received via an email sent in the previous registration
-// stage.
+// This component lets the user enter the registration code they have received via
+// an email sent in the previous registration stage.
 //
 function Page_2(params) { 
     // Set the focus automatically to the first input field after
@@ -578,13 +568,12 @@ function Page_2(params) {
 //
 // Page_3()
 // ========
-// This component lets the user enter and confirm their password.
-// This is the final stage after completing the first and second
-// registration steps on Pages 1 and 2.
+// This component lets the user enter and confirm their password. This is the final 
+// stage after completing the first and second registration steps on Pages 1 and 2.
 //
 function Page_3(params) {
-    // Set the focus automatically to the first input field after
-    // the component has rendered properly.
+    // Set the focus automatically to the first input field after the component has
+    // rendered properly.
     const autofocusID = useRef(null);
     useEffect(() => {
         if (autofocusID.current) {
