@@ -23,6 +23,7 @@ import "./Main.css";
 import { useState, useEffect, useRef } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { getBaseURL } from "./getBaseURL";
+import { states } from "./Constants";
 
 import Axios from "axios";
 const axios = Axios;
@@ -37,23 +38,23 @@ import eye from "./images/password_eye.png";
 //
 // states
 // ===========
-const states = {
-    UNDEFINED: 0,
-    PAGE_1: 1,
-    VERIFY_PAGE_1: 2,     
-    PAGE_2: 3,
-    VERIFY_PAGE_2: 4, 
-    CLIENT_EXISTS: 5,
-    CLIENT_DOES_NOT_EXIST: 6,
-    GENERATE_TOKEN: 7,
-    LOCK_CLIENT: 8,
-    EMAIL_CLIENT: 9,
-    PAGE_3: 10,
-    VERIFY_PAGE_3: 11,
-    CLIENT_VERIFIED: 12,
-    CLIENT_NOT_VERIFIED: 13,
-    ERROR: 500,
-};
+// const states = {
+//     UNDEFINED: 0,
+//     PAGE_1: 1,
+//     VERIFY_PAGE_1: 2,     
+//     PAGE_2: 3,
+//     VERIFY_PAGE_2: 4, 
+//     CLIENT_EXISTS: 5,
+//     CLIENT_DOES_NOT_EXIST: 6,
+//     GENERATE_TOKEN: 7,
+//     LOCK_CLIENT: 8,
+//     EMAIL_CLIENT: 9,
+//     PAGE_3: 10,
+//     VERIFY_PAGE_3: 11,
+//     CLIENT_VERIFIED: 12,
+//     CLIENT_NOT_VERIFIED: 13,
+//     ERROR: 500,
+// };
 
 //
 // ResetPassword()
@@ -88,10 +89,8 @@ export default function ResetPassword() {
     let location = useLocation();
     //console.log("\nLocation " + location.pathname + " " + window.location.href);
 
-    let token = new URLSearchParams(location.search).get('vt');
-    // http://localhost:3000/ResetPassword?vt=dfdfdfdf_HAHHA
-    //console.log("URL [" + location.pathname + "] [" + token + "]"); 
-
+    //let token = new URLSearchParams(location.search).get('vt');
+    
     //
     // Reset Password State Control
     // ============================
@@ -113,15 +112,15 @@ export default function ResetPassword() {
 
         switch (state) {
             case states.UNDEFINED: 
-                let token = new URLSearchParams(location.search).get('rt');
-                console.log(token);
+                let token = new URLSearchParams(location.search).get('rt');                
                 if (token !== null) {
                     // The page has been launched from an link with an embedded URL token. 
                     console.log("verifying token ...");
                     setRegistrationToken(token);
                     verifyToken(token);                             
                 } else {
-                    // This is the initial state transition 
+                    // This is the initial state transition from inside the app, via
+                    // a link from the Sign In page.
                     setState(states.PAGE_1);
                 }       
                 break;
@@ -154,7 +153,7 @@ export default function ResetPassword() {
                 lockClient(UserID);   
                 break; 
 
-            case states.EMAIL_CLIENT:
+            case states.EMAILING:
                 // Email the client
                 emailResetLink(EmailAddress);
                 break; 
@@ -197,14 +196,17 @@ export default function ResetPassword() {
                 break;
                 
             case states.CLIENT_VERIFIED:
-                // unlock the client...
-                navigate("/SignIn");
+                unlockClient(UserID, Password);                
                 break;
 
             case states.CLIENT_NOT_VERIFIED: 
                 setVerificationCodeError("That verification code is not valid.");
                 setState(states.PAGE_3); 
-                break;  
+                break; 
+                
+            case states.EXITING:
+                navigate("/SignIn");
+                break;    
 
             default:
                 break;     
@@ -355,9 +357,33 @@ export default function ResetPassword() {
         .then((response) => {
             if (response.status === 200) {
                 console.log("\nlockClient - status 200");                
-                setState(states.EMAIL_CLIENT);                     
+                setState(states.EMAILING);                     
             } else if (response.status === 500) { 
                 console.log("\nlockClient - status 500"); 
+            }    
+        })
+        .catch(err => {
+            console.log("\nlockClient - err " + err);    
+        })        
+    }; 
+
+    //
+    // unlockClient()
+    // ==============
+    async function unlockClient(user_ID, password) {        
+        console.log("unlockClient() " + user_ID);
+
+        axios.put(baseURL + "unlockUser", { 
+            user_ID: user_ID,
+            password: password 
+        })
+        .then((response) => {
+            if (response.status === 200) {
+                console.log("\nunlockClient - status 200");                
+                setState(states.EXITING);                     
+            } else if (response.status === 500) { 
+                console.log("\nunlockClient - status 500"); 
+                setState(states.PAGE_3);
             }    
         })
         .catch(err => {
@@ -433,7 +459,7 @@ export default function ResetPassword() {
                     )}; 
 
                     {((state === states.CLIENT_EXISTS) || (state === states.CLIENT_DOES_NOT_EXIST) 
-                      || (state === states.EMAIL_CLIENT) || (state === states.LOCK_CLIENT)) && (                       
+                      || (state === states.EMAILING) || (state === states.LOCK_CLIENT)) && (                       
                         <Page_2 
                             EmailAddress={EmailAddress} 
                             setState={setState}                                                            
@@ -473,11 +499,6 @@ export default function ResetPassword() {
         </div>    
     );
 }
-
-// let location = useLocation();
-//    let token = new URLSearchParams(location.search).get('vt');
-//    // http://localhost:3000/ResetPassword?vt=dfdfdfdf_HAHHA
-//    console.log("URL [" + location.pathname + "] [" + token + "]"); 
 
 //
 // Page_1()
@@ -692,7 +713,7 @@ function Page_3(params) {
                                     mt-2 ml-12"
                     id = "Back"
                     style = {{ width: "100px" }}
-                    onClick = {() => {params.navigate("/");}} >      
+                    onClick = {() => {params.setState(states.EXITING)}} >      
                     Cancel
                 </button>
 

@@ -90,6 +90,8 @@
 //                Back-End is being shut down. 
 //                Added the getToken API that generates a unique token with an expiry time. This can 
 //                be used to identify a user that is trying to reset their password. 
+// 16.09.2025 BRD Added the lockUser and unLockUser APIs that are needed while resetting a user's
+//                password.
 //
 import express from 'express';
 const app = express();
@@ -683,6 +685,46 @@ app.put('/api/lockUser', async(request, response) => {
             } else {
                 response.status(500).send("/api/lockUser: Unexpected error " + err.message);
                 logmsg("/api/lockUser returned an unexpected error :" + err.message + "\n" +
+                       "query: " + sqlUpdateCmd);
+            }
+        }
+    );    
+}); 
+
+//
+// unlockUser()
+// ============
+// Unlocks the clients record during the password reset process when they have successfully verified
+// their identity and created a new password. Note that this API clears the Verification code and the
+// Registration token so they cannot be used again. Refer to the matching lockUser API for more information.
+//
+app.put('/api/unlockUser', async(request, response) => {
+    var password = request.body.password.trim();
+    var hashedPassword = await encryptPassword((password.replace(/'/g, "''")));
+    
+    var sqlUpdateCmd = 'DO $$\n' +
+                       'BEGIN \n' +
+                       'UPDATE "User" SET ' +
+                       '"password" = ' + "'" + hashedPassword + "' , " +
+                       '"user_status" = ' + "'A', " +  
+                       '"registration_token" = ' + "'', " +
+                       '"verification_code" = '  + "'' " + 
+                       ' WHERE "user_ID" = ' + "'" + request.body.user_ID + "';\n" +                
+                        'EXCEPTION\n ' +
+                        'WHEN OTHERS THEN\n' +
+                        'ROLLBACK\n; ' +
+                        'END; $$\n';
+        
+    logmsg("/api/unlockUser \n" + sqlUpdateCmd + "\n");
+
+    db.query(
+        sqlUpdateCmd, (err, result) => {                 
+            if (!err) {
+                response.status(200).send("/api/unlockUser: user updated.");
+                logmsg("/api/unlockUser user updated.");                    
+            } else {
+                response.status(500).send("/api/unlockUser: Unexpected error " + err.message);
+                logmsg("/api/unlockUser returned an unexpected error :" + err.message + "\n" +
                        "query: " + sqlUpdateCmd);
             }
         }
