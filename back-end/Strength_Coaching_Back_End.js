@@ -702,14 +702,14 @@ app.put('/api/unlockUser', async(request, response) => {
     var password = request.body.password.trim();
     var hashedPassword = await encryptPassword((password.replace(/'/g, "''")));
     
-    var sqlUpdateCmd = 'DO $$\n' +
-                       'BEGIN \n' +
-                       'UPDATE "User" SET ' +
-                       '"password" = ' + "'" + hashedPassword + "' , " +
-                       '"user_status" = ' + "'A', " +  
-                       '"registration_token" = ' + "'', " +
-                       '"verification_code" = '  + "'' " + 
-                       ' WHERE "user_ID" = ' + "'" + request.body.user_ID + "';\n" +                
+    var sqlUpdateCmd =  'DO $$\n' +
+                        'BEGIN \n' +
+                        'UPDATE "User" SET ' +
+                            '"password" = ' + "'" + hashedPassword + "' , " +
+                            '"user_status" = ' + "'A', " +  
+                            '"registration_token" = ' + "'', " +
+                            '"verification_code" = '  + "'' " + 
+                            ' WHERE "user_ID" = ' + "'" + request.body.user_ID + "';\n" +                
                         'EXCEPTION\n ' +
                         'WHEN OTHERS THEN\n' +
                         'ROLLBACK\n; ' +
@@ -720,7 +720,7 @@ app.put('/api/unlockUser', async(request, response) => {
     db.query(
         sqlUpdateCmd, (err, result) => {                 
             if (!err) {
-                response.status(200).send("/api/unlockUser: user updated.");
+                response.status(200).send("/api/unlockUser: User updated.");
                 logmsg("/api/unlockUser user updated.");                    
             } else {
                 response.status(500).send("/api/unlockUser: Unexpected error " + err.message);

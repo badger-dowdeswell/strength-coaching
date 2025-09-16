@@ -37,21 +37,6 @@ var default_user_image = "template.png"; // This ensures that there is an image 
                                          // after the user signs-in for the first time before
                                          // they upload their own image.
 
-// const states = {
-//    UNDEFINED: 0,
-//    PAGE_1: 1,
-//    VERIFY_PAGE_1: 2, 
-//    EMAILING_USER: 3,
-//    PAGE_2: 4,
-//    VERIFY_PAGE_2: 5,
-//    PAGE_3: 6,
-//    VERIFY_PAGE_3: 7,
-//    CREATING_USER: 8,
-//    CREATED_USER: 9,
-//    REGISTERED: 10,
-//    ERROR: 500,
-// };
-
 //
 // Registration
 // ============
@@ -141,7 +126,8 @@ export default function Registration() {
                 }
                 break;  
                 
-            case states.EMAILING:                                                      
+            case states.EMAILING: 
+                emailUser();                                                     
                 break;
             
             case states.PAGE_2:
@@ -322,6 +308,10 @@ export default function Registration() {
     // Displays each of the registration pages in order to enter
     // and verify the information supplied.
     //
+    //  <Emailing
+    //    emailUser={emailUser} 
+    //  />
+    //
     return (        
         <div>                           
             <TopNav title="" userName="" userRole="" />
@@ -350,8 +340,7 @@ export default function Registration() {
                     )}; 
 
                     {(state === states.EMAILING) && ( 
-                        <Emailing
-                            emailUser={emailUser} 
+                        <Emailing                            
                         />
                     )};    
         
@@ -457,18 +446,18 @@ function Page_1(params) {
             <div className="flex flex-row">
                 <button className="bg-cyan-600 text-white font-bold text-sm py-2 px-2 rounded
                                  mt-2 ml-12 mb-0"
-                    id="Next"
-                    style={{ width: "100px" }}                
-                    onClick={() => {params.setState(states.VERIFY_PAGE_1);}} >
-                    Next &gt;
+                        id="Cancel"
+                        style={{ width: "100px" }}                
+                        onClick={() => {params.navigate("/")}} >
+                    Cancel
                 </button>
 
                 <button className="bg-cyan-600 text-white font-bold text-sm py-2 px-2 rounded
                                 mt-2 ml-5"
-                    id="Cancel"
-                    style={{ width: "100px" }}                
-                    onClick={() => {params.navigate("/")}} >
-                    Cancel
+                        id="Next"
+                        style={{ width: "100px" }}                
+                        onClick={() => {params.setState(states.VERIFY_PAGE_1);}} >
+                    Next &gt;
                 </button>
             </div>
       </div>
@@ -481,7 +470,7 @@ function Page_1(params) {
 // Reports the progress of the sending of the email.
 //
 function Emailing(params) {
-    params.emailUser();
+    //params.emailUser();
 
     return (
         <div>           
