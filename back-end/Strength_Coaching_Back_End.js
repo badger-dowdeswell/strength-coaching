@@ -94,7 +94,6 @@
 //                password. Also added the DebugMode option to the logmsg() function to quickly enable
 //                detailled debug messages for each API call when required.
 //
-//
 import express from 'express';
 const app = express();
 
@@ -224,7 +223,7 @@ const server = app.listen(PORT, () => {
                 dt.toLocaleDateString() + "\nat " + dt.toLocaleTimeString() + 
                 " using local environment sr.env.\n");
     if (debug) {
-        console.log("Debug mode enabled.")
+        console.log("Debug mode enabled.");
     } 
 });
 
@@ -258,7 +257,7 @@ process.on('SIGINT', () => {
 //
 app.get('/api/getToken', async(request, response) => {
     const user_ID = request.query.user_ID;
-    const expiry_time = request.query.expiry_time
+    const expiry_time = request.query.expiry_time;
 
     jwt.sign({user_ID}, JWT_SECRET, expiry_time, (err, token) => {
         if (!err) {
@@ -266,7 +265,7 @@ app.get('/api/getToken', async(request, response) => {
             response.status(200).send(packet);
             logmsg("/api/getToken created token :\n" + token);
         } else {
-            logmsg("/api/getToken error: " + json.err)
+            logmsg("/api/getToken error: " + json.err);
             response.status(500).json({err});
         }
     });
@@ -424,7 +423,7 @@ app.get('/api/getUser', async (request, response) => {
 // encryptPassword()
 // =================
 async function encryptPassword(password) {
-    const hashedPassword = await bcrypt.hash(password, BCRYPT_SALT)
+    const hashedPassword = await bcrypt.hash(password, BCRYPT_SALT);
     return hashedPassword;
 };
 
@@ -541,7 +540,8 @@ app.get('/api/duplicateAlias', async (request, response) => {
         const alias = request.query.alias;
         const user_ID = request.query.user_ID;
         // eslint-disable-next-line no-useless-concat
-        const sqlSelectCmd = 'SELECT "user_ID", "alias" FROM "User" WHERE "user_ID" <> ' + "'" + user_ID + "'" + ' AND "alias" ILIKE ' + "'" + alias + "'";
+        const sqlSelectCmd = 'SELECT "user_ID", "alias" FROM "User" WHERE "user_ID" <> ' + "'" + user_ID + "'"
+                             + ' AND "alias" ILIKE ' + "'" + alias + "'";
         logmsg("/api/duplicateAlias :\n" + sqlSelectCmd);
         
         db.query(sqlSelectCmd, (err, result) => {
@@ -749,12 +749,17 @@ app.put('/api/unlockUser', async(request, response) => {
 // to users. The configuration for the email service, user information, and account passwords are
 // configured in the environment file sr.env.
 //
-app.put('/api/sendMail', async(request, response) => {  
+app.put('/api/sendMail', async(request, response) => {
+    var email_address = request.body.recipient_email_address;
+    if (process.env.TEST_EMAIL.trim() !== "") {
+        // Used the test send-to email address instead of the real one specified.
+        email_address = process.env.TEST_EMAIL;
+    }  
     
     // Configure the NodeMailer email transport from the parameters sent in the API request.
     const mailOptions = {
         from: request.body.sender_email_address, 
-        to: request.body.recipient_email_address,
+        to: email_address,
         subject: request.body.subject, 
         html: request.body.html_body 
     };
