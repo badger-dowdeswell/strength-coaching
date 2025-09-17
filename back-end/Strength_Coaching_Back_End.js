@@ -92,13 +92,15 @@
 //                be used to identify a user that is trying to reset their password. 
 // 16.09.2025 BRD Added the lockUser and unLockUser APIs that are needed while resetting a user's
 //                password. Also added the DebugMode option to the logmsg() function to quickly enable
-//                detailled debug messages for each API call when required.
+//                detailed debug messages for each API call when required.
+// 17.09.2025 BRD Created a test send-to email address in the environment file to simplify email testing.
 //
 import express from 'express';
 const app = express();
 
-const version = 1.03;
+const VERSION = 1.03;
 
+// Turn on all console debug messages.
 const debug = true;
 
 //
@@ -218,13 +220,16 @@ const db = new Pool({
 //
 const server = app.listen(PORT, () => {     
     var dt = new Date();
-    console.log("\nThe Strength Research Online Back-End version " + version +
+    console.log("\nThe Strength Research Online Back-End version " + VERSION +
                 " is\nnow listening on port " + PORT + ". It was started on " +
                 dt.toLocaleDateString() + "\nat " + dt.toLocaleTimeString() + 
                 " using local environment sr.env.\n");
     if (debug) {
         console.log("Debug mode enabled.");
     } 
+    if (process.env.TEST_EMAIL.trim() !== "") {
+        console.log("Test email address enabled.");
+    }    
 });
 
 //

@@ -915,8 +915,8 @@ function Page_5(params) {
         
         await axios.put(baseURL + "sendMail", {
             sender_email_address: "info@strengthresearch.online",                        
-            recipient_email_address: "badger@rockweather.com", 
-            subject: "Coffee with Coach Email List request",             
+            recipient_email_address: "badger@rockweather.com", // RA_BRD
+            subject: "Coffee with Coach Email List request.",             
             html_body: html_body           
         })
         .then((response) => {
