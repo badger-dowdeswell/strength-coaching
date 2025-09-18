@@ -211,9 +211,19 @@ function SignIn() {
     };
 
     //
+    // handleEnter()
+    // =============
+    // Key event handler to trap the enter key
+    const handleEnter = (e) => {
+        if (e.key === 'Enter') {        
+            document.getElementById('SignIn').click(); 
+        }
+    };
+
+    //
     // SIGN-IN
     // =======
-    return (        
+    return ( 
         <div>                           
             <TopNav title="" userName="" userRole="" userImage=""/>
 
@@ -236,6 +246,7 @@ function SignIn() {
                         placeholder="nnnn or email address"
                         autoComplete="new-password"
                         value={UserID}
+                        onKeyDown={handleEnter}
                         onChange={(e) => setUserID(e.target.value)}                        
                     />
                     <p className=" ml-5 mb-1 mt-2 text-cyan-300 text-left text-sm">
@@ -253,6 +264,7 @@ function SignIn() {
                             placeholder="********"
                             autoComplete="new-password"
                             value={Password}
+                            onKeyDown={handleEnter}
                             onChange={(e) => setPassword(e.target.value)}
                         />
                         <img className="mr-5 ml-0 mt-1 h-6 w-7"

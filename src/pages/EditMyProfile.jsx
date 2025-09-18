@@ -418,6 +418,16 @@ export default function EditMyProfile() {
     };
 
     //
+    // handleEnter()
+    // =============
+    // Key event handler to trap the enter key
+    const handleEnter = (e) => {
+        if (e.key === 'Enter') {        
+            document.getElementById('Update').click(); 
+        }
+    };
+
+    //
     // EditMyProfile()
     // ===============
     // This component links all the separate tabbed-dialog components together so
@@ -508,7 +518,8 @@ export default function EditMyProfile() {
                             DateOfBirth={DateOfBirth} setDateOfBirth={setDateOfBirth}
                             errors={errors} setErrors={setErrors}
                             IsChanged={IsChanged} setIsChanged={setIsChanged}
-                            state={state} setState={setState}                                                       
+                            state={state} setState={setState} 
+                            handleEnter={handleEnter}                                                      
                         />
                     )};
 
@@ -615,6 +626,7 @@ function Page_1(params) {
                         id="Salutation"
                         ref={autofocusID}
                         value={params.Salutation}
+                        onKeyDown={params.handleEnter}
                         onChange={(e) => {
                             if (params.state === states.EDITING) {
                                 params.setSalutation(e.target.value);
@@ -633,6 +645,7 @@ function Page_1(params) {
                         type="text" 
                         placeholder=""                       
                         value={params.FirstName}
+                        onKeyDown={params.handleEnter}
                         onChange={(e) => {
                             if (params.state === states.EDITING) {
                                 params.setFirstName(e.target.value);
@@ -650,6 +663,7 @@ function Page_1(params) {
                         type="text"
                         placeholder=""
                         value={params.LastName}
+                        onKeyDown={params.handleEnter}
                         onChange={(e) => {
                             if (params.state === states.EDITING) {
                                 params.setLastName(e.target.value);
@@ -679,6 +693,7 @@ function Page_1(params) {
                             type="text"
                             placeholder=""
                             value={params.Alias}
+                            onKeyDown={params.handleEnter}
                             onChange={(e) => {
                                 if (params.state === states.EDITING) {
                                     params.setAlias(e.target.value);
@@ -696,6 +711,7 @@ function Page_1(params) {
                             type="text"
                             placeholder=""
                             value={params.EmailAddress}
+                            onKeyDown={params.handleEnter}
                             onChange={(e) => {
                                 if (params.state === states.EDITING) {
                                     params.setEmailAddress(e.target.value);
@@ -713,6 +729,7 @@ function Page_1(params) {
                             type="text"
                             placeholder=""
                             value={params.PhoneNumber}
+                            onKeyDown={params.handleEnter}
                             onChange={(e) => {
                                 if (params.state === states.EDITING) {
                                     params.setPhoneNumber(e.target.value);
@@ -732,6 +749,7 @@ function Page_1(params) {
                             type="text"
                             placeholder=""
                             value={params.Address1}
+                            onKeyDown={params.handleEnter}
                             onChange={(e) => {
                                 if (params.state === states.EDITING) {
                                     params.setAddress1(e.target.value);
@@ -752,6 +770,7 @@ function Page_1(params) {
                             type="text"
                             placeholder=""
                             value={params.Address2}
+                            onKeyDown={params.handleEnter}
                             onChange={(e) => {
                                 if (params.state === states.EDITING) {
                                     params.setAddress2(e.target.value);
@@ -772,6 +791,7 @@ function Page_1(params) {
                             type="text"
                             placeholder=""
                             value={params.Address3}
+                            onKeyDown={params.handleEnter}
                             onChange={(e) => {
                                 if (params.state === states.EDITING) {
                                     params.setAddress3(e.target.value);
@@ -792,6 +812,7 @@ function Page_1(params) {
                             type="text"
                             placeholder=""
                             value={params.Suburb}
+                            onKeyDown={params.handleEnter}
                             onChange={(e) => {
                                 if (params.state === states.EDITING) {
                                     params.setSuburb(e.target.value);
@@ -810,6 +831,7 @@ function Page_1(params) {
                             type="text"
                             placeholder=""
                             value={params.City}
+                            onKeyDown={params.handleEnter}
                             onChange={(e) => {
                                 if (params.state === states.EDITING) {
                                     params.setCity(e.target.value);
@@ -828,6 +850,7 @@ function Page_1(params) {
                             type="text"
                             placeholder=""
                             value={params.Postcode}
+                            onKeyDown={params.handleEnter}
                             onChange={(e) => {
                                 if (params.state === states.EDITING) {
                                     params.setPostcode(e.target.value);
@@ -847,6 +870,7 @@ function Page_1(params) {
                             type="text"
                             placeholder=""
                             value={params.StateProvince}
+                            onKeyDown={params.handleEnter}
                             onChange={(e) => {
                                 if (params.state === states.EDITING) {
                                     params.setStateProvince(e.target.value);
@@ -861,7 +885,8 @@ function Page_1(params) {
                         <p className=" ml-5 mb-1 mt-1 text-white text-left">Country</p>
                         <select className="ml-5 mr-5 mt-1 w-48 pl-0 h-6"
                             id="Country"
-                            value={params.Country}                                             
+                            value={params.Country}  
+                            onKeyDown={params.handleEnter}                                           
                             onChange={(e) => {
                                 if (params.state === states.EDITING) {
                                     params.setCountry(e.target.value);
@@ -880,6 +905,7 @@ function Page_1(params) {
                             id="DateOfBirth"                        
                             type="date"                                           
                             value = {params.DateOfBirth}  
+                            onKeyDown={params.handleEnter}
                             onChange={(e) => {
                                 if (params.state === states.EDITING) {
                                     params.setDateOfBirth(e.target.value);                            
