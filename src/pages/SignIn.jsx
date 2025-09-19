@@ -213,19 +213,21 @@ function SignIn() {
     //
     // handleKeys()
     // ============
-    // Key event handler to trap the Enter and Escape keys
+    // Key event handler to trap the Enter and Escape keys during sign-in.
     //
     const handleKeys = (e) => {
-        if (e.key === 'Enter') {        
-            document.getElementById('SignIn').click(); 
+       if (e.key === 'Enter') {        
+           document.getElementById('SignIn').click(); 
         } else if (e.key === 'Escape') {
-            document.getElementById('Cancel').click();
+           document.getElementById('Cancel').click();
         }
-    };    
-
+    }; 
+   
     //
     // SIGN-IN
     // =======
+    // Render the sign-in page.
+    //
     return ( 
         <div>                           
             <TopNav title="" userName="" userRole="" userImage=""/>
@@ -348,5 +350,4 @@ function SignIn() {
         </div>        
     );
 }
-export default SignIn;
-                            
+export default SignIn;                            

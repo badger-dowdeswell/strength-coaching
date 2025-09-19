@@ -12,7 +12,7 @@
 import './Main.css';
 
 import TopNav from "./components/TopNav";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 
 import My_Block_Schedule from "./images/My_Block_Schedule.png";
@@ -60,14 +60,46 @@ function Home() {
 
         default:
             userRole="";
-    }      
+    } 
+    
+    //
+    // autofocus()
+    // ===========
+    // Sets the focus to the first input field automatically. This requires
+    // that just one input element per page has a ref={autoFocusID}.
+    //
+    const autofocusID = useRef(null);
+    useEffect(() => {
+        if (autofocusID.current) {
+            autofocusID.current.focus();
+        }    
+    },[]);    
+    
+    //
+    // handleKeys()
+    // ============
+    // Key event handler to trap the Enter and Escape keys on the Home page to sign-out.
+    // The Sign-Out button gets focus automatically when this page renders. 
+    //
+    const handleKeys = (e) => {
+       if (e.key === 'Enter') {        
+           document.getElementById('SignOut').click(); 
+        } else if (e.key === 'Escape') {
+           document.getElementById('SignOut').click();
+        }
+    }; 
 
+    //
+    // HOME
+    // ====
+    // Render the Home page.
+    //
     return (
         <div>
             <TopNav title="" userID = {userID} userImage = {userImage}
                     userName={userName} userRole={userRole} />
             
-            <div className="flex flex-col">                
+            <div className="flex flex-col">                              
                 <div className="flex flex-row absolute top-24 bottom-0
                                 items-center justify-center
                                 left-0 right-0 bg-gray-800 overflow-auto">
@@ -168,11 +200,12 @@ function Home() {
                         <br></br>
                         <br></br>
 
-
                         <div className="flex flex-row ml-16">
                             <button className="bg-cyan-600 text-white font-bold text-sm py-2 px-2 rounded mt-2 ml-5"
-                                    id="Back"
-                                    style={{ width: "100px"}}
+                                    id="SignOut"
+                                    style={{ width: "100px"}} 
+                                    ref={autofocusID}                                   
+                                    onKeyDown={handleKeys}
                                     onClick={() => {navigate("/")}}>                                 
                                 Sign Out
                             </button> 

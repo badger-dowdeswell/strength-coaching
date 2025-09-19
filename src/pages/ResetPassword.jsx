@@ -24,6 +24,7 @@ import { useState, useEffect, useRef } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { getBaseURL } from "./getBaseURL";
 import { states } from "./Constants";
+import { validateEmail } from "./components/UtilLib";
 
 import Axios from "axios";
 const axios = Axios;
@@ -34,27 +35,6 @@ import TopNav from "./components/TopNav";
 
 import Reset_Person from "./images/Reset_Person.png";
 import eye from "./images/password_eye.png";
-
-//
-// states
-// ===========
-// const states = {
-//     UNDEFINED: 0,
-//     PAGE_1: 1,
-//     VERIFY_PAGE_1: 2,     
-//     PAGE_2: 3,
-//     VERIFY_PAGE_2: 4, 
-//     CLIENT_EXISTS: 5,
-//     CLIENT_DOES_NOT_EXIST: 6,
-//     GENERATE_TOKEN: 7,
-//     LOCK_CLIENT: 8,
-//     EMAIL_CLIENT: 9,
-//     PAGE_3: 10,
-//     VERIFY_PAGE_3: 11,
-//     CLIENT_VERIFIED: 12,
-//     CLIENT_NOT_VERIFIED: 13,
-//     ERROR: 500,
-// };
 
 //
 // ResetPassword()
@@ -86,10 +66,7 @@ export default function ResetPassword() {
     // input type between "text" and "password".
     const [PasswordVisibility, setPasswordVisibility] = useState("password");
       
-    let location = useLocation();
-    //console.log("\nLocation " + location.pathname + " " + window.location.href);
-
-    //let token = new URLSearchParams(location.search).get('vt');
+    let location = useLocation();    
     
     //
     // Reset Password State Control
@@ -215,6 +192,19 @@ export default function ResetPassword() {
     }, [state]);
 
     //
+    // autofocus()
+    // ===========
+    // Sets the focus to the first input field automatically. This requires
+    // that just one input element per page has a ref={autoFocusID}.
+    //
+    const autofocusID = useRef(null);
+    useEffect(() => {
+        if (autofocusID.current) {
+            autofocusID.current.focus();
+        }    
+    },[]);
+
+    //
     // verifyEmail()
     // =============
     // Verify the email address exists and then email the verification code to them.
@@ -222,14 +212,12 @@ export default function ResetPassword() {
     // they may be a hacker. However, if the email address is malformed or blank, tell 
     // the client so they can correct it.
     //
-    function verifyEmail() {
-        console.log("\nverifyEmail() " + EmailAddress);
-
+    function verifyEmail() { 
         if (!EmailAddress.trim()) {
             setEmailAddressError("An email address must be entered.")
             setState(states.PAGE_1);
         } else {    
-            if (!/\S+@\S+\.\S+/.test(EmailAddress)) {
+            if (validateEmail(EmailAddress)) {
                 setEmailAddressError("The email address entered is not valid.");
                 setState(states.PAGE_1);
             } else {
@@ -429,6 +417,19 @@ export default function ResetPassword() {
             console.log("emailUser error: " + err.message);            
         })  
     };
+
+    //
+    // handleKeys()
+    // ============
+    // Key event handler to trap the Enter and Escape keys during sign-in.
+    //
+   // const handleKeys = (e) => {
+    //   if (e.key === 'Enter') {        
+      //     document.getElementById('SendLink').click(); 
+   //     } else if (e.key === 'Cancel') {
+    //       document.getElementById('Cancel').click();
+//        }
+//    }; 
     
     //
     // RESET PASSWORD PAGES
@@ -454,7 +455,7 @@ export default function ResetPassword() {
                             setEmailAddress={setEmailAddress}
                             EmailAddressError={EmailAddressError}
                             setState={setState}                                
-                            navigate={navigate}
+                            navigate={navigate}                            
                         />
                     )}; 
 
@@ -464,6 +465,7 @@ export default function ResetPassword() {
                             EmailAddress={EmailAddress} 
                             setState={setState}                                                            
                             navigate={navigate}
+                            handleKeys = {handleKeys}
                         />
                     )}; 
 
@@ -482,9 +484,9 @@ export default function ResetPassword() {
                             PasswordCopyError = {PasswordCopyError}
                             setState={setState} 
                             navigate={navigate}
+                            handleKeys = {handleKeys}
                         />
                     )}; 
-
                 </div>            
                                     
                 <div className="relative flex items-center justify-center mt-0 ml-3">
@@ -511,7 +513,22 @@ export default function ResetPassword() {
 // is created that forms part of a reset-password page link. This is then sent to 
 // them in an email.                 
 // 
-function Page_1(params) {    
+function Page_1(params) {  
+    //
+    // handleKeys()
+    // ============
+    // Key event handler to trap the Enter and Escape keys during sign-in.
+    //
+    const handleKeys = (e) => {
+       if (e.key === 'Enter') {        
+           document.getElementById('SendLink').click(); 
+        } else if (e.key === 'Cancel') {
+           document.getElementById('Cancel').click();
+        }
+    }; 
+
+    
+    
     return (
         <div>
             <p className="text-white text-center text-xl mt-5">Reset my password</p>
@@ -529,6 +546,7 @@ function Page_1(params) {
             <input className="ml-5 mr-5 mt-4 w-[270px] pl-1"
                 id="EmailAddress"
                 type="text"
+                ref={autofocusID}
                 placeholder=""
                 autoComplete="new-password"
                 value={params.EmailAddress}
@@ -542,7 +560,8 @@ function Page_1(params) {
                 <button className="bg-cyan-600 text-white font-bold text-sm py-2 px-2 rounded
                                 mt-2 ml-12"
                         id="SendLink"
-                        style={{ width: "100px" }}                    
+                        style={{ width: "100px" }}
+                        onKeyDown={handleKeys}                    
                         onClick={() => {params.setState(states.VERIFY_PAGE_1);}
                         }>                    
                     Send Link
@@ -552,6 +571,7 @@ function Page_1(params) {
                                 mt-2 ml-5"
                         id="Cancel"
                         style={{ width: "100px" }}
+                        onKeyDown={handleKeys}
                         onClick={() => {
                             params.navigate("/");
                         }}>
