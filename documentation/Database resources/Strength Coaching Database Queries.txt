@@ -1,0 +1,77 @@
+//
+// STRENGTH RESEARCH ONLINE DATABASE SCHEMAS AND QUERIES
+// =====================================================
+
+CREATE DATABASE "StrengthResearch"
+    WITH
+    OWNER = badger
+    ENCODING = 'UTF8'
+    CONNECTION LIMIT = -1
+    IS_TEMPLATE = False;
+
+COMMENT ON DATABASE "StrengthResearch"
+    IS 'The database for Strength Research Online';
+    
+//    
+// Create User Table
+// =================
+
+DROP TABLE IF EXISTS public."User";
+
+CREATE TABLE public."User" (
+   "user_ID" smallserial,
+   "user_authority" char,
+   "password" character varying(70),
+   "user_status" char,
+   "registration_token" character varying(500),
+   "verification_code" character varying(10),
+   "token_date_time" date,
+   "last_sign_in_date" date,
+   "salutation" character varying(10),
+   "first_name" character varying(25),
+   "middle_name" character varying(25),
+   "last_name" character varying(50),
+   "alias" character varying (25),
+   "gender" char,
+   "pronouns" character varying(20),   
+   "phone_number" character varying(15),
+   "email_address" character varying(60),
+   "address_1" character varying(50),
+   "address_2" character varying(50),
+   "address_3" character varying(50),
+   "suburb" character varying(30),
+   "city" character varying(30),
+   "postcode" character varying(30),
+   "state_province" character varying(30),   
+   "country" character varying(25),
+   "date_of_birth" date,   
+   "gym_name" character varying(30),
+   "user_image" character varying(50) 
+  );    
+   
+ALTER TABLE public."User" OWNER TO badger;
+
+ALTER TABLE ONLY public."User"
+    ADD CONSTRAINT "user_pkey" PRIMARY KEY ("user_ID");
+
+
+COMMENT ON TABLE public."User"
+    IS 'The User table holds information about each individual user. Users can be administrators, trainers, or clients. There is a natural hierarchy of trainers who work with multiple clients and clients who employ different trainers for different disciplines. The application provides functionality that allows trainers to bring on-board new clients, manage their coaching programs, and transfer them to other associated trainers. 
+Verification rules are applied in the React maintenance application in the front-end ensure that only valid combinations of these attributes are allowed to be specified for each user.
+';
+
+// Useful Queries
+// ==============
+
+SELECT "user_ID", "first_name", "last_name", "password", "user_status", "registration_token",
+       "verification_code",  "alias", "email_address", "user_image" FROM "User" ORDER BY "user_ID";
+
+DELETE FROM "User" WHERE "user_ID" = '13'
+
+INSERT INTO "User" ("user_authority", "password", "user_status", "first_name", "last_name", "alias", "email_address") 
+
+// Clear the entire User table
+// ===========================
+DELETE FROM "User";
+
+

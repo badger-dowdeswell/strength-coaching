@@ -13,9 +13,11 @@
 //                Online site (www.strengthcoaching.online).
 //
 import './Main.css';
+import { useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import TopNav from "./components/TopNav";
 import Sign_In_People from "./images/Sign_In_People.png";
+
 //
 // Landing()
 // =========
@@ -30,8 +32,32 @@ function Landing() {
 
     let navigate = useNavigate();
 
-    return (        
-        <div>                         
+    //
+    // autofocus()
+    // ===========
+    // Sets the focus to the first input field automatically. This requires
+    // that just one input element per page has a ref={autoFocusID}.
+    //
+    const autofocusID = useRef(null);
+    useEffect(() => {
+        if (autofocusID.current) {
+            autofocusID.current.focus();
+        }    
+    },[]);
+    
+    //
+    // handleKeys()
+    // ============
+    // Key event handler to trap the Enter key to go to sign-in.
+    //
+    const handleKeys = (e) => {
+       if (e.key === 'Enter') {        
+           document.getElementById('SignIn').click();         
+        }
+    }; 
+
+    return (  
+        <div tabIndex="0">                         
             <TopNav title="" userName="" userRole=""/>
 
             <div className="flex flex-row absolute top-24 bottom-0
@@ -63,8 +89,10 @@ function Landing() {
                             <div> 
                                 <button className="bg-cyan-600 text-white font-bold text-sm py-2 px-2 rounded
                                                                         mt-2 ml-5"                                                                         
-                                    id="Sign_In"
+                                    id="SignIn"
+                                    ref={autofocusID}
                                     style={{ width: "125px" }}
+                                    onKeyDown={handleKeys}
                                     onClick={() => navigate("/SignIn")}>
                                     Sign in
                                 </button>

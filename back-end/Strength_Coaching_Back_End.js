@@ -253,12 +253,12 @@ process.on('SIGINT', () => {
 //
 // getToken()
 // ==========
-// This function generates and returns a JSON Web Token (JWT)
-// that contains a hashed user ID and an expiry time specified
-// by the calling function. It uses the same JTW secret as the
-// other token-generating functions in this back-end. When re-
-// submitted later, it can be verified using the verifyToken() 
-// function to ensure it has not timed out.
+// This function generates and returns a JSON Web Token (JWT) that contains a
+// hashed user ID and an expiry time specified by the calling function. It uses
+// the same JWT secret as the other token-generating functions in this back-end. 
+// When re-submitted later, it can be verified using the verifyToken() function 
+// to ensure it has not timed out and that the same user is accessing the system
+// during this session
 //
 app.get('/api/getToken', async(request, response) => {
     const user_ID = request.query.user_ID;

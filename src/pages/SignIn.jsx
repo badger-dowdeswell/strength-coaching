@@ -1,5 +1,5 @@
 //
-// SIGN IN
+// SIGN-IN
 // =======
 // This is the Strength Coaching Online Sign In page where registered
 // users can enter their credentials to authenticate so they can access
@@ -33,11 +33,11 @@ import Sign_In_Michaela from "./images/Sign_In_Michaela.png";
 import eye from "./images/password_eye.png";
 
 //
-// SignIn
-// ======
-function SignIn() {
-    let navigate = useNavigate();
-
+// SIGN-IN
+// =======
+export default function SignIn() {
+    let navigate = useNavigate();  
+    
     const [UserID, setUserID] = useState("");
     const [JWT, setJWT] = useState("");
     const [UserAuthority, setUserAuthority] = useState("");
@@ -55,19 +55,6 @@ function SignIn() {
     // Used to control the visibility of the password by switching the
     // input type between "text" and "password".
     const [PasswordVisibility, setPasswordVisibility] = useState("password");
-
-    //
-    // autofocus()
-    // ===========
-    // Sets the focus to the first input field automatically. This requires
-    // that just one input element per page has a ref={autoFocusID}.
-    //
-    const autofocusID = useRef(null);
-    useEffect(() => {
-        if (autofocusID.current) {
-            autofocusID.current.focus();
-        }    
-    },[]);
 
     //
     // Editing state control
@@ -138,8 +125,7 @@ function SignIn() {
             console.log("Not Authenticated...");
             setSignInError(!SignInError);
             setUserIDError("");
-            setPasswordError("");
-            setSignInError("Either your user ID or password is incorrect.");
+            setPasswordError("Either your user ID or password is incorrect.");            
             break;
 
         case states.CHANGING_PASSWORD:
@@ -156,11 +142,7 @@ function SignIn() {
             // The user is requesting to register a new account.
             return navigate("/Registration");    
             
-        case states.ERROR:
-            //swal("Signing in",
-            //   "This program has encountered a problem.\n\n" +
-            //   "The details have been logged and the site administrator has been notified.\n\n" +
-            //   "Please click OK to exit.");
+        case states.ERROR:            
             setState(states.LOADING);
             break;
 
@@ -209,6 +191,19 @@ function SignIn() {
             setState(states.NOT_AUTHENTICATED);
         }
     };
+
+    //
+    // autofocus()
+    // ===========
+    // Sets the focus to the first input field automatically. This requires
+    // that just one input element per page has a ref={autoFocusID}.
+    //
+    const autofocusID = useRef(null);
+    useEffect(() => {
+        if (autofocusID.current) {
+            autofocusID.current.focus();
+        }    
+    },[]);
 
     //
     // handleKeys()
@@ -334,7 +329,7 @@ function SignIn() {
                         </button>
                     </div>    
                     <p className=" ml-5 mb-0 mt-0 text-cyan-300 text-left text-sm">
-                        {SignInError}&nbsp;
+                        &nbsp;
                     </p>
                 </div>                
                 
@@ -349,5 +344,5 @@ function SignIn() {
             </div>            
         </div>        
     );
-}
-export default SignIn;                            
+};
+                           
