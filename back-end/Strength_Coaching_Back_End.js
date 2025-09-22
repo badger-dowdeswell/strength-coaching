@@ -101,7 +101,7 @@ const app = express();
 const VERSION = 1.03;
 
 // Turn on all console debug messages.
-const debug = (process.env.DEBUG_MODE === "true");
+const debug = (process.env.DEBUG_MODE.trim() === "true");
 
 //
 // multer()
@@ -114,8 +114,7 @@ const debug = (process.env.DEBUG_MODE === "true");
 import multer from 'multer';
 const storage = multer.diskStorage({
     destination: (request, file, cb) => {
-        //cb(null, process.cwd() + "/../front-end/userImages/");  
-        cb(null, process.cwd() + "/../public/userImages/");     
+        cb(null, process.cwd() + "/../front-end/userImages/");
     },
     filename: (request, file, cb) => {
         cb(null, file.originalname);
