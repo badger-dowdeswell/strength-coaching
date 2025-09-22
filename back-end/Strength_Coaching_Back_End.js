@@ -114,7 +114,8 @@ const debug = true;
 import multer from 'multer';
 const storage = multer.diskStorage({
     destination: (request, file, cb) => {
-        cb(null, process.cwd() + "/../front-end/userImages/");     
+        //cb(null, process.cwd() + "/../front-end/userImages/");  
+        cb(null, process.cwd() + "/../public/userImages/");     
     },
     filename: (request, file, cb) => {
         cb(null, file.originalname);
@@ -798,8 +799,9 @@ app.post('/api/uploadFile', upload.array("photos"), (request, response) => {
     if (!verifyJWT(JWT)) {
         logmsg("/api/uploadFile: User is not authorised");
         response.status(403).send("Not authorised");        
-    } else {
-        logmsg("/api/uploadFile: Received file(s): ", request.files);
+    } else {        
+        logmsg("/api/uploadFile: Received file");
         response.status(200).json({files: request.files });
     }      
 });
+

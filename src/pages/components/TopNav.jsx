@@ -38,8 +38,9 @@ function TopNav(params) {
 
     var userID = sessionStorage.getItem("userID");  
     let userName = sessionStorage.getItem("FirstName") + " " + sessionStorage.getItem("LastName");  
-    const [userImage, setUserImage] = useState("/../front-end/userImages/" + sessionStorage.getItem("UserImage"));     
-    //console.log("\nTopNav [" + userImage + "]");
+    //const [userImage, setUserImage] = useState("/../front-end/userImages/" + sessionStorage.getItem("UserImage"));  
+    const [userImage, setUserImage] = useState("./userImages/" + sessionStorage.getItem("UserImage"));    
+    console.log("\nTopNav [" + userImage + "]");
     
     var userRole = "";   
 

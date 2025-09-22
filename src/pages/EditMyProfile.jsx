@@ -65,9 +65,9 @@ export default function EditMyProfile() {
     // Used to control the visibility of the password by switching the
     // input type between "text" and "password".
     const [PasswordVisibility, setPasswordVisibility] = useState("password"); 
-    const [PasswordError, setPasswordError] = useState("");
+    //const [PasswordError, setPasswordError] = useState(""); RA_BRD
     const [PasswordCopy, setPasswordCopy] = useState("");
-    const [PasswordCopyError, setPasswordCopyError] = useState("");
+    //const [PasswordCopyError, setPasswordCopyError] = useState(""); RA_BRD
             
     //
     // Authentication and Navigation()
@@ -940,7 +940,8 @@ function Page_1(params) {
 function Page_2(params) {     
     const [uploadState, setUploadState] = useState(states.IDLE); 
     const [files, setFiles] = useState([]);     
-    const [preview, setPreview] = useState("/../front-end/userImages/" + params.UserImage); 
+    //const [preview, setPreview] = useState("/../front-end/userImages/" + params.UserImage); 
+    const [preview, setPreview] = useState("./userImages/" + params.UserImage); 
     
     //
     // changeFiles()
@@ -994,6 +995,8 @@ function Page_2(params) {
     //
     // uploadFile()
     // ============
+    // currentTarget.src="/../front-end/userImages/template.png";  RA_BRD
+    //
     const uploadFile = async (JWT, filename, formData) => { 
         await axios.post(baseURL + "uploadFile?JWT=" + JWT, formData, {                                 
             headers: {
@@ -1026,7 +1029,7 @@ function Page_2(params) {
                             height={150}                        
                             onError={({currentTarget}) => {
                                     currentTarget.onerror = null; // prevents looping
-                                    currentTarget.src="/../front-end/userImages/template.png";                                    
+                                    currentTarget.src="./userImages/template.png";                                    
                                     }}
                         />
                     </div> 

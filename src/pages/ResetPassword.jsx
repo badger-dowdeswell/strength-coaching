@@ -217,7 +217,7 @@ export default function ResetPassword() {
             setEmailAddressError("An email address must be entered.")
             setState(states.PAGE_1);
         } else {    
-            if (validateEmail(EmailAddress)) {
+            if (!validateEmail(EmailAddress.trim())) {
                 setEmailAddressError("The email address entered is not valid.");
                 setState(states.PAGE_1);
             } else {
@@ -419,19 +419,6 @@ export default function ResetPassword() {
     };
 
     //
-    // handleKeys()
-    // ============
-    // Key event handler to trap the Enter and Escape keys during sign-in.
-    //
-   // const handleKeys = (e) => {
-    //   if (e.key === 'Enter') {        
-      //     document.getElementById('SendLink').click(); 
-   //     } else if (e.key === 'Cancel') {
-    //       document.getElementById('Cancel').click();
-//        }
-//    }; 
-    
-    //
     // RESET PASSWORD PAGES
     // ====================
     // Displays each of the reset password pages in order to verify the client, email them
@@ -464,8 +451,7 @@ export default function ResetPassword() {
                         <Page_2 
                             EmailAddress={EmailAddress} 
                             setState={setState}                                                            
-                            navigate={navigate}
-                            handleKeys = {handleKeys}
+                            navigate={navigate}                            
                         />
                     )}; 
 
@@ -483,8 +469,7 @@ export default function ResetPassword() {
                             setPasswordCopy = {setPasswordCopy}
                             PasswordCopyError = {PasswordCopyError}
                             setState={setState} 
-                            navigate={navigate}
-                            handleKeys = {handleKeys}
+                            navigate={navigate}                            
                         />
                     )}; 
                 </div>            
@@ -517,7 +502,7 @@ function Page_1(params) {
     //
     // handleKeys()
     // ============
-    // Key event handler to trap the Enter and Escape keys during sign-in.
+    // Key event handler to trap the Enter and Escape keys on this page.
     //
     const handleKeys = (e) => {
        if (e.key === 'Enter') {        
@@ -526,8 +511,6 @@ function Page_1(params) {
            document.getElementById('Cancel').click();
         }
     }; 
-
-    
     
     return (
         <div>
@@ -546,7 +529,7 @@ function Page_1(params) {
             <input className="ml-5 mr-5 mt-4 w-[270px] pl-1"
                 id="EmailAddress"
                 type="text"
-                ref={autofocusID}
+                ref={params.autofocusID}
                 placeholder=""
                 autoComplete="new-password"
                 value={params.EmailAddress}
@@ -587,7 +570,20 @@ function Page_1(params) {
 // ========
 // This component informs the client that an email has been sent to them.
 // 
-function Page_2(params) {    
+function Page_2(params) {  
+    //
+    // handleKeys()
+    // ============
+    // Key event handler to trap the Enter and Escape keys on this page.
+    //
+    const handleKeys = (e) => {
+       if (e.key === 'Enter') {        
+           document.getElementById('Next').click(); 
+        } else if (e.key === 'Cancel') {
+           document.getElementById('Back').click();
+        }
+    }; 
+
     return (
         <div>
             <p className="text-white text-center text-xl mt-0">Reset my password</p>
@@ -615,7 +611,8 @@ function Page_2(params) {
                 <button className="bg-cyan-600 text-white font-bold text-sm py-2 px-2 rounded
                                 mt-2 ml-12"
                         id="Back"
-                        style={{ width: "100px" }}                    
+                        style={{ width: "100px" }} 
+                        onKeyDown={handleKeys}                   
                         onClick={() => {params.setState(states.PAGE_1);}
                         }>                    
                     Back
@@ -649,6 +646,19 @@ function Page_3(params) {
             autofocusID.current.focus();
         }    
     },[]);
+
+    //
+    // handleKeys()
+    // ============
+    // Key event handler to trap the Enter and Escape keys on this page.
+    //
+    const handleKeys = (e) => {
+       if (e.key === 'Enter') {        
+           document.getElementById('SignIn').click(); 
+        } else if (e.key === 'Cancel') {
+           document.getElementById('Back').click();
+        }
+    }; 
     
     return (
         <div className = "mb-0">
@@ -666,6 +676,7 @@ function Page_3(params) {
                    placeholder = ""
                    autoComplete = "new-password"
                    value = {params.VerificationCode}
+                   onKeyDown={handleKeys}
                    onChange = {(e) => params.setVerificationCode(e.target.value.trim())}
             />
             <p className="ml-5 mb-1 mt-2 text-cyan-300 text-left text-sm">
@@ -682,6 +693,7 @@ function Page_3(params) {
                        placeholder = ""
                        autoComplete = "new-password"
                        value = {params.Password}
+                       onKeyDown={handleKeys}
                        onChange = {(e) => params.setPassword(e.target.value.trim())}
                 />
                 <img className="mr-5 ml-0 mt-1 h-6 w-7"
@@ -710,6 +722,7 @@ function Page_3(params) {
                     placeholder = ""
                     autoComplete = "new-password"
                     value = {params.PasswordCopy}
+                    onKeyDown={handleKeys}
                     onChange = {(e) => params.setPasswordCopy(e.target.value.trim())}
                 />
                 <img className="mr-5 ml-0 mt-1 h-6 w-7"
