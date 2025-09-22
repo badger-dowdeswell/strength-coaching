@@ -101,7 +101,7 @@ const app = express();
 const VERSION = 1.03;
 
 // Turn on all console debug messages.
-const debug = true;
+const debug = (process.env.DEBUG_MODE === "true");
 
 //
 // multer()
