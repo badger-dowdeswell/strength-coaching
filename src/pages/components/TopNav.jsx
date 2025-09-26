@@ -37,8 +37,7 @@ function TopNav(params) {
     let navigate = useNavigate();    
 
     var userID = sessionStorage.getItem("userID");  
-    let userName = sessionStorage.getItem("FirstName") + " " + sessionStorage.getItem("LastName");  
-    //const [userImage, setUserImage] = useState("/../front-end/userImages/" + sessionStorage.getItem("UserImage"));  
+    let userName = sessionStorage.getItem("FirstName") + " " + sessionStorage.getItem("LastName");      
     const [userImage, setUserImage] = useState("./userImages/" + sessionStorage.getItem("UserImage"));    
     console.log("\nTopNav [" + userImage + "]");
     
@@ -99,10 +98,7 @@ function TopNav(params) {
                                 draggable={false}
                                 height={57}
                                 width={57}
-                                onError={({ currentTarget }) => {
-                                currentTarget.onerror = null; // prevents looping
-                                currentTarget.src= + "/userImages/template.png";
-                                }}
+                                
                             />
                         )}
                     </div>
