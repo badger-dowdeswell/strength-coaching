@@ -390,7 +390,7 @@ export default function ResetPassword() {
         
         const html_body = "<p>A request to change your password was made on Strength Coaching Online.</p>" + 
                            "<p>If it was you, then please click on " +        
-                          '<a href="' + URL + '/?rt=' + RegistrationToken + '">' +
+                          '<a href="' + URL + '?rt=' + RegistrationToken + '">' +
                           "this link " + "</a>" + 
                           "to go to the Reset my Password page on Strength Coaching Online.</p>" +                                                      
                           "<p>Please enter this verification code into the registration page:</p>" +                           
@@ -442,7 +442,7 @@ export default function ResetPassword() {
                             setEmailAddress={setEmailAddress}
                             EmailAddressError={EmailAddressError}
                             setState={setState}                                
-                            navigate={navigate}                            
+                            navigate={navigate}                                                       
                         />
                     )}; 
 
@@ -511,7 +511,20 @@ function Page_1(params) {
            document.getElementById('Cancel').click();
         }
     }; 
-    
+
+    //
+    // autofocus()
+    // ===========
+    // Sets the focus to the first input field automatically. This requires
+    // that just one input element per page has a ref={autoFocusID}.
+    //
+    const autofocusID = useRef(null);
+    useEffect(() => {
+        if (autofocusID.current) {
+            autofocusID.current.focus();
+        }    
+    },[]);
+        
     return (
         <div>
             <p className="text-white text-center text-xl mt-5">Reset my password</p>
@@ -529,7 +542,7 @@ function Page_1(params) {
             <input className="ml-5 mr-5 mt-4 w-[270px] pl-1"
                 id="EmailAddress"
                 type="text"
-                ref={params.autofocusID}
+                ref={autofocusID}
                 placeholder=""
                 autoComplete="new-password"
                 value={params.EmailAddress}
@@ -638,15 +651,6 @@ function Page_2(params) {
 // This page is displayed when the user clicks on the link in the email sent to them.
 // 
 function Page_3(params) {   
-    // Set the focus automatically to the first input field after
-    // the component has rendered properly.
-    const autofocusID = useRef(null);
-    useEffect(() => {
-        if (autofocusID.current) {
-            autofocusID.current.focus();
-        }    
-    },[]);
-
     //
     // handleKeys()
     // ============
@@ -659,6 +663,20 @@ function Page_3(params) {
            document.getElementById('Back').click();
         }
     }; 
+
+    //
+    // autofocus()
+    // ===========
+    // Set the focus automatically to the first input field after
+    // the component has rendered properly.
+    //
+    const autofocusID = useRef(null);
+    useEffect(() => {
+        if (autofocusID.current) {
+            autofocusID.current.focus();
+        }    
+    },[]);
+
     
     return (
         <div className = "mb-0">

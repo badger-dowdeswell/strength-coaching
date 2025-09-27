@@ -63,8 +63,8 @@ Verification rules are applied in the React maintenance application in the front
 // Useful Queries
 // ==============
 
-SELECT "user_ID", "first_name", "last_name", "password", "user_status", "registration_token",
-       "verification_code",  "alias", "email_address", "user_image" FROM "User" ORDER BY "user_ID";
+SELECT "user_ID", "first_name", "last_name", "alias", "password", "user_status", "registration_token",
+       "email_address", "user_image" FROM "User" ORDER BY "user_ID";
 
 DELETE FROM "User" WHERE "user_ID" = '13'
 

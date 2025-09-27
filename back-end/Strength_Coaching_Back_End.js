@@ -112,9 +112,12 @@ const debug = (process.env.DEBUG_MODE.trim() === "true");
 // ensures that they are treated as public objects.
 //
 import multer from 'multer';
+logmsg("[" + process.cwd() + "]");
+
 const storage = multer.diskStorage({
     destination: (request, file, cb) => {
-        cb(null, process.cwd() + "/../front-end/userImages/");
+        //cb(null, process.cwd() + "/../public/userImages/");
+        cb(null, process.env.IMAGE_UPLOAD_DIR);
     },
     filename: (request, file, cb) => {
         cb(null, file.originalname);
@@ -220,16 +223,17 @@ const db = new Pool({
 //
 const server = app.listen(PORT, () => {     
     var dt = new Date();
-    console.log("\nThe Strength Research Online Back-End version " + VERSION +
-                " is\nnow listening on port " + PORT + ". It was started on " +
-                dt.toLocaleDateString() + "\nat " + dt.toLocaleTimeString() + 
-                " using local environment sr.env.\n");
+    logmsg("\nThe Strength Research Online Back-End version " + VERSION +
+           " is\nnow listening on port " + PORT + ". It was started on " +
+           dt.toLocaleDateString() + "\nat " + dt.toLocaleTimeString() + 
+           " using local environment sr.env.\n");
     if (debug) {
-        console.log("Debug mode enabled.");
+        logmsg("Debug mode enabled.");
     } 
     if (process.env.TEST_EMAIL.trim() !== "") {
-        console.log("Test email address enabled.");
-    }    
+        logmsg("Test email address enabled.");
+    }  
+    logmsg("Images upload direction:\n" + process.env.IMAGE_UPLOAD_DIR);  
 });
 
 //
@@ -246,7 +250,7 @@ process.on('SIGTERM', () => {
 process.on('SIGINT', () => {
     server.close(() => {
     })    
-    logmsg('\nHTTP server closed.');       
+    logmsg('\nHTTP server closed.\n');       
     process.exit();    
 });
 
@@ -800,6 +804,7 @@ app.post('/api/uploadFile', upload.array("photos"), (request, response) => {
         response.status(403).send("Not authorised");        
     } else {        
         logmsg("/api/uploadFile: Received file");
+        logmsg("Uploaded image to " + process.env.IMAGE_UPLOAD_DIR);
         response.status(200).json({files: request.files });
     }      
 });
