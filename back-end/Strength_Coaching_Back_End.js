@@ -98,10 +98,10 @@
 import express from 'express';
 const app = express();
 
-const VERSION = 1.03;
+const version = 1.03;
 
 // Turn on all console debug messages.
-const debug = (process.env.DEBUG_MODE.trim() === "true");
+const debug = (process.env.debug_mode.trim() === "true");
 
 //
 // multer()
@@ -112,12 +112,11 @@ const debug = (process.env.DEBUG_MODE.trim() === "true");
 // ensures that they are treated as public objects.
 //
 import multer from 'multer';
-logmsg("[" + process.cwd() + "]");
 
 const storage = multer.diskStorage({
     destination: (request, file, cb) => {
         //cb(null, process.cwd() + "/../public/userImages/");
-        cb(null, process.env.IMAGE_UPLOAD_DIR);
+        cb(null, process.env.image_upload_dir);
     },
     filename: (request, file, cb) => {
         cb(null, file.originalname);
@@ -152,7 +151,7 @@ app.use(express.json());
 
 // The TCP port the Back-End will listen on for HTTP requests 
 // from the front-end.
-const PORT = process.env.TCP_PORT;
+const port = process.env.TCP_port;
 
 //
 // Email Transporter
@@ -167,8 +166,8 @@ const PORT = process.env.TCP_PORT;
 // dig TXT zmail_domainkey strengthresearch.online 
 //
 const transporter = nodemailer.createTransport({
-    host: process.env.SMTP_HOST,
-    port: process.env.SMTP_PORT,
+    host: process.env.SMTP_host,
+    port: process.env.SMTP_port,
     secure: true,
     dkim: {
         domainName: "strengthresearch.online",
@@ -180,8 +179,8 @@ const transporter = nodemailer.createTransport({
         rejectUnauthorized: false,
     },
     auth: {
-        user: process.env.SMTP_USER,
-        pass: process.env.SMTP_PASSWORD,
+        user: process.env.SMTP_user,
+        pass: process.env.SMTP_password,
     },
 }); 
 
@@ -209,11 +208,11 @@ function logmsg(msg) {
 //
 const Pool = pg.Pool;
 const db = new Pool({
-   database: process.env.DATABASE,
-   port: process.env.PORT,
-   host: process.env.HOST,
-   user: process.env.USER,
-   password: process.env.DB_PASSWORD,   
+   database: process.env.database,
+   port: process.env.port,
+   host: process.env.host,
+   user: process.env.user,
+   password: process.env.db_password,   
 });
 
 //
@@ -221,19 +220,19 @@ const db = new Pool({
 // ============
 // Reports that the back-end is listening when the server starts.
 //
-const server = app.listen(PORT, () => {     
+const server = app.listen(port, () => {     
     var dt = new Date();
-    logmsg("\nThe Strength Research Online Back-End version " + VERSION +
-           " is\nnow listening on port " + PORT + ". It was started on " +
+    logmsg("\nThe Strength Research Online Back-End version " + version +
+           " is\nnow listening on port " + port + ". It was started on " +
            dt.toLocaleDateString() + "\nat " + dt.toLocaleTimeString() + 
            " using local environment sr.env.\n");
     if (debug) {
         logmsg("Debug mode enabled.");
     } 
-    if (process.env.TEST_EMAIL.trim() !== "") {
+    if (process.env.test_email.trim() !== "") {
         logmsg("Test email address enabled.");
     }  
-    logmsg("Images upload direction:\n" + process.env.IMAGE_UPLOAD_DIR);  
+    logmsg("Images upload direction:\n" + process.env.image_upload_dir);  
 });
 
 //
@@ -760,9 +759,9 @@ app.put('/api/unlockUser', async(request, response) => {
 //
 app.put('/api/sendMail', async(request, response) => {
     var email_address = request.body.recipient_email_address;
-    if (process.env.TEST_EMAIL.trim() !== "") {
+    if (process.env.test_email.trim() !== "") {
         // Used the test send-to email address instead of the real one specified.
-        email_address = process.env.TEST_EMAIL;
+        email_address = process.env.test_email;
     }  
     
     // Configure the NodeMailer email transport from the parameters sent in the API request.
@@ -804,7 +803,7 @@ app.post('/api/uploadFile', upload.array("photos"), (request, response) => {
         response.status(403).send("Not authorised");        
     } else {        
         logmsg("/api/uploadFile: Received file");
-        logmsg("Uploaded image to " + process.env.IMAGE_UPLOAD_DIR);
+        logmsg("Uploaded image to " + process.env.image_upload_dir);
         response.status(200).json({files: request.files });
     }      
 });
