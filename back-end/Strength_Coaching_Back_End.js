@@ -1,54 +1,66 @@
 //
 // STRENGTH COACHING ONLINE EXPRESS BACK-END
 // =========================================
-// This back-end server has been implemented with Express with Node.js. This provides the
-// API Routes needed between the React Front-End of the Strength Coaching Online
-// application and the ProgreSQL database that stores the database.
+// This back-end server has been implemented with Express with Node.js. This 
+// provides the API Routes needed between the React Front-End of the Strength
+// Coaching Online application and the ProgreSQL database that stores the 
+// database.
 //
 // Documentation
 // =============
-// Full documentation for the server is available in the Strength Coaching Online
-// documentation folder. This is available in the Github Repository: 
+// Full documentation for the server is available in the Strength Coaching 
+// Online documentation folder. This is available in the Github Repository: 
 //
 //         https://github.com/badger-dowdeswell/strength_coaching.git 
 // 
 // Installing the Back-End server
 // ==============================
-// The complete list of dependencies can be found in package.json in the "dependencies"
-// and "dev-dependencies" section. The current version requires Node.js v24.0.2 or higher.
-// Install it with:
+// The complete list of dependencies can be found in package.json in the 
+// "dependencies" and "dev-dependencies" section. The current version requires
+// Node.js v24 or higher. Install it with:
 //
 //     npm install -g npm@latest 
 //
-// The back-end requires express and the express-fileupload packages. Install them with: 
+//     nvm install version  
+//     e.g. nvm install 24 will install the latest version 24 release)
+//
+// Check the current version number with node -v
+//
+// The back-end requires express and the express-fileupload packages. Install
+// them with: 
 //
 //     npm install express express-fileupload
 //
-// When running this alongside a front-end written in the Vite framework, you can add
-// the script command:
+// Check the version number with npm -v
+//
+// When running this alongside a front-end written in the Vite framework, you 
+// can add the script command:
 //
 //    "dev": nodemon --env-file=sr.env Strength_Coaching_Back_End.js 
 //
-// to the "scripts" section of package.json. This means the command can be used to restart
-// the back-end automatically each time the code changes during development. Parameters 
-// specific to the server are stored in the sr.env file which must be loaded using the
-// command --env-file=sr.env shown in the "dev" command above.
+// to the "scripts" section of package.json. This means the command can be used
+// to restart the back-end automatically each time the code changes during 
+// development. Parameters specific to the server are stored in the sr.env file
+// which must be loaded using the command 
+// 
+//     --env-file=sr.env 
 //
 // Shutting down processes
 // =======================
-// Sometimes, the back-end Node process shuts down but does not release the port it is 
-// running on. The lsof (linux show (list) open files) command is one way to identify 
-// if the port (which is really just another file in Linux) is still connected. This
-// back-end is running on port 3010 so tell lsof to only display processes on that port:
+// Sometimes, the back-end Node process shuts down but does not release the 
+// port it is running on. The lsof (linux show (list) open files) command is 
+// one way to identify if the port, which is really just another file in Linux
+// is still connected. This back-end is running on port 3010 so tell lsof to 
+// only display processes on that port:
 //
 //    sudo lsof -i :3010   which gives and output like this:
 //
 //    COMMAND     PID   USER   FD   TYPE DEVICE SIZE/OFF NODE NAME
 //    MainThrea 44866 badger   22u  IPv6 315170      0t0  TCP *:3010 (LISTEN)
 //
-// In this example, the port is open via process specified in the PID 44866 as shown 
-// in the second column. Shut it down with a kill command and then restart the back-end
-// normally:
+// In this example, the port is open via process specified in the PID 44866 as
+// shown in the second column. Shut it down with a kill command and then restart
+// the back-end normally:
 //
 //    kill -9 44866
 //    npm run dev
@@ -57,48 +69,57 @@
 // ================
 // 26.01.2023 BRD Original version.
 // 12.02.2023 BRD Implemented JSON Web Token authentication and authorisation.
-// 24.02.2023 BRD Upgraded all routes to check for proper authorisation by verifing
-//                JSON Web Tokens (JWTs). Also added encryption to the user's
-//                password authentication.
+// 24.02.2023 BRD Upgraded all routes to check for proper authorisation by 
+//                verifing JSON Web Tokens (JWTs). Also added encryption to the
+//                user's password authentication.
 //                Changed the listener port for the back-end to be 3010 so that
 //                it does not conflict with other back-ends on the same server.
 // 15.01.2025 BRD Updated the original version to work with Strength Research
 //                Online. This will probably be used to later re-create Strength
 //                Coaching Online.
-// 18.01.2025 BRD Refactored the authenticateUser function so it is case-insensitive
-//                when searching by email address. It can also search by the user
-//                alias now.
+// 18.01.2025 BRD Refactored the authenticateUser function so it is case-
+//                insensitive when searching by email address. It can also search
+//                by the user alias now.
 // 01.02.2025 BRD Created the createUser API.
 // 23.03.2025 BRD Added the getUser API.// 
 // 15.05.2025 BRD Created environment management functionality using a .env file.
-// 15.05.2025 BRD Updated to Nod.js v24.0.2 to improve environment support. The new
-//                release no longer requires additional packages to be imported since
-//                the environment process object is now native in running Node applications.
-// 28.05.2025 BRD Cloned the new Strength Coaching Online back end from the original Strength
-//                Research Online back end.
+// 15.05.2025 BRD Updated to Nod.js v24.0.2 to improve environment support. The
+//                new release no longer requires additional packages to be 
+//                imported since the environment process object is now native 
+//                in running Node applications.
+// 28.05.2025 BRD Cloned the new Strength Coaching Online back end from the 
+//                original Strength Research Online back end.
 // 12.08.2025 BRD Added support for the User table field user_image.
-// 13.08.2025 BRD Added the uploadFile api to allow images and other resources to be posted
-//                to the server via the back-end and saved in predefined locations.
-// 29.08.2025 BRD Changes to the updateUser API to allow the user to supply a new password during
-//                the update which gets encrypted and stored.
+// 13.08.2025 BRD Added the uploadFile api to allow images and other resources 
+//                to be posted to the server via the back-end and saved in 
+//                predefined locations.
+// 29.08.2025 BRD Changes to the updateUser API to allow the user to supply a 
+//                new password during the update which gets encrypted and stored.
 // 02.09.2025 BRD Added the API to send emails using Nodemailer.
-// 09.09.2025 BRD Deprecated the second copy of the /api/getUser API. The Node/Express documentation
-//                explains that Express routes are matched sequentially, so the first matching route
-//                in the program will always handle the request. The second API of the same name does
-//                not generate an error but it will never be called.
-// 10.09.2025 BRD Implemented a shutdown() process to process the SIGINT and SIGTERM commands when the
-//                Back-End is being shut down. 
-//                Added the getToken API that generates a unique token with an expiry time. This can 
-//                be used to identify a user that is trying to reset their password. 
-// 16.09.2025 BRD Added the lockUser and unLockUser APIs that are needed while resetting a user's
-//                password. Also added the DebugMode option to the logmsg() function to quickly enable
+// 09.09.2025 BRD Deprecated the second copy of the /api/getUser API. The 
+//                Node/Express documentation explains that Express routes are 
+//                matched sequentially, so the first matching route in the 
+//                program will always handle the request. The second API of the
+//                same name does not generate an error but it will never be called.
+// 10.09.2025 BRD Implemented a shutdown() process to process the SIGINT and 
+//                SIGTERM commands when the Back-End is being shut down. 
+//                Added the getToken API that generates a unique token with an
+//                expiry time. This can be used to identify a user that is 
+//                trying to reset their password. 
+// 16.09.2025 BRD Added the lockUser and unLockUser APIs that are needed while
+//                resetting a user's password. Also added the DebugMode option
+//                to the logmsg() function to quickly enable
 //                detailed debug messages for each API call when required.
-// 17.09.2025 BRD Created a test send-to email address in the environment file to simplify email testing.
+// 17.09.2025 BRD Created a test send-to email address in the environment file 
+//                to simplify email testing.
+// 30.09.2025 BRD Official release of version 1.5. This contains all the 
+//                Phase 1 foundational back-end functionality. This includes 
+//                an upgrade to Node.js v24.9.0
 //
 import express from 'express';
 const app = express();
 
-const version = 1.03;
+const version = 1.5;
 
 // Turn on all console debug messages.
 const debug = (process.env.debug_mode.trim() === "true");
@@ -316,7 +337,7 @@ function verifyJWT(JWT) {
 // Authenticates the user after loading their record from the User table. The bcrypt.compare()
 // function is used to compare the encrypted password retrieved from their record with the
 // password supplied.
-//
+// 
 // If the user password matches, a JSON Web Token (JWT) is generated and returned to the client.
 //
 app.get('/api/authenticateUser', async(request, response) => {
