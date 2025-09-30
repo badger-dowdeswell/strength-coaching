@@ -91,8 +91,7 @@ export default function ResetPassword() {
             case states.UNDEFINED: 
                 let token = new URLSearchParams(location.search).get('rt');                
                 if (token !== null) {
-                    // The page has been launched from an link with an embedded URL token. 
-                    console.log("verifying token ...");
+                    // The page has been launched from an link with an embedded URL token.                     
                     setRegistrationToken(token);
                     verifyToken(token);                             
                 } else {
@@ -116,8 +115,7 @@ export default function ResetPassword() {
                 
             case states.CLIENT_DOES_NOT_EXIST:
                 // Do nothing. The page will tell them that that address will get
-                // an email sent to it, but it won't.
-                console.log("\nNo client with that email address was found");
+                // an email sent to it, but it won't.                
                 break;    
                 
             case states.CLIENT_EXISTS:
@@ -220,8 +218,7 @@ export default function ResetPassword() {
             if (!validateEmail(EmailAddress.trim())) {
                 setEmailAddressError("The email address entered is not valid.");
                 setState(states.PAGE_1);
-            } else {
-                console.log("\nReady to verify..");                
+            } else {                                
                 checkClientExists(EmailAddress, "");
             }      
         }
@@ -234,17 +231,14 @@ export default function ResetPassword() {
     // address or the verification code they entered as a key.
     //
     const checkClientExists = async (email_address, verification_code) => {
-        if (email_address.trim() !== "") {
-            console.log("\ncheckUserExists " + email_address + " " + verification_code);
+        if (email_address.trim() !== "") {            
             try {
                 let response = await axios.get(baseURL + "getUserByEmail?email_address=" + email_address);
                 if (response.status === 200) {  
-                    setUserID(response.data.user_ID);   
-                    console.log("checkUserExists() found client " + response.data.user_ID);                  
+                    setUserID(response.data.user_ID); 
                     setState(states.CLIENT_EXISTS);    
                 } else if (response.status === 404) {
-                    // No client is registered with that email.
-                    console.log("Returned 404");
+                    // No client is registered with that email.                    
                     setUserID("");   
                     setState(states.CLIENT_DOES_NOT_EXIST); 
                 }                   
@@ -257,8 +251,7 @@ export default function ResetPassword() {
             try {
                 let response = await axios.get(baseURL + "getUserByVerificationCode?verification_code=" + verification_code);
                 if (response.status === 200) {  
-                    setUserID(response.data.user_ID);   
-                    console.log("checkUserExists() found client " + response.data.user_ID);  
+                    setUserID(response.data.user_ID);  
                     if (response.data.registration_token === RegistrationToken) {
                         setVerificationCodeError("");
                         setState(states.CLIENT_VERIFIED);
@@ -266,8 +259,7 @@ export default function ResetPassword() {
                         setState(states.PAGE_3);       
                     }
                 } else if (response.status === 404) {
-                    // No client is registered with that verification code.
-                    console.log("Returned 404");
+                    // No client is registered with that verification code.                    
                     setUserID("");
                     setVerificationCodeError("That verification code is not valid");
                     setState(states.PAGE_3);   
@@ -287,8 +279,7 @@ export default function ResetPassword() {
     // Creates the verification code they need to enter on the next page
     // and the token sent in the email to access the page and verify them.
     //
-    async function generateToken(user_ID) {
-        console.log("Locking client " + user_ID);
+    async function generateToken(user_ID) {        
         setVerificationCode((Math.floor(Math.random() * (9 * (Math.pow(10, 4)))) +
                             (Math.pow(10, 4))).toString());
         const expiry_time = {expiresIn: '1d'};  
@@ -296,13 +287,11 @@ export default function ResetPassword() {
         try {
             let response = await axios.get(baseURL + "getToken?user_ID=" + user_ID + 
                                            "@expiry_time=" + expiry_time);
-            if (response.status === 200) { 
-                console.log("Token = " + response.data.token); 
+            if (response.status === 200) {                 
                 setRegistrationToken(response.data.token);
                 setState(states.LOCK_CLIENT);
             }                    
-        } catch (err) { 
-            console.log("Token error:" + err);
+        } catch (err) {             
             setState(states.PAGE_1);
         } 
     };
@@ -313,14 +302,12 @@ export default function ResetPassword() {
     async function verifyToken(registration_token) {        
         try {
             let response = await axios.get(baseURL + "verifyToken?registration_token=" + registration_token);                                            
-            if (response.status === 200) { 
-                console.log("VerifyToken = 200");
+            if (response.status === 200) {                 
                 setState(states.PAGE_3);                
             } else {                    
                 setState(states.PAGE_1);                
             }                    
-        } catch (err) { 
-            console.log("verifyToken error:" + err);
+        } catch (err) {             
             setState(states.PAGE_1);
         } 
     };
@@ -332,9 +319,7 @@ export default function ResetPassword() {
     // have completed the next step using the information emailed to them, they
     // will not be able to log in.
     //
-    async function lockClient(user_ID) {        
-        console.log("Locking client " + user_ID);
-
+    async function lockClient(user_ID) {  
         axios.put(baseURL + "lockUser", { 
             user_ID: user_ID,           
             password: "",
@@ -343,39 +328,35 @@ export default function ResetPassword() {
             verification_code: VerificationCode 
         })
         .then((response) => {
-            if (response.status === 200) {
-                console.log("\nlockClient - status 200");                
+            if (response.status === 200) {                                
                 setState(states.EMAILING);                     
-            } else if (response.status === 500) { 
-                console.log("\nlockClient - status 500"); 
+            } else if (response.status === 500) {
+                // RA_BRD what state should this be?
             }    
         })
         .catch(err => {
-            console.log("\nlockClient - err " + err);    
+            // RA_BRD what state should this be?
+            // console.log("\nlockClient - err " + err);    
         })        
     }; 
 
     //
     // unlockClient()
     // ==============
-    async function unlockClient(user_ID, password) {        
-        console.log("unlockClient() " + user_ID);
-
+    async function unlockClient(user_ID, password) {  
         axios.put(baseURL + "unlockUser", { 
             user_ID: user_ID,
             password: password 
         })
         .then((response) => {
-            if (response.status === 200) {
-                console.log("\nunlockClient - status 200");                
+            if (response.status === 200) {                       
                 setState(states.EXITING);                     
-            } else if (response.status === 500) { 
-                console.log("\nunlockClient - status 500"); 
+            } else if (response.status === 500) {                 
                 setState(states.PAGE_3);
             }    
         })
         .catch(err => {
-            console.log("\nlockClient - err " + err);    
+            // RA_BRD what state should this be?  
         })        
     }; 
 
@@ -408,13 +389,15 @@ export default function ResetPassword() {
         })
         .then((response) => {
             if (response.status === 200) {
-                console.log("email sent");                                         
+                // The email was sent successfully.                                     
             } else if (response.status === 500) {
-                console.log("emailUser error: 500 " + response); 
+                // RA_BRD what state should this be?
+                // console.log("emailUser error: 500 " + response); 
             }    
         })
         .catch(err => {
-            console.log("emailUser error: " + err.message);            
+            // RA_BRD what state should this be?
+            // console.log("emailUser error: " + err.message);            
         })  
     };
 

@@ -223,17 +223,14 @@ export default function Registration() {
             html_body: html_body           
         })
         .then((response) => {
-            if (response.status === 200) {
-                console.log("email sent");
+            if (response.status === 200) {                
                 setState(states.PAGE_2);
                          
-            } else if (response.status === 500) {
-                console.log("emailUser error: 500 " + response.data);                
+            } else if (response.status === 500) {                   
                 setState(states.PAGE_1);                
             }    
         })
-        .catch(err => {
-            console.log("emailUser error: " + err.message);
+        .catch(err => {            
             setState(states.PAGE_1); 
         })  
     }

@@ -64,10 +64,8 @@ export default function EditMyProfile() {
 
     // Used to control the visibility of the password by switching the
     // input type between "text" and "password".
-    const [PasswordVisibility, setPasswordVisibility] = useState("password"); 
-    //const [PasswordError, setPasswordError] = useState(""); RA_BRD
-    const [PasswordCopy, setPasswordCopy] = useState("");
-    //const [PasswordCopyError, setPasswordCopyError] = useState(""); RA_BRD
+    const [PasswordVisibility, setPasswordVisibility] = useState("password");     
+    const [PasswordCopy, setPasswordCopy] = useState("");    
             
     //
     // Authentication and Navigation()
@@ -125,13 +123,10 @@ export default function EditMyProfile() {
             validate();         
             break;
     
-        case states.UPDATING:            
-            //console.log("Updating..");
-            //console.log("IsChanged " + IsChanged); 
+        case states.UPDATING: 
             sessionStorage.setItem("FirstName", FirstName);
             sessionStorage.setItem("LastName", LastName);
-            sessionStorage.setItem("UserImage", UserImage);
-            console.log("Updating... [" + UserImage +"]");
+            sessionStorage.setItem("UserImage", UserImage);            
             updateUser(); 
             break;
 
@@ -167,8 +162,7 @@ export default function EditMyProfile() {
         if (alias.trim()) { 
             try {
                 let response = await axios.get(baseURL + "duplicateAlias?user_ID=" + userID + "&alias=" + alias + "&JWT=" + JWT);
-                // Another user is already using that alias.
-                //console.log("checkDuplicateAlias() found "+ response.status);
+                // Another user is already using that alias.                
                 if (response.status === 200) {
                     errors.Alias="That alias is already in use";                
                     errors.page = 1;   
@@ -176,8 +170,7 @@ export default function EditMyProfile() {
                 }            
             } catch (err) {
                 // No other user is using that alias. That means that the query did not return anything so it returns
-                // like an error via this section.
-                //console.log("checkDuplicateAlias() not found " + err.status); 
+                // like an error via this section.                
                 errors.Alias = "";  
                 errors.page = 0;
                 setState(states.VALIDATING_STAGE_2); 
@@ -198,8 +191,7 @@ export default function EditMyProfile() {
         if (email_address.trim()) { 
             try {
                 let response = await axios.get(baseURL + "duplicateEmail?user_ID=" + userID + "&email_address=" + email_address + "&JWT=" + JWT);
-                // Another user is already using that alias.
-                //console.log("checkDuplicateEmail() found "+ response.status);
+                // Another user is already using that alias.                
                 if (response.status === 200) {
                     errors.EmailAddress="That email address is in use";                
                     errors.page = 1;   
@@ -207,8 +199,7 @@ export default function EditMyProfile() {
                 }            
             } catch (err) {
                 // No other user is using that email. That means that the query did not return anything so it returns
-                // like an error via this section.
-                //console.log("checkDuplicateEmail() not found " + err.status); 
+                // like an error via this section.                
                 errors.Alias = "";  
                 errors.page = 0;
                 setState(states.VALIDATING_STAGE_3); 
@@ -290,8 +281,7 @@ export default function EditMyProfile() {
             errors.DateOfBirth = "Invalid date entered";
             errors.page = 1;
         } 
-
-        console.log("Password [" + Password + "] [" + PasswordCopy + "]");
+    
         if (!(Password === "") || !(PasswordCopy === "")) {
             // The user is trying to change their password
             if (Password.trim() === "") {
@@ -407,8 +397,7 @@ export default function EditMyProfile() {
         .then((response) => {
             setState(states.EXITING);
         })
-        .catch(err => {
-            //console.log(".catch() updateUser() err: " + err.message);
+        .catch(err => {            
             // RA_Badger
             // swal("Manage Registrant Information",
             // "This user could not be updated because the program has encountered a problem.\n\n" +
@@ -939,8 +928,7 @@ function Page_1(params) {
 //
 function Page_2(params) {     
     const [uploadState, setUploadState] = useState(states.IDLE); 
-    const [files, setFiles] = useState([]);     
-    //const [preview, setPreview] = useState("/../front-end/userImages/" + params.UserImage); 
+    const [files, setFiles] = useState([]); 
     const [preview, setPreview] = useState("./userImages/" + params.UserImage); 
     
     //
@@ -968,8 +956,7 @@ function Page_2(params) {
     //
     async function selectFile(e) {
         if (e.target.files) {
-            setFiles(e.target.files); 
-            //console.log("\nUploading...")
+            setFiles(e.target.files);             
             const formData = new FormData();
             formData.append('image', e.target.files);
             setUploadState(states.UPLOADING);  
@@ -994,8 +981,7 @@ function Page_2(params) {
         
     //
     // uploadFile()
-    // ============
-    // currentTarget.src="/../front-end/userImages/template.png";  RA_BRD
+    // ============    
     //
     const uploadFile = async (JWT, filename, formData) => { 
         await axios.post(baseURL + "uploadFile?JWT=" + JWT, formData, {                                 
@@ -1003,13 +989,11 @@ function Page_2(params) {
                 'Content-Type': 'multipart/form-data',
             },
         })
-        .then((response) => {
-            console.log("Uploaded file. " + filename ); 
+        .then((response) => {             
             params.setUserImage(files[0].name);   
             setUploadState(states.UPLOADED);             
         })                
-        .catch(err => {
-            console.log("uploadFile error " + err);            
+        .catch(err => {                      
             setUploadState(states.ERROR);            
         })
     }

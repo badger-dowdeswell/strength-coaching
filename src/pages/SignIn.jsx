@@ -66,8 +66,7 @@ export default function SignIn() {
     const [state, setState] = useState(states.LOADING);
     useEffect(() => {
         switch (state) {
-        case states.LOADING:
-            //console.log("Loading...");
+        case states.LOADING:            
             // This is the initial stage that allows the user to enter their user
             // ID or email and then supply their password. Reset their credentials
             // if they are in a session where they authenticated successfully earlier.
@@ -80,8 +79,7 @@ export default function SignIn() {
             break;
 
         case states.AUTHENTICATING:
-            // The user should have entered an email address or an alias
-            console.log("Authenticating ...");
+            // The user should have entered an email address or an alias            
             var error = false;
             setSignInError("");
             setUserID(UserID.trim());
@@ -109,20 +107,16 @@ export default function SignIn() {
 
         case states.AUTHENTICATED:
             // This is set when the user has been authenticated and can begin using the
-            // adminstration services inside.
-            console.log("Authenticated...");
-            //document.removeEventListener('keydown', keyListener);
+            // adminstration services inside.            
             sessionStorage.setItem("userID", UserID);
-            sessionStorage.setItem("FirstName", FirstName);
-            console.log("Authenticated FirstName " + FirstName);
+            sessionStorage.setItem("FirstName", FirstName);            
             sessionStorage.setItem("LastName", LastName);
             sessionStorage.setItem("UserAuthority", UserAuthority);
             sessionStorage.setItem("UserImage", UserImage);
             sessionStorage.setItem("JWT", JWT);
             return navigate("/Home");
 
-        case states.NOT_AUTHENTICATED:
-            console.log("Not Authenticated...");
+        case states.NOT_AUTHENTICATED:            
             setSignInError(!SignInError);
             setUserIDError("");
             setPasswordError("Either your user ID or password is incorrect.");            
@@ -172,12 +166,10 @@ export default function SignIn() {
                 encodeURIComponent(Password)
             );
             if (response.status === 200) {
-                // The user was found and their credentials were authenticated.
-                //console.log("\nauthenticate(): " + response.status + "\n");
+                // The user was found and their credentials were authenticated.                
                 setUserStatus(response.data.userStatus);
                 setUserID(response.data.user_ID);
-                setFirstName(response.data.first_name);
-                console.log("First_name " + response.data.first_name);
+                setFirstName(response.data.first_name);                
                 setLastName(response.data.last_name);
                 setUserAuthority(response.data.user_authority);
                 setUserImage(response.data.user_image);
@@ -186,8 +178,7 @@ export default function SignIn() {
             } else {
                 setState(states.NOT_AUTHENTICATED);
             }
-        } catch (err) {
-            //console.log("authenticateUser error " + err.message);
+        } catch (err) {            
             setState(states.NOT_AUTHENTICATED);
         }
     };
