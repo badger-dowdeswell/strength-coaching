@@ -112,11 +112,11 @@ function Home() {
                                     alt="/"
                                     draggable={false}                            
                                     width={275}
-                                    onClick={() => {navigate("/Home")}}>         
+                                    onClick={() => {navigate("/MyBlockSchedule")}}>         
                                 </img>                                
             
                                 <p className="text-center text-white text-sm font-bold"
-                                    onClick={() => {navigate("/Home")}}>
+                                    onClick={() => {navigate("/MyBlockSchedule")}}>
                                     My Block Schedule        
                                 </p> 
                             </div>   

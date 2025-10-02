@@ -40,7 +40,7 @@ import Registration from "./pages/Registration";
 import More from "./pages/More";
 import Home from "./pages/Home";
 import Today from "./pages/Today";
-import MySchedule from "./pages/MySchedule";
+import MyBlockSchedule from "./pages/MyBlockSchedule";
 import MyProgress from "./pages/MyProgress";
 import MyMessages from "./pages/MyMessages";
 import EditMyProfile from "./pages/EditMyProfile";
@@ -65,7 +65,7 @@ root.render(
                 <Route path="/More" element={<More />} />
                 <Route path="/Home" element={<Home />} />
                 <Route path="/Today" element={<Today />} />
-                <Route path="/MySchedule" element={<MySchedule />} />
+                <Route path="/MyBlockSchedule" element={<MyBlockSchedule />} />
                 <Route path="/MyProgress" element={<MyProgress />} />
                 <Route path="/MyMessages" element={<MyMessages />} />
                 <Route path="/EditMyProfile" element={<EditMyProfile />} />            
