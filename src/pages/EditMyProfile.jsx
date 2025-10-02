@@ -670,7 +670,9 @@ function Page_1(params) {
             {/*  Display the cancel dialogue */}
             <div>
                 {((params.state === states.CANCELLING)) && (
-                    <ConfirmCancel setState={params.setState} />
+                    <ConfirmCancel setState={params.setState}
+                                   handleKeys={handleKeys}
+                    />
                 )}
             </div>   
 
@@ -1178,6 +1180,8 @@ function Page_4(params) {
 // to cancel the changes they have just made to their profile.
 // 
 function ConfirmCancel(params) {
+
+
     return (
         <div>
             <Modal>
