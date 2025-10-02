@@ -9,10 +9,10 @@
 //
 import './Main.css';
 
-import SideNav from "./components/SideNav";
 import TopNav from "./components/TopNav";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+
 //
 // Home
 // ====
