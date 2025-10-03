@@ -1,0 +1,89 @@
+
+Exercise Table
+==============
+
+DROP TABLE IF EXISTS public."Exercise";
+
+CREATE TABLE IF NOT EXISTS public."Exercise"
+(
+    "exercise_ID" smallint NOT NULL DEFAULT nextval('"Exercise_exercise_ID_seq"'::regclass),
+    name character varying(30) COLLATE pg_catalog."default",
+    video_link character varying(50) COLLATE pg_catalog."default",
+    CONSTRAINT "Exercise_pkey" PRIMARY KEY ("exercise_ID")
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE IF EXISTS public."Exercise"
+    OWNER to badger;
+
+COMMENT ON TABLE public."Exercise"
+    IS 'This is the table of exercises that are used to create sets in a client''s block schedule.';
+
+
+
+INSERT INTO "Exercise" ("name", "video_link") VALUES ('Low Bar Squat TS1', 'Low_Bar_Squat_TS1.mp4');
+
+INSERT INTO "Exercise" ("name", "video_link") VALUES ('Low Bar Squat TS2', 'Low_Bar_Squat_TS2.mp4');
+
+INSERT INTO "Exercise" ("name", "video_link") VALUES ('Low Bar Squat TS3', 'Low_Bar_Squat_TS3.mp4');
+
+INSERT INTO "Exercise" ("name", "video_link") VALUES ('Low Bar Squat TS4', 'Low_Bar_Squat_TS4.mp4');
+
+INSERT INTO "Exercise" ("name", "video_link") VALUES ('Low Bar Squat TS5', 'Low_Bar_Squat_TS5.mp4');
+
+INSERT INTO "Exercise" ("name", "video_link") VALUES ('Comp Bench TS1', 'Comp Bench_TS1.mp4');
+
+INSERT INTO "Exercise" ("name", "video_link") VALUES ('Comp Bench TS2', 'Comp Bench_TS2.mp4');
+
+INSERT INTO "Exercise" ("name", "video_link") VALUES ('Comp Bench TS3', 'Comp Bench_TS3.mp4');
+
+INSERT INTO "Exercise" ("name", "video_link") VALUES ('Comp Bench TS4', 'Comp Bench_TS4.mp4');
+
+INSERT INTO "Exercise" ("name", "video_link") VALUES ('Comp Bench TS5', 'Comp Bench_TS5.mp4');
+
+INSERT INTO "Exercise" ("name", "video_link") VALUES ('SA Lat Pulldown', 'SA_Lat_Pulldown.mp4');
+
+
+Schedule Table
+==============
+
+DROP TABLE IF EXISTS public."Schedule";
+
+CREATE TABLE IF NOT EXISTS public."Schedule"
+(
+    "schedule_ID" smallint NOT NULL DEFAULT nextval('"Schedule_schedule_ID_seq"'::regclass),
+    "seq_ID" smallint,
+    "user_ID" smallint,
+    "block_ID" smallint,
+    "exercise_ID" smallint,
+    sets smallint,
+    actual_sets smallint,
+    reps smallint,
+    actual_reps smallint[],
+    rpe smallint,
+    lower_weight numeric,
+    upper_weight numeric,
+    actual_weight numeric[],
+    velocity_based_metrics character varying(50) COLLATE pg_catalog."default",
+    notes character varying(200) COLLATE pg_catalog."default",
+    "E1RM" smallint,
+    CONSTRAINT "Schedule_pkey" PRIMARY KEY ("schedule_ID")
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE IF EXISTS public."Schedule"
+    OWNER to badger;
+
+COMMENT ON TABLE public."Schedule"
+    IS 'This table carries schedules of sets of exercises for clients.';
+
+
+INSERT INTO "Schedule" ("seq_ID", "user_ID", "block_ID", "exercise_ID") VALUES ('1', '1', '1', "1");
+
+INSERT INTO "Schedule" ("seq_ID", "user_ID", "block_ID", "exercise_ID") VALUES ('2', '1', '1', '2');
+
+SELECT *, "Exercise"."name" AS "exercise_name" FROM "Schedule" LEFT JOIN "Exercise" As "Exercise" ON "Exercise"."exercise_ID";
+
+SELECT *, "Exercise"."name" AS "exercise_name" FROM "Schedule" LEFT JOIN "Exercise" AS "Exercise" ON "Exercise"."exercise_ID" = "Schedule"."exercise_ID";
