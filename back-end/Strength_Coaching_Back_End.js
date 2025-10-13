@@ -779,12 +779,11 @@ app.put('/api/unlockUser', async(request, response) => {
 // Reads the client's training schedule for the specified block and week.
 //         
 app.get('/api/getSchedule', async(request, response) => { 
-    const user_ID = request.query.userID;
+    const user_ID = request.query.user_ID;
+    const JWT = request.query.JWT;    
     const block = request.query.block;
     const week = request.query.week;
-    const day = request.query.day;
-    const JWT = request.query.JWT;    
-
+    
     if (!verifyJWT(JWT)) {
         response.status(403).send("Not authorised");        
     } else {
