@@ -115,6 +115,8 @@
 // 30.09.2025 BRD Official release of version 1.5. This contains all the 
 //                Phase 1 foundational back-end functionality. This includes 
 //                an upgrade to Node.js v24.9.0
+// 13.10.2025 BRD Added the getSchedule API to load the client's training schedule
+//                for the specified block and week.         
 //
 import express from 'express';
 const app = express();
@@ -770,6 +772,71 @@ app.put('/api/unlockUser', async(request, response) => {
         }
     );    
 }); 
+
+//
+// getSchedule()
+// =============
+// Reads the client's training schedule for the specified block and week.
+//         
+app.get('/api/getSchedule', async(request, response) => { 
+    const user_ID = request.query.userID;
+    const block = request.query.block;
+    const week = request.query.week;
+    const day = request.query.day;
+    const JWT = request.query.JWT;    
+
+    if (!verifyJWT(JWT)) {
+        response.status(403).send("Not authorised");        
+    } else {
+        const sqlSelectCmd = 'SELECT *, "Exercise"."name" AS "exercise_name", "Exercise"."video_link" AS "video_link" ' +        
+                            'FROM "Schedule" ' +
+                            'LEFT JOIN "Exercise" AS "Exercise" ON "Exercise"."exercise_ID" = "Schedule"."exercise_ID" ' +
+                            'WHERE "user_ID" = ' + "'" + user_ID + "' " +
+                            'AND "block" = ' + "'" + block + "' " +
+                            'AND "week" = ' + "'" + week + "' " +
+                            'AND "day" = ' + "'" + day + "' " + 
+                            'ORDER BY "seq_ID"';
+        db.query(sqlSelectCmd, (err, result) => {
+            if (!err) {
+                if (result.rows[0] !== undefined) {
+                    logmsg("/api/getSchedule: schedule found");
+                    response.setHeader("Content-Type", "application/json");
+                    response.status(200).json(result.rows);
+                } else {
+                    logmsg("/api/getSchedule: no schedule was found");
+                    response.setHeader("Content-Type", "application/json");
+                    response.status(404).send('Schedule not found');
+                }
+            } else {
+                logmsg("/api/getSchedule returned error" + err + "\n" + sqlSelectCmd);
+                response.status(500).send('Returned error' + err);            
+            }
+        });
+    }    
+}); 
+
+
+// app.get('/api/getUserByEmail', async (request, response) => {
+//     const email_address = request.query.email_address;
+//     // eslint-disable-next-line no-useless-concat
+//     const sqlSelectCmd = 'SELECT * FROM "User" WHERE "email_address" ILIKE ' + "'" + email_address + "';";
+//     db.query(sqlSelectCmd, (err, result) => {
+//         if (!err) {
+//             if (result.rows[0] !== undefined) {
+//                 logmsg("/api/getUserByEmail: user found with the email address " + email_address);
+//                 response.setHeader("Content-Type", "application/json");
+//                 response.status(200).json(result.rows[0]);
+//             } else {
+//                 logmsg("/api/getUserByEmail: no user has registered the email address " + email_address);
+//                 response.setHeader("Content-Type", "application/json");
+//                 response.status(404).send('User not found');
+//             }
+//         } else {
+//             logmsg("/api/getRegistrantByEmail returned error" + err + "\n" + sqlSelectCmd);
+//             response.status(500).send('Returned error' + err);            
+//         }
+//     });
+// });
 
 // 
 // sendMail()
