@@ -7,7 +7,6 @@
 // ================
 // 25.02.2024 BRD Original version.
 // 30.07.2025 BRD Cloned Strength Coaching from the Strength Research application.
-// 
 //
 import './Main.css';
 
@@ -22,8 +21,8 @@ const baseURL = getBaseURL();
 const axios = Axios;
 
 //
-// MySchedule
-// ==========
+// MyBlockSchedule
+// ===============
 function MyBlockSchedule() {
     let navigate = useNavigate();  
 
@@ -60,17 +59,22 @@ function MyBlockSchedule() {
     // ensure that the environment is re-configured appropriately each time the
     // state changes. 
     //
-    const [state, setState] = useState(states.GET_CLIENT);
+    const [state, setState] = useState(states.UNDEFINED);
     
     useEffect(() => {    
         var error = false;
         
         switch (state) {            
-            case states.GET_CLIENT:
+            case states.UNDEFINED:
+                // Load the primary client information needed to identify
+                // which block and week to load.
                 getUser(userID);
                 break;
 
             case states.LOADING:
+                // The client information loaded correctly, so now load
+                // the clients block training schedule for the current
+                // week.
                 getSchedule(userID, Block, Week);
                 break;
 
@@ -90,7 +94,7 @@ function MyBlockSchedule() {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [state]);
 
-//
+    //
     // getUser()
     // =========
     // Reads the user's profile information from the database and loads it into the editing fields.
@@ -141,9 +145,7 @@ function MyBlockSchedule() {
         try {
             let response = await axios.get(baseURL + "getSchedule?user_ID=" + userID + "&JWT=" + JWT + 
                                            "&block=" + Block + "&week=" + Week);
-            if (response.status === 200) {
-                console.log(response.data[0].reps);
-                console.log(response.data[1].reps);
+            if (response.status === 200) {                
                 setSchedule(response.data);  
                 setState(states.LOADED); 
             } else if (response.status === 404) {
@@ -174,8 +176,8 @@ function MyBlockSchedule() {
     };    
 
     //
-    // MY BLOCK SCHEDULE
-    // =================
+    // MyBlockSchedule
+    // ===============
     // Render the Block Schedule page and let the client update their training results.
     //
     return (
