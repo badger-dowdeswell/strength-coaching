@@ -29,6 +29,7 @@ function MyBlockSchedule() {
 
     const[Block, setBlock] = useState(0);
     const[Week, setWeek] = useState(0);
+    const[Schedule, setSchedule] = useState([]);
   
     //
     // Authentication and Navigation()
@@ -71,6 +72,10 @@ function MyBlockSchedule() {
 
             case states.LOADING:
                 getSchedule(userID, Block, Week);
+                break;
+
+            case states.LOADED:
+                debugSchedule();
                 break;
                 
             case states.NOT_AUTHENTICATED:
@@ -136,7 +141,10 @@ function MyBlockSchedule() {
         try {
             let response = await axios.get(baseURL + "getSchedule?user_ID=" + userID + "&JWT=" + JWT + 
                                            "&block=" + Block + "&week=" + Week);
-            if (response.status === 200) {  
+            if (response.status === 200) {
+                console.log(response.data[0].reps);
+                console.log(response.data[1].reps);
+                setSchedule(response.data);  
                 setState(states.LOADED); 
             } else if (response.status === 404) {
               setState(states.NOT_FOUND);
@@ -144,7 +152,16 @@ function MyBlockSchedule() {
         } catch (err) {            
             setState(states.NOT_FOUND);        
         }        
-    };        
+    }; 
+    
+    //
+    // debugSchedule()
+    // ===============
+    function debugSchedule() {
+        console.log("\ndebugSchedule()\n");        
+        console.log("Line count " + Schedule.length + "\n" + Schedule[0,0].exercise_name);
+        console.log("Line count " + Schedule.length + "\n" + Schedule[0,1].exercise_name);
+    };    
 
     //
     // MY BLOCK SCHEDULE
