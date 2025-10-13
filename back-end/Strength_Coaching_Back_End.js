@@ -793,8 +793,7 @@ app.get('/api/getSchedule', async(request, response) => {
                             'LEFT JOIN "Exercise" AS "Exercise" ON "Exercise"."exercise_ID" = "Schedule"."exercise_ID" ' +
                             'WHERE "user_ID" = ' + "'" + user_ID + "' " +
                             'AND "block" = ' + "'" + block + "' " +
-                            'AND "week" = ' + "'" + week + "' " +
-                            'AND "day" = ' + "'" + day + "' " + 
+                            'AND "week" = ' + "'" + week + "' " +                            
                             'ORDER BY "seq_ID"';
         db.query(sqlSelectCmd, (err, result) => {
             if (!err) {
