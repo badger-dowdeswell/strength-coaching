@@ -158,9 +158,19 @@ function MyBlockSchedule() {
     // debugSchedule()
     // ===============
     function debugSchedule() {
+        let line = "";
         console.log("\ndebugSchedule()\n");        
-        console.log("Line count " + Schedule.length + "\n" + Schedule[0,0].exercise_name);
-        console.log("Line count " + Schedule.length + "\n" + Schedule[0,1].exercise_name);
+        console.log("Line count " + Schedule.length + "\n");
+        for (var ptr = 0; ptr <Schedule.length; ptr++ ) {
+            line = Schedule[ptr].exercise_name + " " +
+                   Schedule[ptr].sets + " " +
+                   Schedule[ptr].actual_sets + " " +
+                   Schedule[ptr].reps + " " +
+                   Schedule[ptr].actual_reps + " " +
+                   Schedule[ptr].velocity_based_metrics;
+
+            console.log(line);            
+        }        
     };    
 
     //
