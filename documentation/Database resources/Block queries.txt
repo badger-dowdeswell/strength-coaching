@@ -108,6 +108,14 @@ LEFT JOIN "Exercise" AS "Exercise" ON "Exercise"."exercise_ID" = "Schedule"."exe
 
 WHERE "block" = '1' AND "week" = '1' AND "day" = '1';
 
+
+SELECT *, "Exercise"."name" AS "exercise_name", "Exercise"."video_link" AS "video_link"        
+FROM "Schedule"
+
+LEFT JOIN "Exercise" AS "Exercise" ON "Exercise"."exercise_ID" = "Schedule"."exercise_ID"
+
+WHERE "block" = '1' AND "week" = '1' AND "day" = '2' ORDER BY "seq_ID";
+
 ==========================================================================================
 
 INSERT INTO "Schedule"(

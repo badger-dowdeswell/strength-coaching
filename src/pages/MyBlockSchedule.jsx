@@ -14,7 +14,7 @@ import './Main.css';
 import TopNav from "./components/TopNav";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { states, pages } from "./Constants";
+import { states } from "./Constants";
 
 import Axios from 'axios';
 import { getBaseURL } from "./getBaseURL";
@@ -26,6 +26,9 @@ const axios = Axios;
 // ==========
 function MyBlockSchedule() {
     let navigate = useNavigate();  
+
+    const[Block, setBlock] = useState(0);
+    const[Week, setWeek] = useState(0);
   
     //
     // Authentication and Navigation()
@@ -49,21 +52,104 @@ function MyBlockSchedule() {
     }, [userID, JWT]);
 
     //
-    // Editing state control()
-    // =======================
-    // This section defines the state machine that controls the profile editing
-    // process. The useState and useEffect hooks ensure that the environment is
-    // re-configured appropriately each time the state changes. The currentPage 
-    // state controls which page of the tabbed dialog is currently displayed.
+    // State control()
+    // ===============
+    // This section defines the state machine that controls the schedule display
+    // and enables the client to add details. The useState and useEffect hooks 
+    // ensure that the environment is re-configured appropriately each time the
+    // state changes. 
     //
-    const [state, setState] = useState(states.LOADING);
-    const [currentPage, setCurrentPage] = useState();
+    const [state, setState] = useState(states.GET_CLIENT);
     
+    useEffect(() => {    
+        var error = false;
+        
+        switch (state) {            
+            case states.GET_CLIENT:
+                getUser(userID);
+                break;
+
+            case states.LOADING:
+                getSchedule(userID, Block, Week);
+                break;
+                
+            case states.NOT_AUTHENTICATED:
+            case states.NOT_FOUND:        
+                // Either the user record or their block schedule could not be
+                // read. Sign them out and return them to the landing page.
+                return navigate("/");
+            
+            default:
+                break;
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [state]);
+
+//
+    // getUser()
+    // =========
+    // Reads the user's profile information from the database and loads it into the editing fields.
+    // Note since this method operates within an aync Promise, it is the safest place to
+    // set the editingState so that that state does not get triggered before the read is complete.
+    //
+    const getUser = async (userID) => {         
+        try {
+            let response = await axios.get(baseURL + "getUser?user_ID=" + userID + "&JWT=" + JWT);
+            if (response.status === 200) {                               
+                // setUserID(response.data.user_ID);  
+                // setUserAuthority(response.data.user_authority || "");                
+                // setSalutation(response.data.salutation || "");
+                // setFirstName(response.data.first_name || ""); 
+                // setLastName(response.data.last_name || "");  
+                // setAlias(response.data.alias || ""); 
+                // setPhoneNumber(response.data.phone_number || ""); 
+                // setEmailAddress(response.data.email_address || ""); 
+                // setAddress1(response.data.address_1 || ""); 
+                // setAddress2(response.data.address_2 || ""); 
+                // setAddress3(response.data.address_3 || ""); 
+                // setSuburb(response.data.suburb || ""); 
+                // setCity(response.data.city || ""); 
+                // setPostcode(response.data.postcode || ""); 
+                // setStateProvince(response.data.state_province || "");
+                // setCountry(response.data.country || ""); 
+                // setDateOfBirth(formatDate("YYYY-MM-DD", decodeISOdate(response.data.date_of_birth)));
+                // setUserImage(response.data.user_image || "");
+
+                // RA_BRD - need to add to the clients profile.                
+                setBlock(1);
+                setWeek(1);
+                setState(states.LOADING);                              
+            } else if (response.status === 404) {
+              setState(states.NOT_FOUND);
+            }            
+        } catch (err) {            
+            setState(states.NOT_FOUND);        
+        }        
+    };
+
+    //
+    // getSchedule()
+    // =============
+    // Reads the client's training schedule for the specified block and week.
+    //         
+    const getSchedule = async(userID, Block, Week) => {         
+        try {
+            let response = await axios.get(baseURL + "getSchedule?user_ID=" + userID + "&JWT=" + JWT + 
+                                           "&block=" + Block + "&week=" + Week);
+            if (response.status === 200) {  
+                setState(states.LOADED); 
+            } else if (response.status === 404) {
+              setState(states.NOT_FOUND);
+            }            
+        } catch (err) {            
+            setState(states.NOT_FOUND);        
+        }        
+    };        
 
     //
     // MY BLOCK SCHEDULE
     // =================
-    // Render the Block Schedule page.
+    // Render the Block Schedule page and let the client update their training results.
     //
     return (
         <div>            
