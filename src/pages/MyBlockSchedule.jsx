@@ -200,6 +200,7 @@ function MyBlockSchedule() {
                         <ScheduleLine
                             key={line.schedule_ID}
                             seq_ID={line.seq_ID}
+                            exercise_name={line.exercise_name}
                         />                        
                     ))}
                 </div>

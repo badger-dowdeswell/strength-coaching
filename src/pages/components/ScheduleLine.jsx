@@ -7,6 +7,7 @@ function ScheduleLine(params) {
         <div>
             <p className="text-white">sequence</p>
             <p className="text-white">{params.seq_ID}</p>
+            <p className="text-white">{params.exercise_name}</p>
         </div>
     )
 };
