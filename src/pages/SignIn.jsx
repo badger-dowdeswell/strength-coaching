@@ -230,7 +230,7 @@ export default function SignIn() {
                         Your email address or alias                        
                     </p>
 
-                    <input className="bg-cyan-600 text-white ml-5 mr-5 mt-1 pl-1"
+                    <input className="bg-white text-black ml-5 mr-5 mt-1 pl-1"
                         id="UserID"
                         type="text"
                         ref={autofocusID}
@@ -249,7 +249,7 @@ export default function SignIn() {
                     </p>
                 
                     <div className="flex flex-row">
-                        <input className="bg-cyan-600  text-white ml-5 mt-1 w-72 pl-1"
+                        <input className="bg-white text-black ml-5 mt-1 w-72 pl-1"
                             id="Password"
                             type={PasswordVisibility}
                             placeholder="********"

@@ -11,6 +11,7 @@
 import './Main.css';
 
 import TopNav from "./components/TopNav";
+import ScheduleLine from "./components/ScheduleLine";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { states } from "./Constants";
@@ -164,7 +165,10 @@ function MyBlockSchedule() {
         console.log("\ndebugSchedule()\n");        
         console.log("Line count " + Schedule.length + "\n");
         for (var ptr = 0; ptr <Schedule.length; ptr++ ) {
-            line = Schedule[ptr].exercise_name + " " +
+
+            line = Schedule[ptr].schedule_ID + " " +
+                   Schedule[ptr].seq_ID + " " +
+                   Schedule[ptr].exercise_name + " " +
                    Schedule[ptr].sets + " " +
                    Schedule[ptr].actual_sets + " " +
                    Schedule[ptr].reps + " " +
@@ -191,10 +195,16 @@ function MyBlockSchedule() {
 
                 <br></br>
 
-                <p className="ml-1 text-white">
-                    More content goes in here ... and here ... and here ...
-                </p>
-                <br></br>
+                <div>
+                    {Schedule.map(line => (
+                        <ScheduleLine
+                            key={line.schedule_ID}
+                            seq_ID={line.seq_ID}
+                        />                        
+                    ))}
+                </div>
+
+                
 
                 <div className="flex flex-row justify-center">                        
                     <button className="bg-cyan-600 text-white font-bold text-sm py-2 px-2 rounded
