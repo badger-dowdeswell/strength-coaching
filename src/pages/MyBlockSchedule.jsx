@@ -1,13 +1,13 @@
 //
 // MY BLOCK TRAINING SCHEDULE
 // ==========================
-// This is the complete schedule for the client's training sessions.
+// This is the complete schedule for the client's training sessions for the
+// current block, listed by week and session.
 //
 // Revision History
 // ================
-// 25.02.2024 BRD Original version.
-// 30.07.2025 BRD Cloned Strength Coaching from the Strength Research application.
-//
+// 30.07.2025 BRD Original version.
+// 
 import './Main.css';
 
 import TopNav from "./components/TopNav";
@@ -34,23 +34,22 @@ function MyBlockSchedule() {
     //
     // Authentication and Navigation()
     // ===============================
-    // Checks to see if the local storage has a userID set to ensure that
-    // only authenticated uses can navigate around the application. This
-    // is also a convenient way of logging out. When the UserID is set to
-    // blank via the Sign-out button click, there is no longer an
-    // authenticated user.
+    // Checks to see if the local storage has a userID set to ensure that only
+    // authenticated uses can navigate around the application. This is also a
+    // convenient way of logging out. When the user_ID is set to blank, via the
+    // there will no longer an authenticated user.
     //    
-    var userID = sessionStorage.getItem("userID");      
+    var user_ID = sessionStorage.getItem("userID");      
     const JWT = sessionStorage.getItem('JWT');
     
     useEffect(() => {
-        if (!userID.trim() || !JWT.trim()) {
+        if (!user_ID.trim() || !JWT.trim()) {
             // The page is being accessed by an unauthorised user so redirect them
             // back to the landing page.
             return navigate("/"); 
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [userID, JWT]);
+    }, [user_ID, JWT]);
 
     //
     // State control()
@@ -61,25 +60,18 @@ function MyBlockSchedule() {
     // state changes. 
     //
     const [state, setState] = useState(states.UNDEFINED);
-    
+
     useEffect(() => {    
-        var error = false;
+        //var error = false;
         
         switch (state) {            
             case states.UNDEFINED:
-                // Load the primary client information needed to identify
-                // which block and week to load.
-                getUser(userID);
-                break;
-
-            case states.LOADING:
-                // The client information loaded correctly, so now load
-                // the clients block training schedule for the current
-                // week.
-                getSchedule(userID, Block, Week);
-                break;
+                // Load the primary client information and block schedule lines.                
+                loadSchedule(user_ID);
+                break;            
 
             case states.LOADED:
+                // A schedule was found for this client for this period.
                 debugSchedule();
                 break;
                 
@@ -87,6 +79,7 @@ function MyBlockSchedule() {
             case states.NOT_FOUND:        
                 // Either the user record or their block schedule could not be
                 // read. Sign them out and return them to the landing page.
+                // RA_BRD - need to tell the user that a problem has occured.
                 return navigate("/");
             
             default:
@@ -96,66 +89,54 @@ function MyBlockSchedule() {
     }, [state]);
 
     //
-    // getUser()
-    // =========
+    // loadSchedule()
+    // ==============
     // Reads the user's profile information from the database and loads it into the editing fields.
     // Note since this method operates within an aync Promise, it is the safest place to
     // set the editingState so that that state does not get triggered before the read is complete.
+    // Then, the block schedule lines for each day in that week are loaded.
     //
-    const getUser = async (userID) => {         
+    const loadSchedule = async (user_ID) => { 
+        var block = 0;
+        var week = 0;
+        console.log("loadSchedule\n"); 
         try {
-            let response = await axios.get(baseURL + "getUser?user_ID=" + userID + "&JWT=" + JWT);
-            if (response.status === 200) {                               
-                // setUserID(response.data.user_ID);  
-                // setUserAuthority(response.data.user_authority || "");                
-                // setSalutation(response.data.salutation || "");
-                // setFirstName(response.data.first_name || ""); 
-                // setLastName(response.data.last_name || "");  
-                // setAlias(response.data.alias || ""); 
-                // setPhoneNumber(response.data.phone_number || ""); 
-                // setEmailAddress(response.data.email_address || ""); 
-                // setAddress1(response.data.address_1 || ""); 
-                // setAddress2(response.data.address_2 || ""); 
-                // setAddress3(response.data.address_3 || ""); 
-                // setSuburb(response.data.suburb || ""); 
-                // setCity(response.data.city || ""); 
-                // setPostcode(response.data.postcode || ""); 
-                // setStateProvince(response.data.state_province || "");
-                // setCountry(response.data.country || ""); 
-                // setDateOfBirth(formatDate("YYYY-MM-DD", decodeISOdate(response.data.date_of_birth)));
-                // setUserImage(response.data.user_image || "");
-
+            // load the client information.
+            let response = await axios.get(baseURL + "getUser?user_ID=" + user_ID + "&JWT=" + JWT);
+            if (response.status === 200) { 
                 // RA_BRD - need to add to the clients profile.                
                 setBlock(1);
                 setWeek(1);
-                setState(states.LOADING);                              
+                // RA_BRD - load temporary variables within this scope.
+                block = 1;
+                week = 1;
+                console.log("loadSchedule - loaded client\n");
+
+                // load the schedule lines for this block, this week.
+                try {
+                    let response = await axios.get(baseURL + "getSchedule?user_ID=" + user_ID + "&JWT=" + JWT + 
+                                            "&block=" + block + "&week=" + week);
+                    if (response.status === 200) {
+                        console.log("loadSchedule - loaded schedule\n");                
+                        setSchedule(response.data);  
+                        setState(states.LOADED); 
+                    } else if (response.status === 404) {
+                        setState(states.NOT_FOUND);
+                    }            
+                } catch (err) {  
+                    // The client does not have a schedule specified for this period
+                    // RA_BRD - resolve this later to display an approprite message
+                    //          because it is not a failure.          
+                    setState(states.NOT_FOUND);        
+                }        
             } else if (response.status === 404) {
-              setState(states.NOT_FOUND);
+                // The client was not found.
+                setState(states.NOT_FOUND);
             }            
         } catch (err) {            
             setState(states.NOT_FOUND);        
         }        
     };
-
-    //
-    // getSchedule()
-    // =============
-    // Reads the client's training schedule for the specified block and week.
-    //         
-    const getSchedule = async(userID, Block, Week) => {         
-        try {
-            let response = await axios.get(baseURL + "getSchedule?user_ID=" + userID + "&JWT=" + JWT + 
-                                           "&block=" + Block + "&week=" + Week);
-            if (response.status === 200) {                
-                setSchedule(response.data);  
-                setState(states.LOADED); 
-            } else if (response.status === 404) {
-              setState(states.NOT_FOUND);
-            }            
-        } catch (err) {            
-            setState(states.NOT_FOUND);        
-        }        
-    }; 
     
     //
     // debugSchedule()
@@ -205,8 +186,6 @@ function MyBlockSchedule() {
                     ))}
                 </div>
 
-                
-
                 <div className="flex flex-row justify-center">                        
                     <button className="bg-cyan-600 text-white font-bold text-sm py-2 px-2 rounded
                                         mb-6 mt-2"
@@ -242,4 +221,5 @@ function MyBlockSchedule() {
         </div>
     )
 }
+    
 export default MyBlockSchedule;

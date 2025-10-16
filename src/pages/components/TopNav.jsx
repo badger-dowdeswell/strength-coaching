@@ -1,6 +1,6 @@
 //
-// TOP NAVIGATION BAR
-// ===================
+// TopNav
+// ======
 // This is the top navigation bar component. It is shared by all
 // pages and configured using parameters passed in from each page
 // via the params object:
