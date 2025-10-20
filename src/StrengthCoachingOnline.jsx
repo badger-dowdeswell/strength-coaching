@@ -54,6 +54,7 @@ const version = 1.5;
 // structure significantly.
 //
 const root = ReactDOM.createRoot(document.getElementById('root'));
+
 root.render(
     <StrictMode>
         <BrowserRouter>

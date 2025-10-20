@@ -12,7 +12,7 @@ import './Main.css';
 
 import TopNav from "./components/TopNav";
 import ScheduleLine from "./components/ScheduleLine";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { states } from "./Constants";
 
@@ -27,9 +27,16 @@ const axios = Axios;
 function MyBlockSchedule() {
     let navigate = useNavigate();  
 
-    const[Block, setBlock] = useState(0);
-    const[Week, setWeek] = useState(0);
-    const[Schedule, setSchedule] = useState([]);
+    const [Block, setBlock] = useState(0);
+    const [Week, setWeek] = useState(0); 
+    const [CurrentWeek, setCurrentWeek] = useState(0);
+    const [MaxWeek, setMaxWeek]= useState(0);   
+    const [StartDate, setStartDate] = useState(0);
+
+    // The array of objects that hold one one line for each exercise specified
+    // for this block.    // 
+    const [Schedule, setSchedule] = useState([]);
+    
   
     //
     // Authentication and Navigation()
@@ -98,8 +105,7 @@ function MyBlockSchedule() {
     //
     const loadSchedule = async (user_ID) => { 
         var block = 0;
-        var week = 0;
-        console.log("loadSchedule\n"); 
+        var week = 0;        
         try {
             // load the client information.
             let response = await axios.get(baseURL + "getUser?user_ID=" + user_ID + "&JWT=" + JWT);
@@ -107,17 +113,20 @@ function MyBlockSchedule() {
                 // RA_BRD - need to add to the clients profile.                
                 setBlock(1);
                 setWeek(1);
+                setMaxWeek(4)
+                setCurrentWeek(1);
+
                 // RA_BRD - load temporary variables within this scope.
                 block = 1;
                 week = 1;
-                console.log("loadSchedule - loaded client\n");
+                //console.log("loadSchedule - loaded client\n");
 
                 // load the schedule lines for this block, this week.
                 try {
                     let response = await axios.get(baseURL + "getSchedule?user_ID=" + user_ID + "&JWT=" + JWT + 
                                             "&block=" + block + "&week=" + week);
                     if (response.status === 200) {
-                        console.log("loadSchedule - loaded schedule\n");                
+                        //console.log("loadSchedule - loaded schedule\n");                
                         setSchedule(response.data);  
                         setState(states.LOADED); 
                     } else if (response.status === 404) {
@@ -158,7 +167,58 @@ function MyBlockSchedule() {
 
             console.log(line);            
         }        
-    };    
+    };  
+    
+    // for (let index = 0; index < MaxWeek; index++) {                                    
+    //                                 items.push(
+    //                                     <div>
+    //                                         <button className="bg-white text-black text-sm py-1 px-1 border
+    //                                                         mb-0 mt-0 ml-0"
+    //                                                 id={"Week" + index}
+    //                                                 style={{ width: "100px" }}
+    //                                                 onClick={() => {
+    //                                                         // setTabColor(currentPage, pages.PAGE_1);
+    //                                                         setCurrentWeek(index);
+    //                                                 }}>
+    //                                             {"WEEK " + index}
+    //                                         </button> 
+    //                                     </div> 
+    //                                 )};                                   
+    //                             )}
+    // {(() => { 
+    //                             const items = [];                                 
+    //                             items.push(<div className="flex flex-row">);                                                          
+                                
+    //                             items.push(</div>); 
+    //                             return <>{items}</>;                                                                 
+    //                         })()}    
+
+    //
+    // TabBar()
+    // ========
+    // This function creates a dynamic list of clickable tabs for the tabbed-dialog
+    // that displays the set of pages for the weeks in this schedule.
+    // 
+    function TabBar() {
+        const items = []; 
+        for (let index = 0; index < MaxWeek; index++) {   
+            items.push(
+                <div>
+                    <button  className="bg-white text-black text-sm py-1 px-1 border
+                                                                    mb-0 mt-0 ml-0"
+                            id={"Week" + index + 1}
+                            style={{ width: "100px" }}
+                            onClick={() => {
+                                console.log("\nClicked " + (index + 1) + "\n");                     
+                            }}>
+                        {"WEEK " + (index + 1)}
+                    </button>
+                </div>     
+            )
+        }    
+        return <>{items}</>;  
+    }
+
 
     //
     // MyBlockSchedule
@@ -172,54 +232,94 @@ function MyBlockSchedule() {
                             items-center justify-center
                             left-0 right-0 bg-gray-800 overflow-hidden">
 
-                <p className="ml-1 mt-3 text-white">This is your complete Training Schedule for this Block.</p>
+                <div className="flex flex-col box-border border-2 rounded-lg    
+                                ml-10 mr-10 h-auto w-auto">
+                    <div className="flex flex-row">
+                        <TabBar />
+                    </div>    
+                    <hr className="h-px my-0 bg-white border-0"></hr> 
+                    
+                    {(CurrentWeek === 1) && (
+                        <WeekTab 
+                            CurrentWeek={CurrentWeek}                            
+                        />
+                    )};
 
-                <br></br>
 
-                <div>
-                    {Schedule.map(line => (
-                        <ScheduleLine
-                            key={line.schedule_ID}
-                            seq_ID={line.seq_ID}
-                            exercise_name={line.exercise_name}
-                        />                        
-                    ))}
-                </div>
-
-                <div className="flex flex-row justify-center">                        
-                    <button className="bg-cyan-600 text-white font-bold text-sm py-2 px-2 rounded
-                                        mb-6 mt-2"
-                        id="Update"
-                        style={{ width: "100px" }}
-                        onClick={() => {
-                            // This stops the user clicking Update while
-                            // the ConfirmCancel dialogue is open.
-                            //if (state == states.EDITING) {
-                                //setState(states.VALIDATING_STAGE_1);
-                        //}    
-                        }}>
-                        Update
-                    </button>    
-                
-                    <button className="bg-cyan-600 text-white font-bold text-sm py-2 px-2 rounded
-                                        mb-6 mt-2 ml-8"
-                        id="Cancel"
-                        style={{ width: "100px" }}
-                        onClick={() => {                                
-                            //if (IsChanged) {
-                                //setTabColor(currentPage, pages.PAGE_1);
-                            //   s/etCurrentPage(pages.PAGE_1);
-                                //setState(states.CANCELLING);
-                            //} else {
-                                navigate("/Home");         
+                    <div className="flex flex-row justify-center">                        
+                        <button className="bg-cyan-600 text-white font-bold text-sm py-2 px-2 rounded
+                                            mb-6 mt-2"
+                            id="Update"
+                            style={{ width: "100px" }}
+                            onClick={() => {
+                                // This stops the user clicking Update while
+                                // the ConfirmCancel dialogue is open.
+                                //if (state == states.EDITING) {
+                                    //setState(states.VALIDATING_STAGE_1);
                             //}    
-                        }}>
-                        Cancel
-                    </button>  
-                </div>                           
+                            }}>
+                            Update
+                        </button>    
+                    
+                        <button className="bg-cyan-600 text-white font-bold text-sm py-2 px-2 rounded
+                                            mb-6 mt-2 ml-8"
+                            id="Cancel"
+                            style={{ width: "100px" }}
+                            onClick={() => {                                
+                                //if (IsChanged) {
+                                    //setTabColor(currentPage, pages.PAGE_1);
+                                //   s/etCurrentPage(pages.PAGE_1);
+                                    //setState(states.CANCELLING);
+                                //} else {
+                                    navigate("/Home");         
+                                //}    
+                            }}>
+                            Cancel
+                        </button>  
+                    </div>  
+                </div>                             
             </div>  
         </div>
     )
 }
+
+//
+// WeekTab()
+// =========
+// The tabbed dialog page for the week specified.
+//
+function WeekTab(params) { 
+    //
+    // autofocus()
+    // ===========
+    // Sets the focus to the first input field automatically. This requires
+    // that just one input element per page has a ref={autoFocusID}.
+    //
+    const autofocusID = useRef(null);
+    useEffect(() => {
+        if (autofocusID.current) {
+            autofocusID.current.focus();
+        }    
+    },[]);
+
+    return (
+        <div>
+            <p className="text-white text-center font-bold text-xl mt-5">{params.Week}</p>
+        </div>
+    )
+}   
+
+
+                    // <br></br>
+
+                    // <div>
+                    //     {Schedule.map(line => (
+                    //         <ScheduleLine
+                    //             key={line.schedule_ID}
+                    //             seq_ID={line.seq_ID}
+                    //             exercise_name={line.exercise_name}
+                    //         />                        
+                    //     ))}
+                    // </div>
     
 export default MyBlockSchedule;

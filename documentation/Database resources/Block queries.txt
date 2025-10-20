@@ -127,6 +127,8 @@ WHERE "user_ID" = '1' AND "block" = '1' AND "week" = '1' ORDER BY "day" ASC, "se
 
 ==========================================================================================
 
+Week 1 - Day 1
+==============
 INSERT INTO "Schedule"(
    "seq_ID", "user_ID", "block", "week", "day", "exercise_ID",
    "sets", "actual_sets", "reps", "actual_reps",
@@ -137,8 +139,8 @@ VALUES (
    '1', '1', '3', '{2}',
    '5', '5.5', '0', '0', '{110}', 
    'No weight recommendations this week', 'free-form notes', '134.5'); 
-   
-   
+  
+  
 INSERT INTO "Schedule"(
    "seq_ID", "user_ID", "block", "week", "day", "exercise_ID",
    "sets", "actual_sets", "reps", "actual_reps",
@@ -161,6 +163,8 @@ VALUES (
    '5', '6', '97', '102', '{100}', 
    'Try to keep each squat even, up and down', 'free-form notes', '133.5');    
    
+Week 1 - Day 2 
+============== 
 INSERT INTO "Schedule"(
    "seq_ID", "user_ID", "block", "week", "day", "exercise_ID",
    "sets", "actual_sets", "reps", "actual_reps",
@@ -172,8 +176,81 @@ VALUES (
    '5', '6', '97', '102', '{100}', 
    'Try to keep each squat even, up and down', 'free-form notes', '133.5'); 
    
+
+   
+Week 2 - Day 1   
+==============
+
+INSERT INTO "Schedule"(
+   "seq_ID", "user_ID", "block", "week", "day", "exercise_ID",
+   "sets", "actual_sets", "reps", "actual_reps",
+   "rpe", "actual_rpe", "lower_weight", "upper_weight", "actual_weight", 
+   "velocity_based_metrics", "notes", "E1RM") 
+VALUES (
+   '1', '3', '1', '2', '1', '7',
+   '1', '1', '5', '{4}',
+   '5', '6', '97', '102', '{100}', 
+   'Good, steady warm-up before the next set', 'free-form notes', '133.5');    
+   
+INSERT INTO "Schedule"(
+   "seq_ID", "user_ID", "block", "week", "day", "exercise_ID",
+   "sets", "actual_sets", "reps", "actual_reps",
+   "rpe", "actual_rpe", "lower_weight", "upper_weight", "actual_weight", 
+   "velocity_based_metrics", "notes", "E1RM") 
+VALUES (
+   '2', '3', '1', '2', '1', '8',
+   '1', '1', '5', '{4}',
+   '5', '6', '97', '102', '{100}', 
+   'Try to keep speed steady, up and down', 'free-form notes', '133.5');    
+   
+INSERT INTO "Schedule"(
+   "seq_ID", "user_ID", "block", "week", "day", "exercise_ID",
+   "sets", "actual_sets", "reps", "actual_reps",
+   "rpe", "actual_rpe", "lower_weight", "upper_weight", "actual_weight", 
+   "velocity_based_metrics", "notes", "E1RM") 
+VALUES (
+   '3', '3', '1', '2', '1', '10',
+   '1', '1', '5', '{4}',
+   '5', '6', '97', '102', '{100}', 
+   'Try to keep press even, up and down', 'free-form notes', '133.5');
       
     
 ===============================================================================
+
+function Hi3Times() {
+  const items = [];
+
+  for (let i = 0; i < 3; i++) {
+    items.push(<p key={i}>hi</p>);
+  }
+
+  return <>{items}</>;
+  
+  https://www.youtube.com/watch?v=wB4w12Mr_is
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 

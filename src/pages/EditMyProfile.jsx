@@ -37,7 +37,14 @@ const baseURL = getBaseURL();
 // EditMyProfile()
 // =============== 
 export default function EditMyProfile() {
-    const navigate = useNavigate();    
+    const navigate = useNavigate();  
+    
+    //console.log = function () {};
+    //console.info = function () {};
+    //console.warn = function () {};
+    //console.error = function () {}; // Consider keeping console.error for critical issues
+    //console.debug = function () {};
+
 
     const [errors, setErrors] = useState([]);  
     const [IsChanged, setIsChanged] = useState(false);    
@@ -164,9 +171,12 @@ export default function EditMyProfile() {
                 let response = await axios.get(baseURL + "duplicateAlias?user_ID=" + userID + "&alias=" + alias + "&JWT=" + JWT);
                 // Another user is already using that alias.                
                 if (response.status === 200) {
+                    console.log("duplicateAlias 200");    
                     errors.Alias="That alias is already in use";                
                     errors.page = 1;   
                     setState(states.EDITING);  
+                } else if (response.status === 404) {
+                    console.log("duplicateAlias 404");    
                 }            
             } catch (err) {
                 // No other user is using that alias. That means that the query did not return anything so it returns
@@ -366,12 +376,11 @@ export default function EditMyProfile() {
     // have entered and verified one or a blank password. The function getUser() never
     // retrieves their password during editing, so the password will always be blank unless
     // they have changed it. 
+    //
     // The back-end API always checks to see if a password has been supplied. If it is not
     // blank, it encrypts it, and then stores it. Note this is secure since the API must be
     // supplied with a valid JWT or else it will not update their record.
-    //
-    // const createUser = async () => {
-
+    //  
     const updateUser = async () => {        
         axios.put(baseURL + "updateUser?JWT=" + JWT, {
             user_ID: UserID,
@@ -671,7 +680,7 @@ function Page_1(params) {
             <div>
                 {((params.state === states.CANCELLING)) && (
                     <ConfirmCancel setState={params.setState}
-                                   handleKeys={handleKeys}
+                                   handleKeys={params.handleKeys}
                     />
                 )}
             </div>   
