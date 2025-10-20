@@ -113,7 +113,7 @@ function MyBlockSchedule() {
                 // RA_BRD - need to add to the clients profile.                
                 setBlock(1);
                 setWeek(1);
-                setMaxWeek(4)
+                setMaxWeek(6)
                 setCurrentWeek(1);
 
                 // RA_BRD - load temporary variables within this scope.
@@ -199,43 +199,54 @@ function MyBlockSchedule() {
     // This function creates a dynamic list of clickable tabs for the tabbed-dialog
     // that displays the set of pages for the weeks in this schedule.
     // 
-    function TabBar() {
+    // eslint-disable-next-line react/no-array-index-key
+    function TabBar() {        
         const items = []; 
         for (let index = 0; index < MaxWeek; index++) {   
             items.push(
                 <div>
-                    <button  className="bg-white text-black text-sm py-1 px-1 border
-                                                                    mb-0 mt-0 ml-0"
+                    <button className="text-sm py-1 px-1 border mb-0 mt-0 ml-0"                                                                    
                             id={"Week" + (index + 1)}
-                            style={{ width: "100px" }}
-                            onClick={() => {
-                                console.log("\nClicked " + (index + 1) + "\n");
-                                setTabColour(CurrentWeek, index + 1);
-                                setCurrentWeek(index + 1);                                                     
+                            style={{color: 'white', backgroundColor: '#9ca3af', width: "100px" }}                             
+                            onClick={(e) => {
+                                tabClick(e);
+                                //setTabColour(CurrentWeek, 'white', '#9ca3af');                                
+                                //setCurrentWeek(e.id);  
+                                //setTabColour(CurrentWeek, 'black', "white");                                                    
                             }}>
                         {"WEEK " + (index + 1)}
                     </button>
-                </div>     
-            )
-        }    
-        return <>{items}</>;  
+                </div>                             
+            )             
+        };
+        return items; 
+    }
+
+    //
+    // tabClick()
+    // ==========
+    function tabClick(event) {
+        console.log("\nClicked " + (event.target.id) + "\n");
     }
 
     //
     // setTabColour()
     // ==============
-    function setTabColour(currentTab, newTab) {  
-        console.log("setTabColour" + currentTab + " " + newTab);
+    function setTabColour(currentTab, textColour, backgroundColour) {  
+        console.log("setTabColour " + currentTab );
         
         // Reset the colour of the current tab to grey.
         var el = document.getElementById("Week" + currentTab);
-        el.style.backgroundColor = "#9ca3af";
+        console.log("currentTab " + el.id)
+        el.style.color = textColour
+        el.style.backgroundColor = backgroundColour
     
         // Highlight the new tab by setting its colour to white.
-        el = document.getElementById("Week" + newTab);
-        el.style.backgroundColor = "#ffffff";        
+        //el = document.getElementById("Week" + newTab);
+        //console.log("newTab " + el.id)
+        //el.style.color = "black"        
+        //el.style.backgroundColor = "white";       
     }
-
 
     //
     // MyBlockSchedule
@@ -254,7 +265,7 @@ function MyBlockSchedule() {
                 <div className="flex flex-col box-border border-2 rounded-lg    
                                 ml-10 mr-10 h-auto w-auto">
                     <div className="flex flex-row">
-                        <TabBar />
+                        <TabBar/>         
                     </div>    
                     <hr className="h-px my-0 bg-white border-0"></hr> 
                     
