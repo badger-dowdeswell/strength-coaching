@@ -206,10 +206,12 @@ function MyBlockSchedule() {
                 <div>
                     <button  className="bg-white text-black text-sm py-1 px-1 border
                                                                     mb-0 mt-0 ml-0"
-                            id={"Week" + index + 1}
+                            id={"Week" + (index + 1)}
                             style={{ width: "100px" }}
                             onClick={() => {
-                                console.log("\nClicked " + (index + 1) + "\n");                     
+                                console.log("\nClicked " + (index + 1) + "\n");
+                                setTabColour(CurrentWeek, index + 1);
+                                setCurrentWeek(index + 1);                                                     
                             }}>
                         {"WEEK " + (index + 1)}
                     </button>
@@ -219,11 +221,28 @@ function MyBlockSchedule() {
         return <>{items}</>;  
     }
 
+    //
+    // setTabColour()
+    // ==============
+    function setTabColour(currentTab, newTab) {  
+        console.log("setTabColour" + currentTab + " " + newTab);
+        
+        // Reset the colour of the current tab to grey.
+        var el = document.getElementById("Week" + currentTab);
+        el.style.backgroundColor = "#9ca3af";
+    
+        // Highlight the new tab by setting its colour to white.
+        el = document.getElementById("Week" + newTab);
+        el.style.backgroundColor = "#ffffff";        
+    }
+
 
     //
     // MyBlockSchedule
     // ===============
-    // Render the Block Schedule page and let the client update their training results.
+    // Render the Block Schedule pages with a separate tab for each week. These 
+    // individual pages allow the client to view their training schedule and 
+    // update their progress.
     //
     return (
         <div>            
@@ -239,13 +258,7 @@ function MyBlockSchedule() {
                     </div>    
                     <hr className="h-px my-0 bg-white border-0"></hr> 
                     
-                    {(CurrentWeek === 1) && (
-                        <WeekTab 
-                            CurrentWeek={CurrentWeek}                            
-                        />
-                    )};
-
-
+                    
                     <div className="flex flex-row justify-center">                        
                         <button className="bg-cyan-600 text-white font-bold text-sm py-2 px-2 rounded
                                             mb-6 mt-2"
