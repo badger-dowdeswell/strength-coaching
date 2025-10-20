@@ -199,22 +199,19 @@ function MyBlockSchedule() {
     // This function creates a dynamic list of clickable tabs for the tabbed-dialog
     // that displays the set of pages for the weeks in this schedule.
     // 
-    // eslint-disable-next-line react/no-array-index-key
     function TabBar() {        
         const items = []; 
         for (let index = 0; index < MaxWeek; index++) {   
             items.push(
                 <div>
-                    <button className="text-sm py-1 px-1 border mb-0 mt-0 ml-0"                                                                    
-                            id={"Week" + (index + 1)}
-                            style={{color: 'white', backgroundColor: '#9ca3af', width: "100px" }}                             
-                            onClick={(e) => {
-                                tabClick(e);
-                                //setTabColour(CurrentWeek, 'white', '#9ca3af');                                
-                                //setCurrentWeek(e.id);  
-                                //setTabColour(CurrentWeek, 'black', "white");                                                    
+                    <button className="bg-gray-400 text-black text-sm py-1 px-1 border
+                                       mb-0 mt-0 ml-0"                                                                
+                            id={"TabWeek_" + (index + 1)} 
+                            style={{ width: "100px" }}                                                      
+                            onClick={(e) => {                                
+                                setCurrentWeek(index + 1);                                                 
                             }}>
-                        {"WEEK " + (index + 1)}
+                        {"Week " + (index + 1)}
                     </button>
                 </div>                             
             )             
@@ -222,30 +219,32 @@ function MyBlockSchedule() {
         return items; 
     }
 
-    //
-    // tabClick()
-    // ==========
-    function tabClick(event) {
-        console.log("\nClicked " + (event.target.id) + "\n");
-    }
+    useEffect(() => {
+        console.log("useEffect " + CurrentWeek);
+        setTabColour(CurrentWeek, 0);
+        
+    }, [CurrentWeek]);
+
+    
 
     //
     // setTabColour()
     // ==============
-    function setTabColour(currentTab, textColour, backgroundColour) {  
-        console.log("setTabColour " + currentTab );
+    function setTabColour(newTab, previousTab) {          
         
         // Reset the colour of the current tab to grey.
-        var el = document.getElementById("Week" + currentTab);
-        console.log("currentTab " + el.id)
-        el.style.color = textColour
-        el.style.backgroundColor = backgroundColour
+        //var el = document.getElementById(currentTab);
+        //console.log("currentTab " + el.id)
+        //el.style.color = "black";
+        //el.style.backgroundColor = "white";
     
-        // Highlight the new tab by setting its colour to white.
-        //el = document.getElementById("Week" + newTab);
-        //console.log("newTab " + el.id)
-        //el.style.color = "black"        
-        //el.style.backgroundColor = "white";       
+        if (newTab > 0) {
+            // Highlight the new tab by setting its colour to white. 
+            console.log("setTabColour " + newTab );       
+            var el = document.getElementById("TabWeek_" + newTab);
+            console.log("document " + el.id);
+            el.style.backgroundColor = "#ffffff"; 
+        }      
     }
 
     //
@@ -268,6 +267,12 @@ function MyBlockSchedule() {
                         <TabBar/>         
                     </div>    
                     <hr className="h-px my-0 bg-white border-0"></hr> 
+
+                    <div>
+                        <p className = "text-white font-bold text-sm">
+                            Current week {CurrentWeek}
+                        </p>                        
+                    </div>
                     
                     
                     <div className="flex flex-row justify-center">                        
@@ -347,3 +352,31 @@ function WeekTab(params) {
                     // </div>
     
 export default MyBlockSchedule;
+
+    // //
+    // // TabBar()
+    // // ========
+    // // This function creates a dynamic list of clickable tabs for the tabbed-dialog
+    // // that displays the set of pages for the weeks in this schedule.
+    // // 
+    // function TabBar() {        
+    //     const items = []; 
+    //     for (let index = 0; index < MaxWeek; index++) {   
+    //         items.push(
+    //             <div>
+    //                 <button className="text-sm py-1 px-1 border mb-0 mt-0 ml-0"                                                                    
+    //                         id={"Week" + (index + 1)}
+    //                         style={{color: 'white', backgroundColor: '#9ca3af', width: "100px" }}                             
+    //                         onClick={(e) => {
+    //                             tabClick(e);
+    //                             //setTabColour(CurrentWeek, 'white', '#9ca3af');                                
+    //                             //setCurrentWeek(e.id);  
+    //                             //setTabColour(CurrentWeek, 'black', "white");                                                    
+    //                         }}>
+    //                     {"WEEK " + (index + 1)}
+    //                 </button>
+    //             </div>                             
+    //         )             
+    //     };
+    //     return items; 
+    //}
