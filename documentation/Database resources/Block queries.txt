@@ -4,21 +4,32 @@ Exercise Table
 
 DROP TABLE IF EXISTS public."Exercise";
 
-CREATE TABLE IF NOT EXISTS public."Exercise"
-(
-    "exercise_ID" smallint NOT NULL DEFAULT nextval('"Exercise_exercise_ID_seq"'::regclass),
+DROP TABLE IF EXISTS public."Exercise";
+
+CREATE TABLE IF NOT EXISTS public."Exercise" (
+    "exercise_ID" smallint,
     name character varying(30) COLLATE pg_catalog."default",
     video_link character varying(50) COLLATE pg_catalog."default",
     CONSTRAINT "Exercise_pkey" PRIMARY KEY ("exercise_ID")
 )
-
-TABLESPACE pg_default;
 
 ALTER TABLE IF EXISTS public."Exercise"
     OWNER to badger;
 
 COMMENT ON TABLE public."Exercise"
     IS 'This is the table of exercises that are used to create sets in a client''s block schedule.';
+
+CREATE SEQUENCE Exercise_exercise_ID_seq;
+
+ALTER TABLE "Exercise" ALTER COLUMN "exercise_ID" 
+SET DEFAULT nextval('Exercise_exercise_ID_seq');
+
+ALTER SEQUENCE Exercise_exercise_ID_seq RESTART WITH 1; 
+
+====================================================================================================
+
+
+
 
 INSERT INTO "Exercise" ("name", "video_link") 
 VALUES ('Low Bar Squat TS1', 'Low_Bar_Squat_TS1.mp4');
@@ -52,6 +63,9 @@ VALUES ('Comp Bench TS5', 'Comp Bench_TS5.mp4');
 
 INSERT INTO "Exercise" ("name", "video_link") 
 VALUES ('SA Lat Pulldown', 'SA_Lat_Pulldown.mp4');
+
+INSERT INTO "Exercise" ("name", "video_link") 
+VALUES ('Cable OH Tricept Extension', 'Cable OH Tricept Extension.mp4');
 
 
 Schedule Table
