@@ -21,33 +21,43 @@ function ScheduleLine(params) {
             headerText = "DAY " + params.day;
         }
 
+        // text-base mb-0 mt-0 ml-2 w-10
+
         return (
             <div>
-                {(headerText) && (                    
-                    <div>
-                        <div className="flex flex.row">
-                            <p className="text-white text-base border mb-0 mt-0 ml-2 w-40">
-                               DAY {params.day} 
-                            </p>
-                        </div>
-                    </div>
-                )};     
-
-                <div className="flex flex.row">
-                    <p className="text-white text-base border mb-0 mt-0 ml-2 w-40">
+                <div className="flex flex.row">                    
+                    <p className="text-white text-base border pl-1 mb-0 mt-0 ml-0 w-40">
                         {params.exercise_name} 
                     </p>
                     <div className="flex flex.col">
                         <p className="text-white text-base text-center border mb-0 mt-0 ml-0 w-10">
                             {params.sets} 
                         </p>
-                        <p className="text-white text-base text-center border mb-0 mt-0 ml-0 w-10">
+                        <p className="bg-white text-black text-base text-center border mb-0 mt-0 ml-0 w-10">
                             {params.actual_sets} 
                         </p>
-                    </div>    
-
-
-                
+                        <p className="text-white text-base text-center border mb-0 mt-0 ml-0 w-10">
+                            {params.reps} 
+                        </p>
+                        <p className="bg-white text-black text-base text-center border mb-0 mt-0 ml-0 w-10">
+                            {params.actual_reps} 
+                        </p>
+                        <p className="text-white text-base text-center border mb-0 mt-0 ml-0 w-32">
+                            {params.weights}
+                        </p>
+                        <p className="bg-white text-black text-base text-center border mb-0 mt-0 ml-0 w-32">
+                            {params.actual_weights} 
+                        </p>
+                        <p className="text-white text-base text-center border mb-0 mt-0 ml-0 w-48">
+                            {params.velocity_based_metrics} 
+                        </p>
+                        <p className="bg-white text-black text-base text-center border mb-0 mt-0 ml-0 w-48">
+                            {params.notes} 
+                        </p>
+                        <p className="text-white text-base text-center border mb-0 mt-0 ml-0 w-14">
+                            {params.E1RM} 
+                        </p>
+                    </div> 
                 </div>           
             </div>
         )
