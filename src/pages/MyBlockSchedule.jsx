@@ -37,6 +37,7 @@ function MyBlockSchedule() {
     // for this block.    // 
     const [Schedule, setSchedule] = useState([]);
     
+    const [PrevDay, setPrevDay] = useState(0);
   
     //
     // Authentication and Navigation()
@@ -248,26 +249,23 @@ function MyBlockSchedule() {
                     <div className="flex flex-row">
                         <TabBar/>         
                     </div>    
-                    <hr className="h-px my-0 bg-white border-0"></hr> 
-
-                    <div>
-                        <p className = "text-white font-bold text-sm">
-                            Current week {CurrentWeek}
-                        </p>                        
-                    </div>
-
-                    <br></br>
-
+                    <hr className="h-px my-0 bg-white border-0"></hr>                     
+                    
                     <div>
                         {Schedule.map(line => (
-
                              <ScheduleLine
                                 activeWeek = {CurrentWeek}
+                                day = {line.day}
                                 week = {line.week}                                
                                 key = {line.schedule_ID}
                                 seq_ID = {line.seq_ID}
                                 exercise_name = {line.exercise_name}
-                             />                        
+                                sets = {line.sets}
+                                actual_sets = {line.actual_sets}
+                                reps = {line.reps}
+                                actual_reps = {line.actual_reps}
+                                PrevDay = {PrevDay} setPrevDay = {setPrevDay}
+                            />                        
                          ))}
                     </div>
                     
