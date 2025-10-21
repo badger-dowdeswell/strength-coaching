@@ -782,18 +782,18 @@ app.get('/api/getSchedule', async(request, response) => {
     const user_ID = request.query.user_ID;
     const JWT = request.query.JWT;    
     const block = request.query.block;
-    const week = request.query.week;
+    //const week = request.query.week;
     
     if (!verifyJWT(JWT)) {
         response.status(403).send("Not authorised");        
     } else {
-        const sqlSelectCmd = 'SELECT *, "Exercise"."name" AS "exercise_name", "Exercise"."video_link" AS "video_link" ' +        
-                            'FROM "Schedule" ' +
-                            'LEFT JOIN "Exercise" AS "Exercise" ON "Exercise"."exercise_ID" = "Schedule"."exercise_ID" ' +
-                            'WHERE "user_ID" = ' + "'" + user_ID + "' " +
-                            'AND "block" = ' + "'" + block + "' " +
-                            'AND "week" = ' + "'" + week + "' " +  
-                            'ORDER BY "day" ASC, "seq_ID" ASC';
+        const sqlSelectCmd = 'SELECT *, "Exercise"."name" AS "exercise_name", ' +
+                             ' "Exercise"."video_link" AS "video_link" ' +        
+                             'FROM "Schedule" LEFT JOIN "Exercise" AS "Exercise" ON ' +
+                             '"Exercise"."exercise_ID" = "Schedule"."exercise_ID" ' +
+                             'WHERE "user_ID" = ' + "'" + user_ID + "' " +
+                             'AND "block" = ' + "'" + block + "' " +                             
+                             'ORDER BY "week" ASC, "day" ASC, "seq_ID" ASC';
                             
         db.query(sqlSelectCmd, (err, result) => {
             if (!err) {
@@ -813,29 +813,6 @@ app.get('/api/getSchedule', async(request, response) => {
         });
     }    
 }); 
-
-
-// app.get('/api/getUserByEmail', async (request, response) => {
-//     const email_address = request.query.email_address;
-//     // eslint-disable-next-line no-useless-concat
-//     const sqlSelectCmd = 'SELECT * FROM "User" WHERE "email_address" ILIKE ' + "'" + email_address + "';";
-//     db.query(sqlSelectCmd, (err, result) => {
-//         if (!err) {
-//             if (result.rows[0] !== undefined) {
-//                 logmsg("/api/getUserByEmail: user found with the email address " + email_address);
-//                 response.setHeader("Content-Type", "application/json");
-//                 response.status(200).json(result.rows[0]);
-//             } else {
-//                 logmsg("/api/getUserByEmail: no user has registered the email address " + email_address);
-//                 response.setHeader("Content-Type", "application/json");
-//                 response.status(404).send('User not found');
-//             }
-//         } else {
-//             logmsg("/api/getRegistrantByEmail returned error" + err + "\n" + sqlSelectCmd);
-//             response.status(500).send('Returned error' + err);            
-//         }
-//     });
-// });
 
 // 
 // sendMail()

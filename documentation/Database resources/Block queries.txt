@@ -126,6 +126,14 @@ LEFT JOIN "Exercise" AS "Exercise" ON "Exercise"."exercise_ID" = "Schedule"."exe
 WHERE "user_ID" = '1' AND "block" = '1' AND "week" = '1' ORDER BY "day" ASC, "seq_ID" ASC;
 
 ==========================================================================================
+SELECT "schedule_ID", "user_ID", "week", "day", "Exercise"."name" AS "exercise_name", 
+       "sets", "actual_sets", "reps", "actual_reps", "rpe" 
+       "actual_rpe", "lower_weight", "upper_weight", "actual_weight", "velocity_based_metrics", "notes", "E1RM" 
+FROM "Schedule"
+LEFT JOIN "Exercise" AS "Exercise" ON "Exercise"."exercise_ID" = "Schedule"."exercise_ID"
+WHERE "block" = '1' AND "user_ID" = '1' ORDER BY "week" ASC, "day" ASC, "seq_ID" ASC;
+
+==========================================================================================
 
 Week 1 - Day 1
 ==============

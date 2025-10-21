@@ -69,8 +69,6 @@ function MyBlockSchedule() {
     const [state, setState] = useState(states.UNDEFINED);
 
     useEffect(() => {    
-        //var error = false;
-        
         switch (state) {            
             case states.UNDEFINED:
                 // Load the primary client information and block schedule lines.                
@@ -124,7 +122,9 @@ function MyBlockSchedule() {
                 // load the schedule lines for this block, this week.
                 try {
                     let response = await axios.get(baseURL + "getSchedule?user_ID=" + user_ID + "&JWT=" + JWT + 
-                                            "&block=" + block + "&week=" + week);
+                                            "&block=" + block);
+                    // RA_BRD let response = await axios.get(baseURL + "getSchedule?user_ID=" + user_ID + "&JWT=" + JWT + 
+                    //        "&block=" + block + "&week=" + week);
                     if (response.status === 200) {
                         //console.log("loadSchedule - loaded schedule\n");                
                         setSchedule(response.data);  
@@ -168,31 +168,7 @@ function MyBlockSchedule() {
             console.log(line);            
         }        
     };  
-    
-    // for (let index = 0; index < MaxWeek; index++) {                                    
-    //                                 items.push(
-    //                                     <div>
-    //                                         <button className="bg-white text-black text-sm py-1 px-1 border
-    //                                                         mb-0 mt-0 ml-0"
-    //                                                 id={"Week" + index}
-    //                                                 style={{ width: "100px" }}
-    //                                                 onClick={() => {
-    //                                                         // setTabColor(currentPage, pages.PAGE_1);
-    //                                                         setCurrentWeek(index);
-    //                                                 }}>
-    //                                             {"WEEK " + index}
-    //                                         </button> 
-    //                                     </div> 
-    //                                 )};                                   
-    //                             )}
-    // {(() => { 
-    //                             const items = [];                                 
-    //                             items.push(<div className="flex flex-row">);                                                          
-                                
-    //                             items.push(</div>); 
-    //                             return <>{items}</>;                                                                 
-    //                         })()}    
-
+        
     //
     // TabBar()
     // ========
@@ -219,19 +195,25 @@ function MyBlockSchedule() {
         return items; 
     }
 
+    //
+    // useEffect() CurrentWeek
+    // =======================
+    // This triggers the screen refresh when the client selects a different
+    // week.
+    //
     useEffect(() => {
         console.log("useEffect " + CurrentWeek);
         setTabColour(CurrentWeek, 0);
         
     }, [CurrentWeek]);
 
-    
-
     //
-    // setTabColour()
+    // setTabColour() RA_BRD
     // ==============
-    function setTabColour(newTab, previousTab) {          
-        
+    // Switches the colour of the tab page that is being activated and resets
+    // the colour of the tab that was previously active.
+    // 
+    function setTabColour(newTab, previousTab) { 
         // Reset the colour of the current tab to grey.
         //var el = document.getElementById(currentTab);
         //console.log("currentTab " + el.id)
@@ -240,9 +222,9 @@ function MyBlockSchedule() {
     
         if (newTab > 0) {
             // Highlight the new tab by setting its colour to white. 
-            console.log("setTabColour " + newTab );       
+            //console.log("setTabColour " + newTab );       
             var el = document.getElementById("TabWeek_" + newTab);
-            console.log("document " + el.id);
+            //console.log("document " + el.id);
             el.style.backgroundColor = "#ffffff"; 
         }      
     }
@@ -273,7 +255,21 @@ function MyBlockSchedule() {
                             Current week {CurrentWeek}
                         </p>                        
                     </div>
-                    
+
+                    <br></br>
+
+                    <div>
+                        {Schedule.map(line => (
+
+                             <ScheduleLine
+                                activeWeek = {CurrentWeek}
+                                week = {line.week}                                
+                                key = {line.schedule_ID}
+                                seq_ID = {line.seq_ID}
+                                exercise_name = {line.exercise_name}
+                             />                        
+                         ))}
+                    </div>
                     
                     <div className="flex flex-row justify-center">                        
                         <button className="bg-cyan-600 text-white font-bold text-sm py-2 px-2 rounded

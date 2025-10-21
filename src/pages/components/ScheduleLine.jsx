@@ -11,13 +11,20 @@
 //  
 function ScheduleLine(params) {
     console.log("seq_ID " + params.seq_ID);
-    return (
-        <div>
-            <p className="text-white">sequence</p>
-            <p className="text-white">{params.seq_ID}</p>
-            <p className="text-white">{params.exercise_name}</p>
-        </div>
-    )
+
+    if (params.activeWeek === params.week) {
+        return (
+            <div>
+                <p className="text-white">sequence {params.seq_ID} {params.exercise_name} </p>            
+            </div>
+        )
+    } else {
+        return null;
+    }    
 };
 
 export default ScheduleLine;
+
+// <div>
+//   <p className="text-white">sequence {params.seq_ID} {params.exercise_name} </p>            
+// </div>
