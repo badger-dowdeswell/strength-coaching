@@ -30,6 +30,8 @@ function MyBlockSchedule() {
     const [Block, setBlock] = useState(0);
     const [Week, setWeek] = useState(0); 
     const [CurrentWeek, setCurrentWeek] = useState(0);
+    const [CurrentDay, setCurrentDay] = useState(0);
+    
     const [MaxWeek, setMaxWeek]= useState(0);   
     const [StartDate, setStartDate] = useState(0);
 
@@ -198,6 +200,33 @@ function MyBlockSchedule() {
     }
 
     //
+    // DayTabBar()
+    // ===========
+    // This function creates a dynamic list of clickable tabs for the tabbed-dialog
+    // that displays the set of pages for the weeks in this schedule.
+    // 
+    function DayTabBar() { 
+        const days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];             
+        const items = [];         
+        for (let index = 0; index < 7; index++) {             
+            items.push(
+                <div>
+                    <button className="bg-gray-400 text-black text-sm py-1 px-1 border
+                                       mb-0 mt-0 ml-0"                                                                
+                            id={"TabDay_" + (index + 1)} 
+                            style={{ width: "100px" }}                                                      
+                            onClick={(e) => {                                
+                                setCurrentDay(index + 1);                                                 
+                            }}>
+                        {days[index]}
+                    </button>
+                </div>                             
+            )             
+        };
+        return items; 
+    }
+
+    //
     // useEffect() CurrentWeek
     // =======================
     // This triggers the screen refresh when the client selects a different
@@ -249,7 +278,11 @@ function MyBlockSchedule() {
                     <div className="flex flex-row">
                         <TabBar/>         
                     </div>    
-                    <hr className="h-px my-0 bg-white border-0"></hr>  
+                    
+                    <div className="flex flex-row">
+                        <DayTabBar/>         
+                    </div> 
+                    <hr className="h-px my-0 bg-white border-0"></hr>   
 
                     <p className="text-white text-center font-bold text-xl mt-5">My Block {Block} Week {CurrentWeek} Schedule</p>                   
                     
