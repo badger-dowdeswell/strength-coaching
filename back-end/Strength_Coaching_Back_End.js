@@ -115,6 +115,8 @@
 // 30.09.2025 BRD Official release of version 1.5. This contains all the 
 //                Phase 1 foundational back-end functionality. This includes 
 //                an upgrade to Node.js v24.9.0
+// 13.10.2025 BRD Added the getSchedule API to load the client's training schedule
+//                for the specified block and week.         
 //
 import express from 'express';
 const app = express();
@@ -769,6 +771,47 @@ app.put('/api/unlockUser', async(request, response) => {
             }
         }
     );    
+}); 
+
+//
+// getSchedule()
+// =============
+// Reads the client's training schedule for the specified block and week.
+//         
+app.get('/api/getSchedule', async(request, response) => { 
+    const user_ID = request.query.user_ID;
+    const JWT = request.query.JWT;    
+    const block = request.query.block;
+    //const week = request.query.week;
+    
+    if (!verifyJWT(JWT)) {
+        response.status(403).send("Not authorised");        
+    } else {
+        const sqlSelectCmd = 'SELECT *, "Exercise"."name" AS "exercise_name", ' +
+                             ' "Exercise"."video_link" AS "video_link" ' +        
+                             'FROM "Schedule" LEFT JOIN "Exercise" AS "Exercise" ON ' +
+                             '"Exercise"."exercise_ID" = "Schedule"."exercise_ID" ' +
+                             'WHERE "user_ID" = ' + "'" + user_ID + "' " +
+                             'AND "block" = ' + "'" + block + "' " +                             
+                             'ORDER BY "week" ASC, "day" ASC, "seq_ID" ASC';
+                            
+        db.query(sqlSelectCmd, (err, result) => {
+            if (!err) {
+                if (result.rows[0] !== undefined) {
+                    logmsg("/api/getSchedule: schedule found");
+                    response.setHeader("Content-Type", "application/json");
+                    response.status(200).json(result.rows);
+                } else {
+                    logmsg("/api/getSchedule: no schedule was found");
+                    response.setHeader("Content-Type", "application/json");
+                    response.status(404).send('Schedule not found');
+                }
+            } else {
+                logmsg("/api/getSchedule returned error" + err + "\n" + sqlSelectCmd);
+                response.status(500).send('Returned error' + err);            
+            }
+        });
+    }    
 }); 
 
 // 

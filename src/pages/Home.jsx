@@ -46,8 +46,7 @@ function Home() {
     }, [userID, JWT]);
 
     let userName = sessionStorage.getItem("FirstName") + " " + sessionStorage.getItem("LastName");  
-    let userImage = "./userImages/" + userID + ".png";
-    console.log("UserID " + userID);
+    let userImage = "./userImages/" + userID + ".png";    
     var userRole = "";   
     switch (sessionStorage.getItem("UserAuthority")) {
         case "A":

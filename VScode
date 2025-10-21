@@ -1,8 +1,0 @@
-[Desktop Entry]
-Name=VScode
-Encoding=UTF-8
-Version=1.0
-Type=Application
-Terminal=true
-Exec=/home/badger/dev/strength-research/code .
-Icon=/home/badger/Dropbox/null/configuration/icons/vscode.png
