@@ -71,13 +71,15 @@ function MyBlockSchedule() {
     useEffect(() => {    
         switch (state) {            
             case states.UNDEFINED:
-                // Load the primary client information and block schedule lines.                
+                // Load the primary client information and block schedule lines.
+                setCurrentWeek(0);                
                 loadSchedule(user_ID);
                 break;            
 
             case states.LOADED:
                 // A schedule was found for this client for this period.
-                debugSchedule();
+                //debugSchedule(); 
+                setCurrentWeek(1);               
                 break;
                 
             case states.NOT_AUTHENTICATED:
@@ -110,10 +112,9 @@ function MyBlockSchedule() {
             if (response.status === 200) { 
                 // RA_BRD - need to add to the clients profile.                
                 setBlock(1);
-                setWeek(1);
+                //setWeek(1);
                 setMaxWeek(6)
-                setCurrentWeek(1);
-
+                
                 // RA_BRD - load temporary variables within this scope.
                 block = 1;
                 week = 1;
@@ -176,8 +177,8 @@ function MyBlockSchedule() {
     // that displays the set of pages for the weeks in this schedule.
     // 
     function TabBar() {        
-        const items = []; 
-        for (let index = 0; index < MaxWeek; index++) {   
+        const items = [];         
+        for (let index = 0; index < MaxWeek; index++) {             
             items.push(
                 <div>
                     <button className="bg-gray-400 text-black text-sm py-1 px-1 border
@@ -202,9 +203,8 @@ function MyBlockSchedule() {
     // week.
     //
     useEffect(() => {
-        console.log("useEffect " + CurrentWeek);
-        setTabColour(CurrentWeek, 0);
-        
+        //console.log("useEffect " + CurrentWeek);
+        setTabColour(CurrentWeek, 0);        
     }, [CurrentWeek]);
 
     //
