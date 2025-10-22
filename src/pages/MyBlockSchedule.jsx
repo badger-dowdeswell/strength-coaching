@@ -243,10 +243,6 @@ function MyBlockSchedule() {
             let el = document.getElementById("TabDay_" + CurrentDay); 
             el.style.backgroundColor = "#ffffff";        
         }
-
-        LineCount.current = 0;
-        //console.log("useEffect LineCount " + LineCount.current);        
-
     }, [CurrentWeek, CurrentDay] );
 
     //
@@ -309,8 +305,7 @@ function MyBlockSchedule() {
                         {Schedule.map(line => (
                             <ScheduleLine
                                 activeWeek = {CurrentWeek}
-                                activeDay = {CurrentDay}
-                                LineCount = {LineCount} 
+                                activeDay = {CurrentDay}                                
                                 day = {line.day}
                                 week = {line.week}                                
                                 key = {line.schedule_ID}
