@@ -13,7 +13,10 @@
 // ================
 // 30.07.2025 BRD Original version.
 //  
-function ScheduleLine(params) { 
+import {useState} from "react";
+
+function ScheduleLine(params) {    
+
     if ((params.activeWeek === params.week) && (params.activeDay === params.day)) {
         return (
             <div>
@@ -24,10 +27,10 @@ function ScheduleLine(params) {
                     <div className="flex flex.col">
                         <p className="text-white text-base text-center border mb-0 mt-0 ml-0 w-10">
                             {params.sets} 
-                        </p>
+                        </p> 
                         <p className="bg-white text-black text-base text-center border mb-0 mt-0 ml-0 w-10">
                             {params.actual_sets} 
-                        </p>
+                        </p> 
                         <p className="text-white text-base text-center border mb-0 mt-0 ml-0 w-10">
                             {params.reps} 
                         </p>
