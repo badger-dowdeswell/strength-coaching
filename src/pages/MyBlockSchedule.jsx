@@ -281,7 +281,7 @@ function MyBlockSchedule() {
                     
                     <div className="flex flex.row text-white">                        
                         <p className="text-center border mb-0 mt-5 ml-0 w-40">
-                            DAY {CurrentDay} &nbsp; &nbsp;  Exercises 
+                            Exercises 
                         </p>
                         <p className="text-center border mb-0 mt-5 ml-0 w-20">
                             Sets 
