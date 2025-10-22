@@ -6,8 +6,8 @@
 // to report their training progress on the specified exercise.
 //
 // The component processes and formats the schedule one line at a time. If the
-// data does not belong to the specified week, a null element is returned so that
-// line is not displayed on the wrong week.
+// data does not belong to the specified week, or the specific day, a null 
+// element is returned so that line is not displayed on the wrong page.
 //
 // Revision History
 // ================
@@ -15,13 +15,11 @@
 //  
 function ScheduleLine(params) {  
     var headerText = "";  
-    if (params.activeWeek === params.week) {
+    if ((params.activeWeek === params.week) && (params.activeDay === params.day)) {
         if (params.PrevDay !== params.day) {
             //params.setPrevDay(params.day);
             headerText = "DAY " + params.day;
         }
-
-        // text-base mb-0 mt-0 ml-2 w-10
 
         return (
             <div>

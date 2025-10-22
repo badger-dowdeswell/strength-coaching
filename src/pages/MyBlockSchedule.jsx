@@ -39,8 +39,6 @@ function MyBlockSchedule() {
     // for this block.    // 
     const [Schedule, setSchedule] = useState([]);
     
-    const [PrevDay, setPrevDay] = useState(0);
-  
     //
     // Authentication and Navigation()
     // ===============================
@@ -82,7 +80,8 @@ function MyBlockSchedule() {
             case states.LOADED:
                 // A schedule was found for this client for this period.
                 //debugSchedule(); 
-                setCurrentWeek(1);               
+                setCurrentWeek(1); 
+                setCurrentDay(1);              
                 break;
                 
             case states.NOT_AUTHENTICATED:
@@ -114,9 +113,8 @@ function MyBlockSchedule() {
             let response = await axios.get(baseURL + "getUser?user_ID=" + user_ID + "&JWT=" + JWT);
             if (response.status === 200) { 
                 // RA_BRD - need to add to the clients profile.                
-                setBlock(1);
-                //setWeek(1);
-                setMaxWeek(6)
+                setBlock(1);                
+                setMaxWeek(8)
                 
                 // RA_BRD - load temporary variables within this scope.
                 block = 1;
@@ -174,12 +172,13 @@ function MyBlockSchedule() {
     };  
         
     //
-    // TabBar()
-    // ========
+    // WeekTabBar()
+    // ============
     // This function creates a dynamic list of clickable tabs for the tabbed-dialog
     // that displays the set of pages for the weeks in this schedule.
     // 
-    function TabBar() {        
+    function WeekTabBar() { 
+        // eslint-disable-next-line react/no-array-index-key       
         const items = [];         
         for (let index = 0; index < MaxWeek; index++) {             
             items.push(
@@ -206,6 +205,7 @@ function MyBlockSchedule() {
     // that displays the set of pages for the weeks in this schedule.
     // 
     function DayTabBar() { 
+        // eslint-disable-next-line react/no-array-index-key
         const days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];             
         const items = [];         
         for (let index = 0; index < 7; index++) {             
@@ -227,37 +227,34 @@ function MyBlockSchedule() {
     }
 
     //
-    // useEffect() CurrentWeek
-    // =======================
-    // This triggers the screen refresh when the client selects a different
-    // week.
+    // DayWeekChange[]
+    // ===============
+    // This triggers the screen refresh when the client selects a different day
+    // or week.
     //
-    useEffect(() => {
-        //console.log("useEffect " + CurrentWeek);
-        setTabColour(CurrentWeek, 0);        
-    }, [CurrentWeek]);
+    //useEffect(() => {
+    //    console.log("useEffect " + CurrentWeek + " " + CurrentDay);
+    //    setTabColour(CurrentWeek, 0);        
+    //}, [CurrentWeek, CurrentDay]);
 
     //
-    // setTabColour() RA_BRD
+    // setTabColour() 
     // ==============
     // Switches the colour of the tab page that is being activated and resets
     // the colour of the tab that was previously active.
     // 
-    function setTabColour(newTab, previousTab) { 
-        // Reset the colour of the current tab to grey.
-        //var el = document.getElementById(currentTab);
-        //console.log("currentTab " + el.id)
-        //el.style.color = "black";
-        //el.style.backgroundColor = "white";
-    
-        if (newTab > 0) {
-            // Highlight the new tab by setting its colour to white. 
-            //console.log("setTabColour " + newTab );       
-            var el = document.getElementById("TabWeek_" + newTab);
-            //console.log("document " + el.id);
-            el.style.backgroundColor = "#ffffff"; 
-        }      
-    }
+    //function setTabColour() { 
+    useEffect(() => {
+        if (CurrentWeek > 0) {
+            let el = document.getElementById("TabWeek_" + CurrentWeek); 
+            el.style.backgroundColor = "#ffffff";        
+        }
+
+        if (CurrentDay > 0) {
+            let el = document.getElementById("TabDay_" + CurrentDay); 
+            el.style.backgroundColor = "#ffffff";        
+        }
+    }, [CurrentWeek, CurrentDay]);
 
     //
     // MyBlockSchedule
@@ -276,7 +273,7 @@ function MyBlockSchedule() {
                 <div className="flex flex-col box-border border-2 rounded-lg    
                                 ml-10 mr-10 h-auto w-auto">
                     <div className="flex flex-row">
-                        <TabBar/>         
+                        <WeekTabBar/>         
                     </div>    
                     
                     <div className="flex flex-row">
@@ -284,11 +281,12 @@ function MyBlockSchedule() {
                     </div> 
                     <hr className="h-px my-0 bg-white border-0"></hr>   
 
-                    <p className="text-white text-center font-bold text-xl mt-5">My Block {Block} Week {CurrentWeek} Schedule</p>                   
+                    <p className="text-white text-center font-bold text-xl mt-5">
+                        My Block {Block} Week {CurrentWeek} Day {CurrentDay} Training Schedule</p>                   
                     
                     <div className="flex flex.row text-white">                        
                         <p className="text-center border mb-0 mt-5 ml-0 w-40">
-                            DAY 1 &nbsp; &nbsp;  Exercise 
+                            DAY {CurrentDay} &nbsp; &nbsp;  Exercise 
                         </p>
                         <p className="text-center border mb-0 mt-5 ml-0 w-20">
                             Sets 
@@ -317,6 +315,7 @@ function MyBlockSchedule() {
                         {Schedule.map(line => (
                              <ScheduleLine
                                 activeWeek = {CurrentWeek}
+                                activeDay = {CurrentDay}
                                 day = {line.day}
                                 week = {line.week}                                
                                 key = {line.schedule_ID}
@@ -330,8 +329,7 @@ function MyBlockSchedule() {
                                 actual_weights = {line.actual_weight}
                                 velocity_based_metrics = {line.velocity_based_metrics}
                                 notes = {line.notes}
-                                E1RM = {line.E1RM}
-                                PrevDay = {PrevDay} setPrevDay = {setPrevDay}                                
+                                E1RM = {line.E1RM}                                                               
                             />                        
                          ))}
                     </div>
@@ -339,6 +337,22 @@ function MyBlockSchedule() {
                     <br></br>
                     
                     <div className="flex flex-row justify-center">
+                        <button className="bg-cyan-600 text-white font-bold text-sm py-2 px-2 rounded
+                                            mb-6 mt-2 ml-8"
+                            id="Save"
+                            style={{ width: "100px" }}
+                            onClick={() => {                                
+                                //if (IsChanged) {
+                                    //setTabColor(currentPage, pages.PAGE_1);
+                                //   s/etCurrentPage(pages.PAGE_1);
+                                    //setState(states.CANCELLING);
+                                //} else {
+                                          
+                                //}    
+                            }}>
+                            Save
+                        </button>  
+
                         <button className="bg-cyan-600 text-white font-bold text-sm py-2 px-2 rounded
                                             mb-6 mt-2 ml-8"
                             id="Back"
