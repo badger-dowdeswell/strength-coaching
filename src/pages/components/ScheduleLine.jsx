@@ -13,17 +13,8 @@
 // ================
 // 30.07.2025 BRD Original version.
 //  
-function ScheduleLine(params) {  
-    //var headerText = "";  
+function ScheduleLine(params) { 
     if ((params.activeWeek === params.week) && (params.activeDay === params.day)) {
-        //if (params.PrevDay !== params.day) {
-            //params.setPrevDay(params.day);
-        //    headerText = "DAY " + params.day;
-        //}
-
-        console.log("ScheduleLine LineCount " + params.LineCount.current); 
-        params.LineCount.current = params.LineCount.current + 1;   
-
         return (
             <div>
                 <div className="flex flex.row">                    

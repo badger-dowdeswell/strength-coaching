@@ -27,16 +27,12 @@ const axios = Axios;
 function MyBlockSchedule() {
     let navigate = useNavigate();  
 
-    const [Block, setBlock] = useState(0);
-    // const [Week, setWeek] = useState(0); 
+    const [Block, setBlock] = useState(0);    
     const [CurrentWeek, setCurrentWeek] = useState(0);
     const [CurrentDay, setCurrentDay] = useState(0);
     
     const [MaxWeek, setMaxWeek]= useState(0);   
-    // const [StartDate, setStartDate] = useState(0);
-
-    var LineCount = useRef(0);    
-
+        
     // The array of objects that hold one one line for each exercise specified
     // for this block.   
     const [Schedule, setSchedule] = useState([]);
@@ -83,7 +79,9 @@ function MyBlockSchedule() {
                 // A schedule was found for this client for this period.
                 //debugSchedule(); 
                 setCurrentWeek(1); 
-                setCurrentDay(1);              
+                setCurrentDay(1);  
+                //Schedule[0].exercise_name = "ha ha"; 
+                //console.log("LOADED " + Schedule[0].exercise_name);           
                 break;
                 
             case states.NOT_AUTHENTICATED:
@@ -116,7 +114,7 @@ function MyBlockSchedule() {
             if (response.status === 200) { 
                 // RA_BRD - need to add to the clients profile.                
                 setBlock(1);                
-                setMaxWeek(8)
+                setMaxWeek(9)
                 
                 // RA_BRD - load temporary variables within this scope.
                 block = 1;
@@ -172,7 +170,8 @@ function MyBlockSchedule() {
                    Schedule[ptr].velocity_based_metrics;
 
             console.log(line);            
-        }        
+        }         
+        
     };  
         
     //
@@ -246,7 +245,7 @@ function MyBlockSchedule() {
         }
 
         LineCount.current = 0;
-        console.log("useEffect LineCount " + LineCount.current);        
+        //console.log("useEffect LineCount " + LineCount.current);        
 
     }, [CurrentWeek, CurrentDay] );
 
@@ -330,40 +329,41 @@ function MyBlockSchedule() {
                         ))}
                     </div>
 
-                    
-                    <div className="flex flex-row justify-center mt-5">
-                        <button className="bg-cyan-600 text-white font-bold text-sm py-2 px-2 rounded
-                                            mb-6 mt-2 ml-8"
-                            id="Save"
-                            style={{ width: "100px" }}
-                            onClick={() => {                                
-                                //if (IsChanged) {
-                                    //setTabColor(currentPage, pages.PAGE_1);
-                                //   s/etCurrentPage(pages.PAGE_1);
-                                    //setState(states.CANCELLING);
-                                //} else {
-                                          
-                                //}    
-                            }}>
-                            Save
-                        </button>  
+                    <div className="mt-auto">    
+                        <div className="flex flex-row justify-center mt-5">
+                            <button className="bg-cyan-600 text-white font-bold text-sm py-2 px-2 rounded
+                                                mb-6 mt-2 ml-8"
+                                id="Save"
+                                style={{ width: "100px" }}
+                                onClick={() => {                                
+                                    //if (IsChanged) {
+                                        //setTabColor(currentPage, pages.PAGE_1);
+                                    //   s/etCurrentPage(pages.PAGE_1);
+                                        //setState(states.CANCELLING);
+                                    //} else {
+                                            
+                                    //}    
+                                }}>
+                                Save
+                            </button>  
 
-                        <button className="bg-cyan-600 text-white font-bold text-sm py-2 px-2 rounded
-                                            mb-6 mt-2 ml-8"
-                            id="Back"
-                            style={{ width: "100px" }}
-                            onClick={() => {                                
-                                //if (IsChanged) {
-                                    //setTabColor(currentPage, pages.PAGE_1);
-                                //   s/etCurrentPage(pages.PAGE_1);
-                                    //setState(states.CANCELLING);
-                                //} else {
-                                    navigate("/Home");         
-                                //}    
-                            }}>
-                            Back
-                        </button>  
-                    </div> 
+                            <button className="bg-cyan-600 text-white font-bold text-sm py-2 px-2 rounded
+                                                mb-6 mt-2 ml-8"
+                                id="Back"
+                                style={{ width: "100px" }}
+                                onClick={() => {                                
+                                    //if (IsChanged) {
+                                        //setTabColor(currentPage, pages.PAGE_1);
+                                    //   s/etCurrentPage(pages.PAGE_1);
+                                        //setState(states.CANCELLING);
+                                    //} else {
+                                        navigate("/Home");         
+                                    //}    
+                                }}>
+                                Back
+                            </button>  
+                        </div> 
+                    </div>
                 </div>                
             </div>  
         </div>
