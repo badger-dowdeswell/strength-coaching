@@ -2,7 +2,7 @@
 // MY BLOCK TRAINING SCHEDULE
 // ==========================
 // This is the complete schedule for the client's training sessions for the
-// current block, listed by week and session.
+// current block, listed by week and day.
 //
 // Revision History
 // ================
@@ -28,21 +28,23 @@ function MyBlockSchedule() {
     let navigate = useNavigate();  
 
     const [Block, setBlock] = useState(0);
-    const [Week, setWeek] = useState(0); 
+    // const [Week, setWeek] = useState(0); 
     const [CurrentWeek, setCurrentWeek] = useState(0);
     const [CurrentDay, setCurrentDay] = useState(0);
     
     const [MaxWeek, setMaxWeek]= useState(0);   
-    const [StartDate, setStartDate] = useState(0);
+    // const [StartDate, setStartDate] = useState(0);
+
+    var LineCount = useRef(0);    
 
     // The array of objects that hold one one line for each exercise specified
-    // for this block.    // 
+    // for this block.   
     const [Schedule, setSchedule] = useState([]);
     
     //
     // Authentication and Navigation()
     // ===============================
-    // Checks to see if the local storage has a userID set to ensure that only
+    // Checks to see if the local storage has a user_ID set to ensure that only
     // authenticated uses can navigate around the application. This is also a
     // convenient way of logging out. When the user_ID is set to blank, via the
     // there will no longer an authenticated user.
@@ -95,7 +97,7 @@ function MyBlockSchedule() {
                 break;
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [state]);
+    }, [state] );
 
     //
     // loadSchedule()
@@ -152,6 +154,8 @@ function MyBlockSchedule() {
     //
     // debugSchedule()
     // ===============
+    // RA_BRD
+    //
     function debugSchedule() {
         let line = "";
         console.log("\ndebugSchedule()\n");        
@@ -177,8 +181,7 @@ function MyBlockSchedule() {
     // This function creates a dynamic list of clickable tabs for the tabbed-dialog
     // that displays the set of pages for the weeks in this schedule.
     // 
-    function WeekTabBar() { 
-        // eslint-disable-next-line react/no-array-index-key       
+    function WeekTabBar() {         
         const items = [];         
         for (let index = 0; index < MaxWeek; index++) {             
             items.push(
@@ -202,10 +205,9 @@ function MyBlockSchedule() {
     // DayTabBar()
     // ===========
     // This function creates a dynamic list of clickable tabs for the tabbed-dialog
-    // that displays the set of pages for the weeks in this schedule.
+    // that displays the set of pages for the days in this schedule.
     // 
-    function DayTabBar() { 
-        // eslint-disable-next-line react/no-array-index-key
+    function DayTabBar() {         
         const days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];             
         const items = [];         
         for (let index = 0; index < 7; index++) {             
@@ -227,23 +229,11 @@ function MyBlockSchedule() {
     }
 
     //
-    // DayWeekChange[]
-    // ===============
-    // This triggers the screen refresh when the client selects a different day
-    // or week.
-    //
-    //useEffect(() => {
-    //    console.log("useEffect " + CurrentWeek + " " + CurrentDay);
-    //    setTabColour(CurrentWeek, 0);        
-    //}, [CurrentWeek, CurrentDay]);
-
-    //
     // setTabColour() 
     // ==============
-    // Switches the colour of the tab page that is being activated and resets
-    // the colour of the tab that was previously active.
+    // Switches the colour of the tab for the current week and day that is being
+    // activated.
     // 
-    //function setTabColour() { 
     useEffect(() => {
         if (CurrentWeek > 0) {
             let el = document.getElementById("TabWeek_" + CurrentWeek); 
@@ -254,7 +244,11 @@ function MyBlockSchedule() {
             let el = document.getElementById("TabDay_" + CurrentDay); 
             el.style.backgroundColor = "#ffffff";        
         }
-    }, [CurrentWeek, CurrentDay]);
+
+        LineCount.current = 0;
+        console.log("useEffect LineCount " + LineCount.current);        
+
+    }, [CurrentWeek, CurrentDay] );
 
     //
     // MyBlockSchedule
@@ -271,7 +265,8 @@ function MyBlockSchedule() {
                             left-0 right-0 bg-gray-800 overflow-hidden">
 
                 <div className="flex flex-col box-border border-2 rounded-lg    
-                                ml-10 mr-10 h-auto w-auto">
+                                ml-10 mr-10 h-[500px] w-auto">
+                    
                     <div className="flex flex-row">
                         <WeekTabBar/>         
                     </div>    
@@ -286,7 +281,7 @@ function MyBlockSchedule() {
                     
                     <div className="flex flex.row text-white">                        
                         <p className="text-center border mb-0 mt-5 ml-0 w-40">
-                            DAY {CurrentDay} &nbsp; &nbsp;  Exercise 
+                            DAY {CurrentDay} &nbsp; &nbsp;  Exercises 
                         </p>
                         <p className="text-center border mb-0 mt-5 ml-0 w-20">
                             Sets 
@@ -313,9 +308,10 @@ function MyBlockSchedule() {
 
                     <div>
                         {Schedule.map(line => (
-                             <ScheduleLine
+                            <ScheduleLine
                                 activeWeek = {CurrentWeek}
                                 activeDay = {CurrentDay}
+                                LineCount = {LineCount} 
                                 day = {line.day}
                                 week = {line.week}                                
                                 key = {line.schedule_ID}
@@ -331,12 +327,11 @@ function MyBlockSchedule() {
                                 notes = {line.notes}
                                 E1RM = {line.E1RM}                                                               
                             />                        
-                         ))}
+                        ))}
                     </div>
 
-                    <br></br>
                     
-                    <div className="flex flex-row justify-center">
+                    <div className="flex flex-row justify-center mt-5">
                         <button className="bg-cyan-600 text-white font-bold text-sm py-2 px-2 rounded
                                             mb-6 mt-2 ml-8"
                             id="Save"
@@ -368,8 +363,8 @@ function MyBlockSchedule() {
                             }}>
                             Back
                         </button>  
-                    </div>  
-                </div>                             
+                    </div> 
+                </div>                
             </div>  
         </div>
     )
