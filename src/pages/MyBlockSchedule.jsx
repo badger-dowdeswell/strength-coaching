@@ -212,7 +212,9 @@ function MyBlockSchedule() {
         for (let index = 0; index < 7; index++) {             
             items.push(
                 <div>
-                    <button className="bg-gray-400 text-black text-sm py-1 px-1 border
+            
+    
+        <button className="bg-gray-400 text-black text-sm py-1 px-1 border
                                        mb-0 mt-0 ml-0"                                                                
                             id={"TabDay_" + (index + 1)} 
                             style={{ width: "100px" }}                                                      
@@ -295,7 +297,9 @@ function MyBlockSchedule() {
                         </p>
                         <p className="text-base text-center border mb-0 mt-5 ml-0 w-48">
                             Notes
-                        </p>  
+             
+    
+           </p>  
                         <p className="text-base text-center border mb-0 mt-5 ml-0 w-14">
                             E1RM
                         </p>     
@@ -330,14 +334,7 @@ function MyBlockSchedule() {
                                                 mb-6 mt-2 ml-8"
                                 id="Save"
                                 style={{ width: "100px" }}
-                                onClick={() => {                                
-                                    //if (IsChanged) {
-                                        //setTabColor(currentPage, pages.PAGE_1);
-                                    //   s/etCurrentPage(pages.PAGE_1);
-                                        //setState(states.CANCELLING);
-                                    //} else {
-                                            
-                                    //}    
+                                onClick={() => { 
                                 }}>
                                 Save
                             </button>  
@@ -346,10 +343,11 @@ function MyBlockSchedule() {
                                                 mb-6 mt-2 ml-8"
                                 id="Back"
                                 style={{ width: "100px" }}
-                                onClick={() => {                                
+                                onClick={() => { 
+                                    // RA_BRD                                
                                     //if (IsChanged) {
                                         //setTabColor(currentPage, pages.PAGE_1);
-                                    //   s/etCurrentPage(pages.PAGE_1);
+                                    //   setCurrentPage(pages.PAGE_1);
                                         //setState(states.CANCELLING);
                                     //} else {
                                         navigate("/Home");         
@@ -364,72 +362,7 @@ function MyBlockSchedule() {
         </div>
     )
 }
-
-//
-// WeekTab()
-// =========
-// The tabbed dialog page for the week specified.
-//
-function WeekTab(params) { 
-    //
-    // autofocus()
-    // ===========
-    // Sets the focus to the first input field automatically. This requires
-    // that just one input element per page has a ref={autoFocusID}.
-    //
-    const autofocusID = useRef(null);
-    useEffect(() => {
-        if (autofocusID.current) {
-            autofocusID.current.focus();
-        }    
-    },[]);
-
-    return (
-        <div>
-            <p className="text-white text-center font-bold text-xl mt-5">{params.Week}</p>
-        </div>
-    )
-}   
-
-
-                    // <br></br>
-
-                    // <div>
-                    //     {Schedule.map(line => (
-                    //         <ScheduleLine
-                    //             key={line.schedule_ID}
-                    //             seq_ID={line.seq_ID}
-                    //             exercise_name={line.exercise_name}
-                    //         />                        
-                    //     ))}
-                    // </div>
     
 export default MyBlockSchedule;
 
-    // //
-    // // TabBar()
-    // // ========
-    // // This function creates a dynamic list of clickable tabs for the tabbed-dialog
-    // // that displays the set of pages for the weeks in this schedule.
-    // // 
-    // function TabBar() {        
-    //     const items = []; 
-    //     for (let index = 0; index < MaxWeek; index++) {   
-    //         items.push(
-    //             <div>
-    //                 <button className="text-sm py-1 px-1 border mb-0 mt-0 ml-0"                                                                    
-    //                         id={"Week" + (index + 1)}
-    //                         style={{color: 'white', backgroundColor: '#9ca3af', width: "100px" }}                             
-    //                         onClick={(e) => {
-    //                             tabClick(e);
-    //                             //setTabColour(CurrentWeek, 'white', '#9ca3af');                                
-    //                             //setCurrentWeek(e.id);  
-    //                             //setTabColour(CurrentWeek, 'black', "white");                                                    
-    //                         }}>
-    //                     {"WEEK " + (index + 1)}
-    //                 </button>
-    //             </div>                             
-    //         )             
-    //     };
-    //     return items; 
-    //}
+    
