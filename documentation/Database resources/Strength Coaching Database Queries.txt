@@ -19,7 +19,7 @@ COMMENT ON DATABASE "StrengthResearch"
 DROP TABLE IF EXISTS public."User";
 
 CREATE TABLE public."User" (
-   "user_ID" smallserial,
+   "user_ID" smallint
    "user_authority" char,
    "password" character varying(70),
    "user_status" char,
