@@ -71,17 +71,17 @@ export default function ResetPassword() {
     //
     // Reset Password State Control
     // ============================
-    // The password reset process operates as a State Machine. This allows it to move
-    // stage-by-stage forwards and backwards, waiting at appropriate times for an
-    // async process to return a value before transitioning to a new stage. The
-    // current state is held in state, which always contains one of the
-    // pre-defined states enumerated constants.
+    // The password reset process operates as a State Machine. This allows it to
+    // move stage-by-stage forwards and backwards, waiting at appropriate times 
+    // for an async process to return a value before transitioning to a new 
+    // stage. The current state is held in state, which always contains one of
+    // the pre-defined states enumerated constants.
     //    
-    // The useState Hook ensures that the environment gets updated and re-configured 
-    // each time the state changes. This can trigger page transitions, reads and writes 
-    // from the database, or display errors that require the client to correct what 
-    // they entered. The set of possible states is defined in the states
-    // enumerated list declared above.
+    // The useState Hook ensures that the environment gets updated and 
+    // re-configured each time the state changes. This can trigger page transitions
+    // reads and writes from the database, or display errors that require the client
+    // to correct what they entered. The set of possible states is defined in the
+    // states enumerated list declared the /components/Constants.
     //        
     const [state, setState] = useState(states.UNDEFINED); 
     useEffect(() => { 
@@ -102,14 +102,12 @@ export default function ResetPassword() {
                 break;
 
             case states.PAGE_1:
-                // Display the first page that explains to the
-                // client what they need to do. It requests their
-                // registered email address.                
+                // Display the first page that explains to the client what they 
+                // need to do. It requests their registered email address.                
                 break;
 
             case states.VERIFY_PAGE_1:
-                // Verifies that the email entered belongs to
-                // a registered client.                
+                // Verifies that the email entered belongs to a registered client.                
                 verifyEmail();                
                 break; 
                 
@@ -119,8 +117,8 @@ export default function ResetPassword() {
                 break;    
                 
             case states.CLIENT_EXISTS:
-                // A client with that email address was found. Generate the token they
-                // need and generate the password reset token.
+                // A client with that email address was found. Generate the token
+                // they need and generate the password reset token.
                 generateToken(UserID);
                 break; 
 
@@ -205,10 +203,10 @@ export default function ResetPassword() {
     //
     // verifyEmail()
     // =============
-    // Verify the email address exists and then email the verification code to them.
-    // If the email is not found, inform them that you have sent the email anyway since
-    // they may be a hacker. However, if the email address is malformed or blank, tell 
-    // the client so they can correct it.
+    // Verify the email address exists and then email the verification code to 
+    // them. If the email is not found, inform them that you have sent the email
+    // anyway since they may be a hacker. However, if the email address is 
+    // malformed or blank, tell the client so they can correct it.
     //
     function verifyEmail() { 
         if (!EmailAddress.trim()) {
@@ -227,13 +225,15 @@ export default function ResetPassword() {
     //
     // checkClientExists() 
     // ===================
-    // Verifys that the client exists by loading their client record using either their email 
-    // address or the verification code they entered as a key.
+    // Verifys that the client exists by loading their client record using either
+    // their email address or the verification code they entered as a key.
     //
     const checkClientExists = async (email_address, verification_code) => {
         if (email_address.trim() !== "") {            
             try {
-                let response = await axios.get(baseURL + "getUserByEmail?email_address=" + email_address);
+                let response = await axios.get(baseURL + 
+                                               "getUserByEmail?email_address=" + 
+                                               email_address);
                 if (response.status === 200) {  
                     setUserID(response.data.user_ID); 
                     setState(states.CLIENT_EXISTS);    
@@ -249,7 +249,9 @@ export default function ResetPassword() {
             } 
         } else if (verification_code.trim() !== "") { 
             try {
-                let response = await axios.get(baseURL + "getUserByVerificationCode?verification_code=" + verification_code);
+                let response = await axios.get(baseURL + 
+                                               "getUserByVerificationCode?verification_code="
+                                               + verification_code);
                 if (response.status === 200) {  
                     setUserID(response.data.user_ID);  
                     if (response.data.registration_token === RegistrationToken) {
@@ -301,7 +303,9 @@ export default function ResetPassword() {
     // =============
     async function verifyToken(registration_token) {        
         try {
-            let response = await axios.get(baseURL + "verifyToken?registration_token=" + registration_token);                                            
+            let response = await axios.get(baseURL +
+                                           "verifyToken?registration_token=" +
+                                           registration_token);                                            
             if (response.status === 200) {                 
                 setState(states.PAGE_3);                
             } else {                    
@@ -363,23 +367,24 @@ export default function ResetPassword() {
     //
     // emailResetLink()
     // ================
-    // Sends an email to the address the client specified. The email contains
-    // an explanation of how to reset their password. 
+    // Sends an email to the address the client specified. The email contains an 
+    // explanation of how to reset their password. 
     //
     async function emailResetLink(email_address) {
         const URL = window.location.href;
         
-        const html_body = "<p>A request to change your password was made on Strength Coaching Online.</p>" + 
-                           "<p>If it was you, then please click on " +        
-                          '<a href="' + URL + '?rt=' + RegistrationToken + '">' +
-                          "this link " + "</a>" + 
-                          "to go to the Reset my Password page on Strength Coaching Online.</p>" +                                                      
-                          "<p>Please enter this verification code into the registration page:</p>" +                           
-                          "<h1 style='text-align: center; font-size: 25px;'>" + VerificationCode + "</h1>" +  
-                          "<p>The verification code is valid for the next 20 minutes.</p>" + 
-                          "<p>If this was not you or you need further assistance, please contact the support team by emailing info@strengthcoacing.online.</p>" +                          
-                          "<p>Kind regards,</p>" +
-                          "</p>Luke Selway</p>";
+        const html_body = 
+            "<p>A request to change your password was made on Strength Coaching Online.</p>" + 
+            "<p>If it was you, then please click on " +        
+            '<a href="' + URL + '?rt=' + RegistrationToken + '">' +
+            "this link " + "</a>" + 
+            "to go to the Reset my Password page on Strength Coaching Online.</p>" +                                                      
+            "<p>Please enter this verification code into the registration page:</p>" +                           
+            "<h1 style='text-align: center; font-size: 25px;'>" + VerificationCode + "</h1>" +  
+            "<p>The verification code is valid for the next 20 minutes.</p>" + 
+            "<p>If this was not you or you need further assistance, please contact the support team by emailing info@strengthcoacing.online.</p>" +                          
+            "<p>Kind regards,</p>" +
+            "</p>Luke Selway</p>";
 
         await axios.put(baseURL + "sendMail", {
             sender_email_address: "info@strengthresearch.online",            
@@ -404,9 +409,9 @@ export default function ResetPassword() {
     //
     // RESET PASSWORD PAGES
     // ====================
-    // Displays each of the reset password pages in order to verify the client, email them
-    // a password reset link, and then let them enter a new password when they click on the
-    // link sent to them.
+    // Displays each of the reset password pages in order to verify the client,
+    // email them a password reset link, and then let them enter a new password
+    // when they click on the link sent to them.
     //
     return (        
         <div>            
@@ -429,8 +434,10 @@ export default function ResetPassword() {
                         />
                     )}; 
 
-                    {((state === states.CLIENT_EXISTS) || (state === states.CLIENT_DOES_NOT_EXIST) 
-                      || (state === states.EMAILING) || (state === states.LOCK_CLIENT)) && (                       
+                    {((state === states.CLIENT_EXISTS) || 
+                      (state === states.CLIENT_DOES_NOT_EXIST) ||
+                      (state === states.EMAILING) || 
+                      (state === states.LOCK_CLIENT)) && (                       
                         <Page_2 
                             EmailAddress={EmailAddress} 
                             setState={setState}                                                            
@@ -631,7 +638,8 @@ function Page_2(params) {
 //
 // Page_3()
 // ========
-// This page is displayed when the user clicks on the link in the email sent to them.
+// This page is displayed when the user clicks on the link in the email sent to
+// them.
 // 
 function Page_3(params) {   
     //
