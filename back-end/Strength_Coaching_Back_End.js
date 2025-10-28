@@ -8,7 +8,7 @@
 //
 // Documentation
 // =============
-// Full documentation for the server is available in the Strength Coaching 
+// Full documentation for the server is available in the Strength Coaching  
 // Online documentation folder. This is available in the Github Repository: 
 //
 //         https://github.com/badger-dowdeswell/strength_coaching.git 
@@ -116,10 +116,14 @@
 //                Phase 1 foundational back-end functionality. This includes 
 //                an upgrade to Node.js v24.9.0
 // 13.10.2025 BRD Added the getSchedule API to load the client's training schedule
-//                for the specified block and week.         
+//                for the specified block and week. 
+// 28.10.2025 BRD Added the /api/streamVideo API to serve a training video securely
+//                from the back-end.        
 //
 import express from 'express';
 const app = express();
+
+import fs from 'fs';
 
 const version = 1.5;
 
@@ -255,7 +259,8 @@ const server = app.listen(port, () => {
     if (process.env.test_email.trim() !== "") {
         logmsg("Test email address enabled.");
     }  
-    logmsg("Images upload direction:\n" + process.env.image_upload_dir);  
+    logmsg("Images upload directory:\n" + process.env.image_upload_dir);  
+    logmsg("Training videos directory:\n" + process.env.training_videos_dir);  
 });
 
 //
@@ -872,3 +877,62 @@ app.post('/api/uploadFile', upload.array("photos"), (request, response) => {
     }      
 });
 
+
+// const videoFileMap = {
+//    'cdn' : 'videos/cdn.mp4'
+// }
+
+//
+// streamVideo()
+// =============
+// This API serves the requested training video securely from the back-end.
+// 
+// https://www.youtube.com/watch?v=XfX2Ap30pwU
+//
+app.get('/api/streamVideo', (request, response) => { 
+    const user_ID = request.query.user_ID;
+    const JWT = request.query.JWT; 
+
+    if (!verifyJWT(JWT)) {
+        logmsg("/api/streamVideo: User is not authorised");
+        response.status(403).send("Not authorised");        
+    } else { 
+        const fileName = request.params.filename;
+        const filePath = process.env.training_videos_dir + fileName;
+        if (!filePath) {
+            return response.status(404).send("Video not available");        
+        }
+
+        // Extract the video file parameters.        
+        const stat = fs.statSync(filePath);
+        const fileSize = stat.size;
+        // Extract the range header supplied by the front-end video player.
+        const range = request.headers.range;
+        if (range) {
+            // The player has supplied a range header. Extract the parts size
+            // requested. 
+            const parts = range.replace(/bytes=/, '').split('=');
+            const start = parseInt(parts[0],10);
+            const end = parseInt(parts[1],10);
+        } else {
+            // The player has not supplied a range. Default to supplying
+            // the whole video in a single continueous stream.
+            const start = 0;  //RA_BRD check this - is it zero or one?
+            const end = fileSize - 1;
+        }
+
+        chunksize = end - start + 1;
+
+        // Create a stream object to read the video file from the
+        // directory so it can be sent back to the front-end.
+        const file = fs.createReadStream(filePath, {start, end});
+
+        // Create the response header to be sent back.
+        const header = {
+            'Content-Range': 'bytes ${start}-${end}/${fileSize}',
+            'Accept-Ranges': 'bytes',
+            'Content-Length': chunksize,
+            'Content-Type': 'video/mp4'
+        };
+    } 
+})    
