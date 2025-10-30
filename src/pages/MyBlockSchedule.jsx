@@ -13,6 +13,7 @@
 import './Main.css';
 
 import TopNav from "./components/TopNav";
+import Modal from "./components/Modal";
 import ScheduleLine from "./components/ScheduleLine";
 import { useEffect, useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
@@ -33,7 +34,10 @@ function MyBlockSchedule() {
     const [CurrentWeek, setCurrentWeek] = useState(0);
     const [CurrentDay, setCurrentDay] = useState(0);
     
-    const [MaxWeek, setMaxWeek]= useState(0);   
+    const [MaxWeek, setMaxWeek]= useState(0);  
+    
+    const [VideoVisible, setVideoVisible] = useState(false); 
+    const [VideoLink, setVideoLink] = useState(""); 
         
     // The array of objects that hold one one line for each exercise specified
     // for this block.   
@@ -214,9 +218,7 @@ function MyBlockSchedule() {
         for (let index = 0; index < 7; index++) {             
             items.push(
                 <div>
-            
-    
-        <button className="bg-gray-400 text-black text-sm py-1 px-1 border
+                    <button className="bg-gray-400 text-black text-sm py-1 px-1 border
                                        mb-0 mt-0 ml-0"                                                                
                             id={"TabDay_" + (index + 1)} 
                             style={{ width: "100px" }}                                                      
@@ -265,6 +267,18 @@ function MyBlockSchedule() {
 
                 <div className="flex flex-col box-border border-2 rounded-lg    
                                 ml-10 mr-10 h-[500px] w-auto">
+
+                    {/*  Display the video player window
+                         video_link = {params.video_link}
+                     */}
+                    <div>
+                        {(VideoVisible) && (
+                            <ShowVideo 
+                                setVideoVisible = {setVideoVisible}
+                                VideoLink = {VideoLink}                                
+                            />
+                        )}
+                    </div>                 
                     
                     <div className="flex flex-row">
                         <WeekTabBar/>         
@@ -303,7 +317,7 @@ function MyBlockSchedule() {
                         <p className="text-base text-center border mb-0 mt-5 ml-0 w-14">
                             E1RM
                         </p>     
-                    </div>
+                    </div>            
 
                     <div>
                         {Schedule.map(line => (
@@ -324,7 +338,9 @@ function MyBlockSchedule() {
                                 actual_weights = {line.actual_weight}
                                 velocity_based_metrics = {line.velocity_based_metrics}
                                 notes = {line.notes}
-                                E1RM = {line.E1RM}                                                               
+                                E1RM = {line.E1RM} 
+                                setVideoVisible = {setVideoVisible} 
+                                setVideoLink = {setVideoLink}                                                                  
                             />                        
                         ))}
                     </div>
@@ -363,6 +379,55 @@ function MyBlockSchedule() {
         </div>
     )
 }
+
+//
+// ShowVideo()
+// ============
+// The Modal component is used to wrap the video player in a custom dialog box.
+//  
+function ShowVideo(params) {
+    console.log("ShowVideo " + params.VideoLink);
+    return (
+        <div>
+            <Modal>
+                <div className="bg-gray-800 overflow-hidden box-border border-2 rounded-lg">
+                    <div className="flex flex-col" > 
+                        <h1 className="bg-gray-800 text-white text-center text-sm ml-10 mr-10 mt-5 w-80">
+                            Video link {params.VideoLink}
+                        </h1> 
+
+                        <p className="ml-10 mr-10 mt-[350px]">
+                        </p>                      
+
+                        <div className="mt-auto">    
+                            <div className="flex flex-row justify-center mt-5">
+                                <button className="bg-cyan-600 text-white font-bold text-sm py-2 px-2 rounded
+                                                  mb-6 mt-2"
+                                    id="Play"
+                                    style={{ width: "100px" }}
+                                    onClick={() => {
+                                        //params.setState(states.EXITING);
+                                    }}>
+                                    Play
+                                </button>    
+
+                                <button className="bg-cyan-600 text-white font-bold text-sm py-2 px-2 rounded
+                                                mb-6 mt-2 ml-8"
+                                    id="Back"
+                                    style={{ width: "100px" }}
+                                    onClick={() => {                                    
+                                        params.setVideoVisible(false);
+                                    }}>
+                                    Back
+                                </button> 
+                            </div>    
+                        </div>                                 
+                    </div>   
+                </div>     
+            </Modal> 
+        </div> 
+    ); 
+}         
     
 export default MyBlockSchedule;
 

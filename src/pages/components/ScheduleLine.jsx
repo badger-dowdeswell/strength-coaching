@@ -14,28 +14,14 @@
 // 30.07.2025 BRD Original version.
 //  
 import {useState} from "react";
-import Modal from "./Modal";
 
 import training_video_image from "./componentImages/training_video.png";
 
 function ScheduleLine(params) { 
-    if ((params.activeWeek === params.week) && (params.activeDay === params.day)) {
-        const [VideoVisible, setVideoVisible] = useState(false);  
-
+    if ((params.activeWeek === params.week) && (params.activeDay === params.day)) { 
         return (
-            <div>
-                {/*  Display the video player window */}
-                <div>
-                    {(VideoVisible) && (
-                        <ShowVideo 
-                            setVideoVisible = {setVideoVisible}
-                            video_link = {params.video_link}
-                        />
-                    )}
-                </div> 
-
-                <div className="flex flex.row">  
-                                     
+            <div>                
+                <div className="flex flex.row"> 
                     <p className="text-white text-base border pl-1 mb-0 mt-0 ml-0 w-40">                        
                         {params.exercise_name}
                        
@@ -44,11 +30,11 @@ function ScheduleLine(params) {
                              title="The training video for this exercise" 
                              draggable={false} 
                              height={30} width={30}
-                             onClick={() => {
-                                console.log("videoVisible");
-                                setVideoVisible(true);
+                             onClick={() => {  
+                                console.log("Video link " + params.video_link);
+                                params.setVideoLink(params.video_link);                             
+                                params.setVideoVisible(true);
                              }}
-
                         />                            
                     </p>  
 
@@ -88,53 +74,5 @@ function ScheduleLine(params) {
         return null;
     }    
 };
-
-//
-// ShowVideo()
-// ===========
-// The Modal component is used to wrap the video player in a custom dialog box.
-//  
-function ShowVideo(params) {
-    return (
-        <div>
-            <Modal>
-                <div className="bg-gray-800 overflow-hidden box-border border-2 rounded-lg">
-                    <div className="flex flex-col" > 
-                        <h1 className="bg-gray-800 text-white text-center text-xl ml-10 mr-10 mt-5 w-80">
-                            {params.video_link}
-                        </h1> 
-
-                        <p className="ml-10 mr-10 mt-52">
-                        </p>                      
-
-                        <div className="mt-auto">    
-                            <div className="flex flex-row justify-center mt-5">
-                                <button className="bg-cyan-600 text-white font-bold text-sm py-2 px-2 rounded
-                                                  ml-2 mb-6 mt-2 ml-10"
-                                    id="Play"
-                                    style={{ width: "100px" }}
-                                    onClick={() => {
-                                        //params.setState(states.EXITING);
-                                    }}>
-                                    Play
-                                </button>    
-
-                                <button className="bg-cyan-600 text-white font-bold text-sm py-2 px-2 rounded
-                                                mb-6 mt-2 ml-8"
-                                    id="Back"
-                                    style={{ width: "100px" }}
-                                    onClick={() => {                                    
-                                        params.setVideoVisible(false);
-                                    }}>
-                                    Back
-                                </button> 
-                            </div>    
-                        </div>                                 
-                    </div>   
-                </div>     
-            </Modal> 
-        </div> 
-    );      
-}
 
 export default ScheduleLine;
