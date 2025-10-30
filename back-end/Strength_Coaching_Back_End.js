@@ -906,33 +906,59 @@ app.get('/api/streamVideo', (request, response) => {
         // Extract the video file parameters.        
         const stat = fs.statSync(filePath);
         const fileSize = stat.size;
+        
         // Extract the range header supplied by the front-end video player.
         const range = request.headers.range;
+        var start = 0;
+        var end = 0;
         if (range) {
             // The player has supplied a range header. Extract the parts size
             // requested. 
-            const parts = range.replace(/bytes=/, '').split('=');
+            const parts = range.replace(/bytes=/, '').split('-');
             const start = parseInt(parts[0],10);
-            const end = parseInt(parts[1],10);
+            if (parts[1]) {
+                end = parseInt(parts[1],10);
+            } else {
+                // The end parameter of the range was not supplied so default it
+                // to the file size.
+                end = fileSize - 1;
+            }
+
+            // Now we can calculate the size of the chunks of video that the
+            // player can accept when it is streamed.
+            chunksize = end - start + 1;       
+
+            // Create a stream object to read the video file from the
+            // directory so it can be sent back to the front-end.
+            const file = fs.createReadStream(filePath, {start, end});
+
+            // Create the response header to be sent back.
+            const header = {
+                'Content-Range': 'bytes ${start}-${end}/${fileSize}',
+                'Accept-Ranges': 'bytes',
+                'Content-Length': chunksize,
+                'Content-Type': 'video/mp4'
+            };
+
+            // Send the response. HTTP code 206 is the response for a partial
+            // response. This indicates that a stream is being served on-demand
+            // to the front-end.
+            response.writeHead(206, header);
+            file.pipe(response);
+            
         } else {
-            // The player has not supplied a range. Default to supplying
-            // the whole video in a single continueous stream.
-            const start = 0;  //RA_BRD check this - is it zero or one?
-            const end = fileSize - 1;
-        }
-
-        chunksize = end - start + 1;
-
-        // Create a stream object to read the video file from the
-        // directory so it can be sent back to the front-end.
-        const file = fs.createReadStream(filePath, {start, end});
-
-        // Create the response header to be sent back.
-        const header = {
-            'Content-Range': 'bytes ${start}-${end}/${fileSize}',
-            'Accept-Ranges': 'bytes',
-            'Content-Length': chunksize,
-            'Content-Type': 'video/mp4'
-        };
+            // The player has not supplied a range. Create the response header
+            // to be sent back. Default to supplying the whole video in a single 
+            // continueous stream.
+            const header = {                
+                'Content-Length': fileSize,
+                'Content-Type': 'video/mp4'
+            };
+            // Send the response as HTTP code 200 for a normal successfull response.
+            // The whole file will be served back to the client in a single
+            // response.
+            response.writeHead(200, header);
+            fs.createReadStream(filePath).pipe(response);            
+        }    
     } 
 })    

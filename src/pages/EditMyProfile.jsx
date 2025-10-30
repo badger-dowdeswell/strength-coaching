@@ -1189,8 +1189,6 @@ function Page_4(params) {
 // to cancel the changes they have just made to their profile.
 // 
 function ConfirmCancel(params) {
-
-
     return (
         <div>
             <Modal>

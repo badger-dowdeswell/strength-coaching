@@ -7,6 +7,8 @@
 // Revision History
 // ================
 // 30.07.2025 BRD Original version.
+// 30.10.2025 BRD Added video streaming capabilities for showing training 
+//                videos in-context on a modal dialog window.
 // 
 import './Main.css';
 
@@ -297,9 +299,7 @@ function MyBlockSchedule() {
                         </p>
                         <p className="text-base text-center border mb-0 mt-5 ml-0 w-48">
                             Notes
-             
-    
-           </p>  
+                        </p>  
                         <p className="text-base text-center border mb-0 mt-5 ml-0 w-14">
                             E1RM
                         </p>     
@@ -315,6 +315,7 @@ function MyBlockSchedule() {
                                 key = {line.schedule_ID}
                                 seq_ID = {line.seq_ID}
                                 exercise_name = {line.exercise_name}
+                                video_link = {line.video_link}
                                 sets = {line.sets}
                                 actual_sets = {line.actual_sets}
                                 reps = {line.reps}
