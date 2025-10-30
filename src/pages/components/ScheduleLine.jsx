@@ -31,7 +31,7 @@ function ScheduleLine(params) {
                              draggable={false} 
                              height={30} width={30}
                              onClick={() => {  
-                                console.log("Video link " + params.video_link);
+                                //console.log("Video link " + params.video_link);
                                 params.setVideoLink(params.video_link);                             
                                 params.setVideoVisible(true);
                              }}

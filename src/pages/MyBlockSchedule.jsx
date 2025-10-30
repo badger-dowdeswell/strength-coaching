@@ -274,6 +274,8 @@ function MyBlockSchedule() {
                     <div>
                         {(VideoVisible) && (
                             <ShowVideo 
+                                user_ID = {user_ID}
+                                JWT = {JWT}
                                 setVideoVisible = {setVideoVisible}
                                 VideoLink = {VideoLink}                                
                             />
@@ -384,9 +386,33 @@ function MyBlockSchedule() {
 // ShowVideo()
 // ============
 // The Modal component is used to wrap the video player in a custom dialog box.
-//  
+// https://www.npmjs.com/package/react-player
+// 
+// <p className="ml-10 mr-10 mt-[350px]">
+// </p>  
+// 
 function ShowVideo(params) {
-    console.log("ShowVideo " + params.VideoLink);
+    //console.log("ShowVideo " + params.VideoLink);
+    const videoRef = useRef(null);
+
+    const [videoID, setVideoID] = useState(null);
+
+    //
+    // playVideo()
+    // ===========
+    function playVideo(e, videoID) {
+        e.preventDefault();
+        setVideoID(videoID);
+    }
+
+    useEffect(() => {
+        if (videoRef.current) {
+            videoRef.current.pause();
+            videoRef.current.removeAttribute('src');
+            videoRef.current.load();
+        }
+    })
+   
     return (
         <div>
             <Modal>
@@ -396,8 +422,17 @@ function ShowVideo(params) {
                             Video link {params.VideoLink}
                         </h1> 
 
-                        <p className="ml-10 mr-10 mt-[350px]">
-                        </p>                      
+                        <video className="text-white"
+                               ref = {videoRef}
+                               width = '320'
+                               height = '240'
+                               controls 
+                               src = {baseURL + 'streamVideo?user_ID="' + params.user_ID 
+                                           +"&JWT=" + params.JWT
+                                           + "&filename=" + params.VideoLink}
+                               type = 'video/mp4'>                            
+                            Your browser does not support video   
+                        </video>          
 
                         <div className="mt-auto">    
                             <div className="flex flex-row justify-center mt-5">
@@ -405,9 +440,9 @@ function ShowVideo(params) {
                                                   mb-6 mt-2"
                                     id="Play"
                                     style={{ width: "100px" }}
-                                    onClick={() => {
-                                        //params.setState(states.EXITING);
-                                    }}>
+                                    onClick={() => {(e) => {
+                                        playVideo(e, params.VideoLink);    
+                                    }}}>
                                     Play
                                 </button>    
 
@@ -429,6 +464,4 @@ function ShowVideo(params) {
     ); 
 }         
     
-export default MyBlockSchedule;
-
-    
+export default MyBlockSchedule;    

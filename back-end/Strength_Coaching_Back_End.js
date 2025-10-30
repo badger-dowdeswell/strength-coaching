@@ -892,12 +892,14 @@ app.post('/api/uploadFile', upload.array("photos"), (request, response) => {
 app.get('/api/streamVideo', (request, response) => { 
     const user_ID = request.query.user_ID;
     const JWT = request.query.JWT; 
+    const fileName = request.query.filename;
+
+    logmsg("\n/api/streamVideo " + user_ID + " " + JWT + "\n" + fileName);
 
     if (!verifyJWT(JWT)) {
         logmsg("/api/streamVideo: User is not authorised");
         response.status(403).send("Not authorised");        
-    } else { 
-        const fileName = request.params.filename;
+    } else {         
         const filePath = process.env.training_videos_dir + fileName;
         if (!filePath) {
             return response.status(404).send("Video not available");        
@@ -906,6 +908,7 @@ app.get('/api/streamVideo', (request, response) => {
         // Extract the video file parameters.        
         const stat = fs.statSync(filePath);
         const fileSize = stat.size;
+        logmsg("\n/api/streamVideo range =" + fileSize);
         
         // Extract the range header supplied by the front-end video player.
         const range = request.headers.range;
@@ -914,6 +917,7 @@ app.get('/api/streamVideo', (request, response) => {
         if (range) {
             // The player has supplied a range header. Extract the parts size
             // requested. 
+            logmsg("\n/api/streamVideo range =" + range);
             const parts = range.replace(/bytes=/, '').split('-');
             const start = parseInt(parts[0],10);
             if (parts[1]) {
@@ -923,10 +927,12 @@ app.get('/api/streamVideo', (request, response) => {
                 // to the file size.
                 end = fileSize - 1;
             }
+            logmsg("\n/api/streamVideo end =" + end);            
 
             // Now we can calculate the size of the chunks of video that the
             // player can accept when it is streamed.
-            chunksize = end - start + 1;       
+            const chunksize = end - start + 1;    
+            logmsg("\n/api/streamVideo chunksize =" + chunksize);   
 
             // Create a stream object to read the video file from the
             // directory so it can be sent back to the front-end.
@@ -950,11 +956,12 @@ app.get('/api/streamVideo', (request, response) => {
             // The player has not supplied a range. Create the response header
             // to be sent back. Default to supplying the whole video in a single 
             // continueous stream.
+            logmsg("\n/api/streamVideo no range specified");
             const header = {                
                 'Content-Length': fileSize,
                 'Content-Type': 'video/mp4'
             };
-            // Send the response as HTTP code 200 for a normal successfull response.
+            // Send the response as HTTP code 200 for a normal, successfull response.
             // The whole file will be served back to the client in a single
             // response.
             response.writeHead(200, header);
