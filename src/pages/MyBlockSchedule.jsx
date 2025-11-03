@@ -19,6 +19,8 @@ import { useEffect, useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { states } from "./Constants";
 
+import ReactPlayer from 'react-player';
+
 import Axios from 'axios';
 import { getBaseURL } from "./getBaseURL";
 const baseURL = getBaseURL();
@@ -387,31 +389,30 @@ function MyBlockSchedule() {
 // ============
 // The Modal component is used to wrap the video player in a custom dialog box.
 // https://www.npmjs.com/package/react-player
-// 
-// <p className="ml-10 mr-10 mt-[350px]">
-// </p>  
-// 
+//
+// installation:  npm i react-player
+//
 function ShowVideo(params) {
     //console.log("ShowVideo " + params.VideoLink);
-    const videoRef = useRef(null);
-
-    const [videoID, setVideoID] = useState(null);
+    // const videoRef = useRef(null);
+    
+    // const [videoID, setVideoID] = useState(null);
 
     //
     // playVideo()
     // ===========
-    function playVideo(e, videoID) {
-        e.preventDefault();
-        setVideoID(videoID);
-    }
-
-    useEffect(() => {
-        if (videoRef.current) {
-            videoRef.current.pause();
-            videoRef.current.removeAttribute('src');
-            videoRef.current.load();
-        }
-    })
+    // function playVideo(e, videoID) {
+    //    e.preventDefault();
+    //    setVideoID(videoID);
+    // }   
+    
+    // useEffect(() => {
+    //    if (videoRef.current) {
+    //        videoRef.current.pause();
+    //        videoRef.current.removeAttribute('src');
+    //        videoRef.current.load();
+    //    }
+    //})
    
     return (
         <div>
@@ -422,17 +423,16 @@ function ShowVideo(params) {
                             Video link {params.VideoLink}
                         </h1> 
 
-                        <video className="text-white"
-                               ref = {videoRef}
-                               width = '320'
-                               height = '240'
-                               controls 
-                               src = {baseURL + 'streamVideo?user_ID="' + params.user_ID 
+                        <ReactPlayer
+                            width="100"                            
+                            controls='true' 
+                            playing  
+                                                  
+                            url = {baseURL + 'streamVideo?user_ID=' + params.user_ID 
                                            +"&JWT=" + params.JWT
                                            + "&filename=" + params.VideoLink}
-                               type = 'video/mp4'>                            
-                            Your browser does not support video   
-                        </video>          
+                            type = 'video/mp4'                  
+                        /> 
 
                         <div className="mt-auto">    
                             <div className="flex flex-row justify-center mt-5">
@@ -462,6 +462,37 @@ function ShowVideo(params) {
             </Modal> 
         </div> 
     ); 
-}         
-    
+}   
 export default MyBlockSchedule;    
+
+
+// htps://ik.imagekit.io/roadsidecoder/yt/example.mp4" 
+   
+// 
+// <p className="ml-10 mr-10 mt-[350px]">
+// </p>  
+
+//src = {baseURL + 'streamVideo?user_ID="' + params.user_ID 
+ //                                          +"&JWT=" + params.JWT
+  //                                         + "&filename=" + params.VideoLink}
+// src = {baseURL + 'streamVideo?user_ID="' + params.user_ID 
+ //                                          +"&JWT=" + params.JWT
+ //                                          + "&filename=" + params.VideoLink}
+// {baseURL + 'streamVideo?user_ID="' + params.user_ID 
+  //                                         +"&JWT=" + params.JWT
+ //  
+ //                                       + "&filename=" + params.VideoLink}
+
+
+    // <video className="text-white"                               
+    //                            width = '320'
+    //                            height = '240'
+    //                            autoPlay  
+    //                            controls                                                         
+    //                            src = "https://ik.imagekit.io/roadsidecoder/yt/example.mp4"                              
+    //                            type = 'video/mp4'>                            
+    //                         Your browser does not support video   
+    //                     </video>   
+    
+    // <ReactPlayer
+    //                        src = "ht

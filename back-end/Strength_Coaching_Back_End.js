@@ -122,6 +122,10 @@
 //
 import express from 'express';
 const app = express();
+import path from 'path'
+
+// Serve static files (e.g., video files) from a 'public' directory
+app.use('/media', express.static( path.join(__dirname, .process.env.training_videos_dir)));
 
 import fs from 'fs';
 
@@ -908,7 +912,7 @@ app.get('/api/streamVideo', (request, response) => {
         // Extract the video file parameters.        
         const stat = fs.statSync(filePath);
         const fileSize = stat.size;
-        logmsg("\n/api/streamVideo range =" + fileSize);
+        logmsg("/api/streamVideo range =" + fileSize);
         
         // Extract the range header supplied by the front-end video player.
         const range = request.headers.range;
@@ -917,7 +921,7 @@ app.get('/api/streamVideo', (request, response) => {
         if (range) {
             // The player has supplied a range header. Extract the parts size
             // requested. 
-            logmsg("\n/api/streamVideo range =" + range);
+            logmsg("/api/streamVideo range = " + range);
             const parts = range.replace(/bytes=/, '').split('-');
             const start = parseInt(parts[0],10);
             if (parts[1]) {
@@ -927,12 +931,12 @@ app.get('/api/streamVideo', (request, response) => {
                 // to the file size.
                 end = fileSize - 1;
             }
-            logmsg("\n/api/streamVideo end =" + end);            
+            logmsg("/api/streamVideo end = " + end);            
 
             // Now we can calculate the size of the chunks of video that the
             // player can accept when it is streamed.
             const chunksize = end - start + 1;    
-            logmsg("\n/api/streamVideo chunksize =" + chunksize);   
+            logmsg("/api/streamVideo chunksize = " + chunksize);   
 
             // Create a stream object to read the video file from the
             // directory so it can be sent back to the front-end.
