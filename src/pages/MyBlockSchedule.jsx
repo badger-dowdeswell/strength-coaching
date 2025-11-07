@@ -9,17 +9,22 @@
 // 30.07.2025 BRD Original version.
 // 30.10.2025 BRD Added video streaming capabilities for showing training 
 //                videos in-context on a modal dialog window.
+// 08.11.2025 BRD Merged the ScheduleLine component into this source file.
+//                This should make it easier to update fields stored in
+//                the Schedule array.
 // 
 import './Main.css';
 
 import TopNav from "./components/TopNav";
 import Modal from "./components/Modal";
-import ScheduleLine from "./components/ScheduleLine";
+
 import { useEffect, useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { states } from "./Constants";
 
 import ReactPlayer from 'react-player';
+
+import training_video_image from "./images/training_video.png";
 
 import Axios from 'axios';
 import { getBaseURL } from "./getBaseURL";
@@ -463,6 +468,142 @@ function ShowVideo(params) {
         </div> 
     ); 
 }   
+
+//
+// ScheduleLine()
+// ==============
+// This component is able to receive one line as an object from a block schedule
+// array and display it. It does not allow the client to modify the fields. That
+// is done in the ScheduleDay component, which only displays one day that they
+// have selected. There, they can report their training progress on the specified
+// exercise.
+//
+// The component processes and formats the schedule one line at a time. If the
+// data does not belong to the specified week, or the specific day, a null 
+// element is returned so that line is not displayed on the wrong page.
+//
+function ScheduleLine(params) { 
+    if ((params.activeWeek === params.week) && (params.activeDay === params.day)) { 
+        return (
+            <div>                
+                <div className="flex flex.row"> 
+                    <p className="text-white text-base border pl-1 mb-0 mt-0 ml-0 w-40">                        
+                        {params.exercise_name}
+                       
+                        <img className="ml-auto"
+                             src={training_video_image}
+                             title="The training video for this exercise" 
+                             draggable={false} 
+                             height={30} width={30}
+                             onClick={() => {  
+                                //console.log("Video link " + params.video_link);
+                                //params.setVideoLink(params.video_link);                             
+                                //params.setVideoVisible(true);
+                             }}
+                        />                            
+                    </p>  
+
+                    <div className="flex flex.col">
+                        <p className ="bg-gray-800 text-white  text-base text-center border mb-0 mt-0 ml-0 w-10">
+                            {params.sets} 
+                        </p> 
+                        <p className = "bg-gray-800 text-white  text-base text-center border mb-0 mt-0 ml-0 w-10">
+                            {params.actual_sets} 
+                        </p> 
+                        <p className = "bg-gray-800 text-white  text-base text-center border mb-0 mt-0 ml-0 w-10">
+                            {params.reps} 
+                        </p>
+                        <p className = "bg-gray-800 text-white  text-base text-center border mb-0 mt-0 ml-0 w-10">
+                            {params.actual_reps} 
+                        </p>
+                        <p className = "bg-gray-800 text-white  text-base text-center border mb-0 mt-0 ml-0 w-32">
+                            {params.weights}
+                        </p>
+                        <p className = "bg-gray-800 text-white  text-base text-center border mb-0 mt-0 ml-0 w-32">
+                            {params.actual_weights} 
+                        </p>
+                        <p className = "bg-gray-800 text-white text-base text-center border mb-0 mt-0 ml-0 w-48">
+                            {params.velocity_based_metrics} 
+                        </p>
+                        <p className = "bg-gray-800 text-white text-base text-center border mb-0 mt-0 ml-0 w-48">
+                            {params.notes} 
+                        </p>
+                        <p className = "bg-gray-800 text-white text-base text-center border mb-0 mt-0 ml-0 w-14">
+                            {params.E1RM} 
+                        </p>
+                    </div> 
+                </div>           
+            </div>
+        )
+    } else {
+        return null;
+    }    
+};
+
+//
+// ScheduleDay()
+// ==============
+// This component is only displays one day that the client has selected. Here,
+// they can report their training progress on the specified exercise.
+//
+function SchedulDay(params) { 
+    if ((params.activeWeek === params.week) && (params.activeDay === params.day)) { 
+        return (
+            <div>                
+                <div className="flex flex.row"> 
+                    <p className="text-white text-base border pl-1 mb-0 mt-0 ml-0 w-40">                        
+                        {params.exercise_name}
+                       
+                        <img className="ml-auto"
+                             src={training_video_image}
+                             title="The training video for this exercise" 
+                             draggable={false} 
+                             height={30} width={30}
+                             onClick={() => {  
+                                //console.log("Video link " + params.video_link);
+                                params.setVideoLink(params.video_link);                             
+                                params.setVideoVisible(true);
+                             }}
+                        />                            
+                    </p>  
+
+                    <div className="flex flex.col">
+                        <p className="text-white text-base text-center border mb-0 mt-0 ml-0 w-10">
+                            {params.sets} 
+                        </p> 
+                        <p className="bg-white text-black text-base text-center border mb-0 mt-0 ml-0 w-10">
+                            {params.actual_sets} 
+                        </p> 
+                        <p className="text-white text-base text-center border mb-0 mt-0 ml-0 w-10">
+                            {params.reps} 
+                        </p>
+                        <p className="bg-white text-black text-base text-center border mb-0 mt-0 ml-0 w-10">
+                            {params.actual_reps} 
+                        </p>
+                        <p className="text-white text-base text-center border mb-0 mt-0 ml-0 w-32">
+                            {params.weights}
+                        </p>
+                        <p className="bg-white text-black text-base text-center border mb-0 mt-0 ml-0 w-32">
+                            {params.actual_weights} 
+                        </p>
+                        <p className="text-white text-base text-center border mb-0 mt-0 ml-0 w-48">
+                            {params.velocity_based_metrics} 
+                        </p>
+                        <p className="bg-white text-black text-base text-center border mb-0 mt-0 ml-0 w-48">
+                            {params.notes} 
+                        </p>
+                        <p className="text-white text-base text-center border mb-0 mt-0 ml-0 w-14">
+                            {params.E1RM} 
+                        </p>
+                    </div> 
+                </div>           
+            </div>
+        )
+    } else {
+        return null;
+    } 
+}       
+
 export default MyBlockSchedule;    
 
 

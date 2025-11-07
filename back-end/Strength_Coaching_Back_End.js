@@ -125,7 +125,7 @@ const app = express();
 import path from 'path'
 
 // Serve static files (e.g., video files) from a 'public' directory
-app.use('/media', express.static( path.join(__dirname, .process.env.training_videos_dir)));
+//app.use('/media', express.static( path.join(__dirname, process.env.training_videos_dir)));
 
 import fs from 'fs';
 
@@ -150,8 +150,7 @@ const storage = multer.diskStorage({
         cb(null, process.env.image_upload_dir);
     },
     filename: (request, file, cb) => {
-        cb(null, file.originalname);
-    },
+        cb(null, file.originalname);    },
 });
 const upload = multer({storage});
 

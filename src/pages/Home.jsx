@@ -17,6 +17,7 @@ import { useNavigate } from "react-router-dom";
 
 import My_Block_Schedule from "./images/My_Block_Schedule.png";
 import Block_Review from "./images/Block_Review.png";
+import Resources_Hub from "./images/Block_Review.png";
 import Edit_My_Profile from "./images/Edit_My_Profile.png";
 //
 // Home
@@ -129,24 +130,9 @@ function Home() {
                                         onClick={() => {navigate("/Home")}}>
                                 </img>                                     
                                 <p className="text-center text-white text-sm font-bold">
-                                    Block Reflection     
+                                    Block Review     
                                 </p> 
-                            </div> 
-
-                            <div className="mr-10">
-                                <img className="rounded"
-                                     src={Block_Review}
-                                     alt="/"
-                                     draggable={false}                            
-                                     width={275}
-                                     onClick={() => {navigate("/Home")}}>  
-                                </img>  
-
-                                <p className="text-center text-white text-sm font-bold"
-                                    onClick={() => {navigate("/Home")}}>
-                                    Resources Hub
-                                </p> 
-                            </div>    
+                            </div>  
                         </div>                     
                         <br></br>
                         <br></br>
@@ -154,7 +140,7 @@ function Home() {
                         <div className="flex flex-row ml-20">
                             <div className="mr-10">
                                 <img className="rounded"
-                                    src={My_Block_Schedule}
+                                    src={Resources_Hub}
                                     alt="/"
                                     draggable={false}                            
                                     width={275}
@@ -163,24 +149,10 @@ function Home() {
             
                                 <p className="text-center text-white text-sm font-bold"
                                    onClick={() => {navigate("/Home")}}>
-                                    Something Else   
+                                    Resources Hub   
                                 </p> 
                             </div>   
             
-                            <div className="mr-10">
-                                <img className="rounded"
-                                     src={Block_Review}
-                                     alt="/"
-                                     draggable={false}                            
-                                     width={273}
-                                     onClick={() => {navigate("/Home")}}>
-                                </img>                                     
-                                <p className="text-center text-white text-sm font-bold"
-                                   onClick={() => {navigate("/Home")}}>
-                                    Something Else  
-                                </p> 
-                            </div> 
-
                             <div className="mr-10">
                                 <img className="rounded"
                                      src={Edit_My_Profile}
