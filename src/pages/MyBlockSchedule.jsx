@@ -183,9 +183,33 @@ function MyBlockSchedule() {
                    Schedule[ptr].velocity_based_metrics;
 
             console.log(line);            
-        }         
-        
-    };  
+        } 
+    }; 
+
+    //
+    // FindWeek()
+    // ==========
+    // Scans the Sechecule to determine if there are any activities scheduled for
+    // the specified week. This allows the WeekTabBar to only display tabs for
+    // the required weeks.
+    // 
+    function FindWeek(reqWeek) {
+       var found = false;
+
+       const isFound = (element) => element.week == reqWeek;
+
+       const index = Schedule.findIndex(isFound);
+       if (index > -1) {        
+          found = true;
+        }
+
+        // if (found) {
+        //     console.log("findWeek - " + reqWeek + " found");
+        // } else {
+        //     console.log("findWeek - " + reqWeek + " not found");
+        // }    
+        return found;
+    }
         
     //
     // WeekTabBar()
@@ -193,22 +217,30 @@ function MyBlockSchedule() {
     // This function creates a dynamic list of clickable tabs for the tabbed-dialog
     // that displays the set of pages for the weeks in this schedule.
     // 
-    function WeekTabBar() {         
+    function WeekTabBar() {  
+
+        //var reqWeek = 1;
+        //var found = false;
+
+        //found = FindWeek(reqWeek); 
+        
         const items = [];         
-        for (let index = 0; index < MaxWeek; index++) {             
-            items.push(
-                <div>
-                    <button className="bg-gray-400 text-black text-sm py-1 px-1 border
-                                       mb-0 mt-0 ml-0"                                                                
-                            id={"TabWeek_" + (index + 1)} 
-                            style={{ width: "100px" }}                                                      
-                            onClick={(e) => {                                
-                                setCurrentWeek(index + 1);                                                 
-                            }}>
-                        {"Week " + (index + 1)}
-                    </button>
-                </div>                             
-            )             
+        for (let index = 0; index < MaxWeek; index++) {  
+            if (FindWeek(index + 1)) {          
+                items.push(
+                    <div>
+                        <button className="bg-gray-400 text-black text-sm py-1 px-1 border
+                                        mb-0 mt-0 ml-0"                                                                
+                                id={"TabWeek_" + (index + 1)} 
+                                style={{ width: "100px" }}                                                      
+                                onClick={(e) => {                                
+                                    setCurrentWeek(index + 1);                                                 
+                                }}>
+                            {"Week " + (index + 1)}
+                        </button>
+                    </div>                             
+                )  
+            }               
         };
         return items; 
     }
