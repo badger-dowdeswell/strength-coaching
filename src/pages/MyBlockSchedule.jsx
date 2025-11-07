@@ -189,7 +189,7 @@ function MyBlockSchedule() {
     //
     // FindWeek()
     // ==========
-    // Scans the Sechecule to determine if there are any activities scheduled for
+    // Scans the Schedule to determine if there are any activities scheduled for
     // the specified week. This allows the WeekTabBar to only display tabs for
     // the required weeks.
     // 
@@ -215,15 +215,10 @@ function MyBlockSchedule() {
     // WeekTabBar()
     // ============
     // This function creates a dynamic list of clickable tabs for the tabbed-dialog
-    // that displays the set of pages for the weeks in this schedule.
+    // that displays the set of pages for the weeks in this schedule. Only weeks
+    // where activities have been scheduled are visible.
     // 
     function WeekTabBar() {  
-
-        //var reqWeek = 1;
-        //var found = false;
-
-        //found = FindWeek(reqWeek); 
-        
         const items = [];         
         for (let index = 0; index < MaxWeek; index++) {  
             if (FindWeek(index + 1)) {          
@@ -246,28 +241,56 @@ function MyBlockSchedule() {
     }
 
     //
+    // FindDay()
+    // ==========
+    // Scans the Schedule to determine if there are any activities scheduled for
+    // the specified week. This allows the WeekTabBar to only display tabs for
+    // the required weeks.
+    // 
+    function FindDay(reqWeek, reqDay) {
+       var found = false;
+
+       const isFound = (element) => ((element.week == reqWeek) && (element.day == reqDay));
+
+       const index = Schedule.findIndex(isFound);
+       if (index > -1) {        
+          found = true;
+        }
+
+        // if (found) {
+        //     console.log("findWeek - " + reqWeek + " found");
+        // } else {
+        //     console.log("findWeek - " + reqWeek + " not found");
+        // }    
+        return found;
+    }
+
+    //
     // DayTabBar()
     // ===========
     // This function creates a dynamic list of clickable tabs for the tabbed-dialog
-    // that displays the set of pages for the days in this schedule.
+    // that displays the set of pages for the active days in the current schedule for
+    // this week. Days where nothing is scheduled are not displayed.
     // 
     function DayTabBar() {         
         const days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];             
         const items = [];         
-        for (let index = 0; index < 7; index++) {             
-            items.push(
-                <div>
-                    <button className="bg-gray-400 text-black text-sm py-1 px-1 border
-                                       mb-0 mt-0 ml-0"                                                                
-                            id={"TabDay_" + (index + 1)} 
-                            style={{ width: "100px" }}                                                      
-                            onClick={(e) => {                                
-                                setCurrentDay(index + 1);                                                 
-                            }}>
-                        {days[index]}
-                    </button>
-                </div>                             
-            )             
+        for (let index = 0; index < 7; index++) { 
+            if (FindDay(CurrentWeek, index + 1)) {                  
+                items.push(
+                    <div>
+                        <button className="bg-gray-400 text-black text-sm py-1 px-1 border
+                                        mb-0 mt-0 ml-0"                                                                
+                                id={"TabDay_" + (index + 1)} 
+                                style={{ width: "100px" }}                                                      
+                                onClick={(e) => {                                
+                                    setCurrentDay(index + 1);                                                 
+                                }}>
+                            {days[index]}
+                        </button>
+                    </div>                             
+                ) 
+            }               
         };
         return items; 
     }
