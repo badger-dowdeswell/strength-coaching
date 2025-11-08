@@ -32,6 +32,17 @@ const baseURL = getBaseURL();
 const axios = Axios;
 
 //
+// pages
+// =====
+// Constants that controls the type of page currently being displayed.
+// These constants are used to set the currentPage state.
+//
+const pages = {
+    PAGE_WEEK: 1,
+    PAGE_DAY: 2
+}    
+
+//
 // MyBlockSchedule
 // ===============
 function MyBlockSchedule() {
@@ -79,6 +90,7 @@ function MyBlockSchedule() {
     // state changes. 
     //
     const [state, setState] = useState(states.UNDEFINED);
+    const [currentPage, setCurrentPage] = useState(pages.PAGE_WEEK);
 
     useEffect(() => {    
         switch (state) {            
@@ -191,23 +203,24 @@ function MyBlockSchedule() {
     // ==========
     // Scans the Schedule to determine if there are any activities scheduled for
     // the specified week. This allows the WeekTabBar to only display tabs for
-    // the required weeks.
+    // the required weeks. Refer to the findIndex() documentation at:
+    //
+    // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/findIndex
+    //
+    // for an explanation of how the JavsScript array findIndex() function works.
     // 
     function FindWeek(reqWeek) {
        var found = false;
 
+       // Callback function that returns true or false if the element matches the parameters.
        const isFound = (element) => element.week == reqWeek;
 
+       // Search the array to find the index of the first matching element that meets the
+       // requirements.
        const index = Schedule.findIndex(isFound);
        if (index > -1) {        
           found = true;
         }
-
-        // if (found) {
-        //     console.log("findWeek - " + reqWeek + " found");
-        // } else {
-        //     console.log("findWeek - " + reqWeek + " not found");
-        // }    
         return found;
     }
         
@@ -250,18 +263,16 @@ function MyBlockSchedule() {
     function FindDay(reqWeek, reqDay) {
        var found = false;
 
+       // Callback function that returns true or false if the element matches the
+       // parameters
        const isFound = (element) => ((element.week == reqWeek) && (element.day == reqDay));
 
+       // Search the array to find the index of the first matching element that meets the
+       // requirements.
        const index = Schedule.findIndex(isFound);
        if (index > -1) {        
           found = true;
-        }
-
-        // if (found) {
-        //     console.log("findWeek - " + reqWeek + " found");
-        // } else {
-        //     console.log("findWeek - " + reqWeek + " not found");
-        // }    
+        }        
         return found;
     }
 
@@ -293,7 +304,7 @@ function MyBlockSchedule() {
             }               
         };
         return items; 
-    }
+    };
 
     //
     // setTabColour() 
@@ -304,12 +315,16 @@ function MyBlockSchedule() {
     useEffect(() => {
         if (CurrentWeek > 0) {
             let el = document.getElementById("TabWeek_" + CurrentWeek); 
-            el.style.backgroundColor = "#ffffff";        
+            if (el != null) {
+                el.style.backgroundColor = "#ffffff";   
+            }         
         }
 
         if (CurrentDay > 0) {
             let el = document.getElementById("TabDay_" + CurrentDay); 
-            el.style.backgroundColor = "#ffffff";        
+            if (el != null) {
+                el.style.backgroundColor = "#ffffff"; 
+            }           
         }
     }, [CurrentWeek, CurrentDay] );
 
@@ -321,128 +336,138 @@ function MyBlockSchedule() {
     // update their progress.
     //
     return (
-        <div>            
-            <TopNav title=""/>
-            <div className="flex flex-col absolute top-24 bottom-0
-                            items-center justify-center
-                            left-0 right-0 bg-gray-800 overflow-hidden">
+        (currentPage === pages.PAGE_WEEK) && (
+            <showBlockWeek/>  
+        )    
+    )};
+    
+    //
+    // showBlockWeek
+    // =============
+    function showBlockWeek() {
+        return (
+            <div>            
+                <TopNav title=""/>
+                <div className="flex flex-col absolute top-24 bottom-0
+                                items-center justify-center
+                                left-0 right-0 bg-gray-800 overflow-hidden">
 
-                <div className="flex flex-col box-border border-2 rounded-lg    
-                                ml-10 mr-10 h-[500px] w-auto">
+                    <div className="flex flex-col box-border border-2 rounded-lg    
+                                    ml-10 mr-10 h-[500px] w-auto">
 
-                    {/*  Display the video player window
-                         video_link = {params.video_link}
-                     */}
-                    <div>
-                        {(VideoVisible) && (
-                            <ShowVideo 
-                                user_ID = {user_ID}
-                                JWT = {JWT}
-                                setVideoVisible = {setVideoVisible}
-                                VideoLink = {VideoLink}                                
-                            />
-                        )}
-                    </div>                 
-                    
-                    <div className="flex flex-row">
-                        <WeekTabBar/>         
-                    </div>    
-                    
-                    <div className="flex flex-row">
-                        <DayTabBar/>         
-                    </div> 
-                    <hr className="h-px my-0 bg-white border-0"></hr>   
-
-                    <p className="text-white text-center font-bold text-xl mt-5">
-                        My Block {Block} Week {CurrentWeek} Day {CurrentDay} Training Schedule</p>                   
-                    
-                    <div className="flex flex.row text-white">                        
-                        <p className="text-center border mb-0 mt-5 ml-0 w-40">
-                            Exercises 
-                        </p>
-                        <p className="text-center border mb-0 mt-5 ml-0 w-20">
-                            Sets 
-                        </p>
-                        <p className="text-base text-center border mb-0 mt-5 ml-0 w-20">
-                            Reps 
-                        </p>
-                        <p className="text-base text-center border mb-0 mt-5 ml-0 w-32">
-                            Weights 
-                        </p>
-                        <p className="text-base text-center border mb-0 mt-5 ml-0 w-32">
-                            My Weights 
-                        </p>
-                        <p className="text-base text-center border mb-0 mt-5 ml-0 w-48">
-                            Velocity-Based Metrics 
-                        </p>
-                        <p className="text-base text-center border mb-0 mt-5 ml-0 w-48">
-                            Notes
-                        </p>  
-                        <p className="text-base text-center border mb-0 mt-5 ml-0 w-14">
-                            E1RM
-                        </p>     
-                    </div>            
-
-                    <div>
-                        {Schedule.map(line => (
-                            <ScheduleLine
-                                activeWeek = {CurrentWeek}
-                                activeDay = {CurrentDay}                                
-                                day = {line.day}
-                                week = {line.week}                                
-                                key = {line.schedule_ID}
-                                seq_ID = {line.seq_ID}
-                                exercise_name = {line.exercise_name}
-                                video_link = {line.video_link}
-                                sets = {line.sets}
-                                actual_sets = {line.actual_sets}
-                                reps = {line.reps}
-                                actual_reps = {line.actual_reps}
-                                weights = {line.lower_weight + " - " + line.upper_weight}
-                                actual_weights = {line.actual_weight}
-                                velocity_based_metrics = {line.velocity_based_metrics}
-                                notes = {line.notes}
-                                E1RM = {line.E1RM} 
-                                setVideoVisible = {setVideoVisible} 
-                                setVideoLink = {setVideoLink}                                                                  
-                            />                        
-                        ))}
-                    </div>
-
-                    <div className="mt-auto">    
-                        <div className="flex flex-row justify-center mt-5">
-                            <button className="bg-cyan-600 text-white font-bold text-sm py-2 px-2 rounded
-                                                mb-6 mt-2 ml-8"
-                                id="Save"
-                                style={{ width: "100px" }}
-                                onClick={() => { 
-                                }}>
-                                Save
-                            </button>  
-
-                            <button className="bg-cyan-600 text-white font-bold text-sm py-2 px-2 rounded
-                                                mb-6 mt-2 ml-8"
-                                id="Back"
-                                style={{ width: "100px" }}
-                                onClick={() => { 
-                                    // RA_BRD                                
-                                    //if (IsChanged) {
-                                        //setTabColor(currentPage, pages.PAGE_1);
-                                    //   setCurrentPage(pages.PAGE_1);
-                                        //setState(states.CANCELLING);
-                                    //} else {
-                                        navigate("/Home");         
-                                    //}    
-                                }}>
-                                Back
-                            </button>  
+                        {/*  Display the video player window
+                            video_link = {params.video_link}
+                        */}
+                        <div>
+                            {(VideoVisible) && (
+                                <ShowVideo 
+                                    user_ID = {user_ID}
+                                    JWT = {JWT}
+                                    setVideoVisible = {setVideoVisible}
+                                    VideoLink = {VideoLink}                                
+                                />
+                            )}
+                        </div>                 
+                        
+                        <div className="flex flex-row">
+                            <WeekTabBar/>         
+                        </div>    
+                        
+                        <div className="flex flex-row">
+                            <DayTabBar/>         
                         </div> 
-                    </div>
-                </div>                
-            </div>  
-        </div>
-    )
-}
+                        <hr className="h-px my-0 bg-white border-0"></hr>   
+
+                        <p className="text-white text-center font-bold text-xl mt-5">
+                            My Block {Block} Week {CurrentWeek} Day {CurrentDay} Training Schedule</p>                   
+                        
+                        <div className="flex flex.row text-white">                        
+                            <p className="text-center border mb-0 mt-5 ml-0 w-40">
+                                Exercises 
+                            </p>
+                            <p className="text-center border mb-0 mt-5 ml-0 w-20">
+                                Sets 
+                            </p>
+                            <p className="text-base text-center border mb-0 mt-5 ml-0 w-20">
+                                Reps 
+                            </p>
+                            <p className="text-base text-center border mb-0 mt-5 ml-0 w-32">
+                                Weights 
+                            </p>
+                            <p className="text-base text-center border mb-0 mt-5 ml-0 w-32">
+                                My Weights 
+                            </p>
+                            <p className="text-base text-center border mb-0 mt-5 ml-0 w-48">
+                                Velocity-Based Metrics 
+                            </p>
+                            <p className="text-base text-center border mb-0 mt-5 ml-0 w-48">
+                                Notes
+                            </p>  
+                            <p className="text-base text-center border mb-0 mt-5 ml-0 w-14">
+                                E1RM
+                            </p>     
+                        </div>            
+
+                        <div>
+                            {Schedule.map(line => (
+                                <ScheduleLine
+                                    activeWeek = {CurrentWeek}
+                                    activeDay = {CurrentDay}                                
+                                    day = {line.day}
+                                    week = {line.week}                                
+                                    key = {line.schedule_ID}
+                                    seq_ID = {line.seq_ID}
+                                    exercise_name = {line.exercise_name}
+                                    video_link = {line.video_link}
+                                    sets = {line.sets}
+                                    actual_sets = {line.actual_sets}
+                                    reps = {line.reps}
+                                    actual_reps = {line.actual_reps}
+                                    weights = {line.lower_weight + " - " + line.upper_weight}
+                                    actual_weights = {line.actual_weight}
+                                    velocity_based_metrics = {line.velocity_based_metrics}
+                                    notes = {line.notes}
+                                    E1RM = {line.E1RM} 
+                                    setVideoVisible = {setVideoVisible} 
+                                    setVideoLink = {setVideoLink}                                                                  
+                                />                        
+                            ))}
+                        </div>
+
+                        <div className="mt-auto">    
+                            <div className="flex flex-row justify-center mt-5">
+                                <button className="bg-cyan-600 text-white font-bold text-sm py-2 px-2 rounded
+                                                    mb-6 mt-2 ml-8"
+                                    id="Save"
+                                    style={{ width: "100px" }}
+                                    onClick={() => { 
+                                    }}>
+                                    Save
+                                </button>  
+
+                                <button className="bg-cyan-600 text-white font-bold text-sm py-2 px-2 rounded
+                                                    mb-6 mt-2 ml-8"
+                                    id="Back"
+                                    style={{ width: "100px" }}
+                                    onClick={() => { 
+                                        // RA_BRD                                
+                                        //if (IsChanged) {
+                                            //setTabColor(currentPage, pages.PAGE_1);
+                                        //   setCurrentPage(pages.PAGE_1);
+                                            //setState(states.CANCELLING);
+                                        //} else {
+                                            navigate("/Home");         
+                                        //}    
+                                    }}>
+                                    Back
+                                </button>  
+                            </div> 
+                        </div>
+                    </div>                
+                </div>  
+            </div>
+        )
+    }
 
 //
 // ShowVideo()
@@ -539,6 +564,7 @@ function ShowVideo(params) {
 //
 function ScheduleLine(params) { 
     if ((params.activeWeek === params.week) && (params.activeDay === params.day)) { 
+
         return (
             <div>                
                 <div className="flex flex.row"> 
@@ -551,6 +577,8 @@ function ScheduleLine(params) {
                              draggable={false} 
                              height={30} width={30}
                              onClick={() => {  
+                                showExercise(params.week, params.day, params.seq_ID);
+                                
                                 //console.log("Video link " + params.video_link);
                                 //params.setVideoLink(params.video_link);                             
                                 //params.setVideoVisible(true);
@@ -592,7 +620,15 @@ function ScheduleLine(params) {
         )
     } else {
         return null;
-    }    
+    } 
+    
+    //
+    // showExercise()
+    // ==============
+    function showExercise(week, day, seq_ID) {
+        console.log("\nweek = " + week + " day = " + day + 
+                    " seq_ID = " + seq_ID);
+    }     
 };
 
 //
