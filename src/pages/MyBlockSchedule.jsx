@@ -337,14 +337,14 @@ function MyBlockSchedule() {
     //
     return (
         (currentPage === pages.PAGE_WEEK) && (
-            <showBlockWeek/>  
+            <ShowBlockWeek />  
         )    
     )};
     
     //
-    // showBlockWeek
+    // ShowBlockWeek
     // =============
-    function showBlockWeek() {
+    function ShowBlockWeek() {
         return (
             <div>            
                 <TopNav title=""/>
