@@ -77,7 +77,7 @@ CREATE TABLE IF NOT EXISTS public."Schedule" (
     "schedule_ID" smallint,
     "seq_ID" smallint,
     "user_ID" smallint,
-    "block" smallint,
+    "block" smallint,   
     "week" smallint,
     "day" smallint,
     "exercise_ID" smallint,
