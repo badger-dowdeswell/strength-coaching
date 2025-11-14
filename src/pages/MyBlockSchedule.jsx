@@ -38,8 +38,8 @@ const axios = Axios;
 // These constants are used to set the currentPage state.
 //
 const pages = {
-    PAGE_WEEK: 1,
-    PAGE_DAY: 2
+    PAGE_DAY: 1,
+    PAGE_EXERCISE: 2
 }    
 
 //
@@ -90,7 +90,7 @@ function MyBlockSchedule() {
     // state changes. 
     //
     const [state, setState] = useState(states.UNDEFINED);
-    const [currentPage, setCurrentPage] = useState(pages.PAGE_WEEK);
+    const [currentPage, setCurrentPage] = useState(pages.PAGE_DAY);
 
     useEffect(() => {    
         switch (state) {            
@@ -348,26 +348,121 @@ function MyBlockSchedule() {
 
                 <div className="flex flex-col box-border border-2 rounded-lg    
                                 ml-10 mr-10 h-[500px] w-auto">
+                               
                     <div className="flex flex-row">
-                        <WeekTabBar/>         
-                    </div>    
-                        
-                    <div className="flex flex-row">
-                        <DayTabBar/>         
+                        <WeekTabBar
+                            Schedule = {Schedule}
+
+                        /> 
                     </div>
 
-                    <button className = "bg-cyan-600 text-white font-bold text-sm py-2 px-2 rounded mb-6 mt-2 ml-8"
-                            id = "Back"
-                            style = {{ width: "100px" }} 
-                            onClick={() => {                                         
-                                        navigate("/Home");         
-                                    }    
-                            }>            
-                    </button>
+                    <div className="flex flex-row">    
+                        <DayTabBar/>         
+                    </div> 
+
+                    {(currentPage === pages.PAGE_DAY) && (
+                        <Page_Day
+                            Schedule = {Schedule}
+                            activeWeek = {CurrentWeek}
+                            activeDay = {CurrentDay} 
+                            setVideoVisible = {setVideoVisible} 
+                            setVideoLink = {setVideoLink}
+                            navigate = {navigate}                                                                  
+                        />                   
+                    )};
                 </div> 
             </div> 
         </div>        
     )
+}
+
+//
+// Page_Day()
+// ==========
+// This displays all the exercises scheduled for the current day.
+//
+function Page_Day(params) {
+    return (
+        <div>
+            <hr className="h-px my-0 bg-white border-0"></hr> 
+            <p className="text-white text-center font-bold text-xl mt-5">
+                Training Schedule</p>                   
+            
+            <div className="flex flex.row text-white">                        
+                <p className="text-center border mb-0 mt-5 ml-0 w-40">
+                    Exercises 
+                </p>
+                <p className="text-center border mb-0 mt-5 ml-0 w-20">
+                    Sets 
+                </p>
+                <p className="text-base text-center border mb-0 mt-5 ml-0 w-20">
+                    Reps 
+                </p>
+                <p className="text-base text-center border mb-0 mt-5 ml-0 w-32">
+                    Weights 
+                </p>
+                <p className="text-base text-center border mb-0 mt-5 ml-0 w-32">
+                    My Weights 
+                </p>
+                <p className="text-base text-center border mb-0 mt-5 ml-0 w-48">
+                    Velocity-Based Metrics 
+                </p>
+                <p className="text-base text-center border mb-0 mt-5 ml-0 w-48">
+                    Notes
+                </p>  
+                <p className="text-base text-center border mb-0 mt-5 ml-0 w-14">
+                    E1RM
+                </p>     
+            </div>            
+
+            <div>
+                {params.Schedule.map(line => (
+                    <ScheduleLine
+                        activeWeek = {params.activeWeek}
+                        activeDay = {params.activeDay}                                
+                        day = {line.day}
+                        week = {line.week}                                
+                        key = {line.schedule_ID}
+                        seq_ID = {line.seq_ID}
+                        exercise_name = {line.exercise_name}
+                        video_link = {line.video_link}
+                        sets = {line.sets}
+                        actual_sets = {line.actual_sets}
+                        reps = {line.reps}
+                        actual_reps = {line.actual_reps}
+                        weights = {line.lower_weight + " - " + line.upper_weight}
+                        actual_weights = {line.actual_weight}
+                        velocity_based_metrics = {line.velocity_based_metrics}
+                        notes = {line.notes}
+                        E1RM = {line.E1RM} 
+                        setVideoVisible = {params.setVideoVisible} 
+                        setVideoLink = {params.setVideoLink}                                                                  
+                    />                        
+                ))}
+            </div>
+
+            <div className = "mt-auto">    
+                <div className = "flex flex-row justify-center mt-5">
+                    <button className = "bg-cyan-600 text-white font-bold text-sm py-2 px-2 rounded mb-6 mt-2 ml-8"
+                            id = "Save"p
+                            style = {{ width: "100px" }}
+                            onClick = {() => { 
+                            }}>
+                        Save
+                    </button>  
+
+                    <button className = "bg-cyan-600 text-white font-bold text-sm py-2 px-2 rounded mb-6 mt-2 ml-8"
+                            id = "Back"
+                            style = {{ width: "100px" }}
+                            onClick = {() => {                                 
+                                params.navigate("/Home"); 
+                            }}>
+                            Back
+                    </button>                      
+                </div>
+            </div> 
+        </div>
+    )  
 }
 
     //
