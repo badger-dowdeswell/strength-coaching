@@ -807,7 +807,16 @@ app.get('/api/getSchedule', async(request, response) => {
             if (!err) {
                 if (result.rows[0] !== undefined) {
                     logmsg("/api/getSchedule: schedule found");
-                    response.setHeader("Content-Type", "application/json");
+
+                    // Assign a unique, incrementing key to each element in the
+                    // response that will be used as a primary index of the array
+                    // on the front end.
+                    for (var key = 0; key < result.rows.length; key++) {                        
+                        result.rows[key].key = key;
+                        console.log("map " + key + " [" + result.rows[key].key + "]");
+                    }
+
+                    response.setHeader("Content-Type", "application/json");                  
                     response.status(200).json(result.rows);
                 } else {
                     logmsg("/api/getSchedule: no schedule was found");
