@@ -230,11 +230,11 @@ function MyBlockSchedule() {
     // that displays the set of pages for the weeks in this schedule. Only weeks
     // where activities have been scheduled are visible.
     // 
-    function WeekTabBar() {  
+    function WeekTabBar() {         
         const items = [];         
         for (let index = 0; index < MaxWeek; index++) {  
-            if (FindWeek(index + 1)) {          
-                items.push(
+            if (FindWeek(index + 1)) { 
+                items.push( 
                     <div>
                         <button className="bg-gray-400 text-black text-sm py-1
                                            px-1 border mb-0 mt-0 ml-0"                                                                
@@ -638,6 +638,17 @@ function ShowVideo(params) {
     //        videoRef.current.load();
     //    }
     //})
+
+    // <ReactPlayer
+    //                         width="100"                            
+    //                         controls="true" 
+    //                         playing  
+                                                  
+    //                         url = {baseURL + 'streamVideo?user_ID=' + params.user_ID 
+    //                                        +"&JWT=" + params.JWT
+    //                                        + "&filename=" + params.VideoLink}
+    //                         type = 'video/mp4'                  
+    //                     /> 
    
     return (
         <div>
@@ -647,17 +658,6 @@ function ShowVideo(params) {
                         <h1 className="bg-gray-800 text-white text-center text-sm ml-10 mr-10 mt-5 w-80">
                             Video link {params.VideoLink}
                         </h1> 
-
-                        <ReactPlayer
-                            width="100"                            
-                            controls='true' 
-                            playing  
-                                                  
-                            url = {baseURL + 'streamVideo?user_ID=' + params.user_ID 
-                                           +"&JWT=" + params.JWT
-                                           + "&filename=" + params.VideoLink}
-                            type = 'video/mp4'                  
-                        /> 
 
                         <div className="mt-auto">    
                             <div className="flex flex-row justify-center mt-5">
