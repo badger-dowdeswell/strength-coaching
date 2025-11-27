@@ -23,7 +23,7 @@
 // 19.10.2022 BRD Renamed as LookupLists.js now that
 //                it is going to be used by other
 //                components.
-// 11.03.2025 BRD Adapted for use in Strength Research
+// 11.03.2025 BRD Adapted for use in Strength Research and Strength Coaching.
 //
 import React from 'react';
 

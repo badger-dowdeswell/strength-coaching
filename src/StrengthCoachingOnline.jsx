@@ -53,22 +53,24 @@ const version = 1.5;
 // calls this router component directly which simplifies the
 // structure significantly.
 //
+// <Route path="/Today" element={<Today />} /> RA_BRD
+// <Route path="/MyProgress" element={<MyProgress />} />
+// <Route path="/MyMessages" element={<MyMessages />} />
+// <Route path="/More" element={<More />} />
+//
 const root = ReactDOM.createRoot(document.getElementById('root'));
 
 root.render(
     <StrictMode>
         <BrowserRouter>
             <Routes>
-                <Route path="/" element={<Landing />} />            
+                <Route path="/" element={<Landing />} />   
+                <Route path="/More" element={<More />} />         
                 <Route path="/SignIn" element={<SignIn />} />
                 <Route path="/ResetPassword" element={<ResetPassword />} /> 
-                <Route path="/Registration" element={<Registration />} />
-                <Route path="/More" element={<More />} />
-                <Route path="/Home" element={<Home />} />
-                <Route path="/Today" element={<Today />} />
-                <Route path="/MyBlockSchedule" element={<MyBlockSchedule />} />
-                <Route path="/MyProgress" element={<MyProgress />} />
-                <Route path="/MyMessages" element={<MyMessages />} />
+                <Route path="/Registration" element={<Registration />} />                
+                <Route path="/Home" element={<Home />} />                
+                <Route path="/MyBlockSchedule" element={<MyBlockSchedule />} />  
                 <Route path="/EditMyProfile" element={<EditMyProfile />} />            
             </Routes>
         </BrowserRouter>

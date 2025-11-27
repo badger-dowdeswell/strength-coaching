@@ -22,7 +22,7 @@ import "./Main.css";
 
 import { useState, useEffect, useRef } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import { getBaseURL } from "./getBaseURL";
+import { getBaseURL } from "./components/getBaseURL";
 import { states } from "./Constants";
 import { validateEmail } from "./components/UtilLib";
 

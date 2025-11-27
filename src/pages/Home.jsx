@@ -26,28 +26,28 @@ function Home() {
     let navigate = useNavigate();    
     
     //
-    // Authentication and Navigation
-    // =============================
-    // Checks to see if the local storage has a userID set to ensure that
-    // only authenticated uses can navigate around the application. This
-    // is also a convenient way of logging out. When the UserID is set to
-    // blank via the Sign-out button click, there is no longer an
-    // authenticated user.
-    //
-    let userID = sessionStorage.getItem("userID");
-    const JWT = sessionStorage.getItem('JWT');
+    // Authentication and Navigation()
+    // ===============================
+    // Checks to see if the local storage has a user_ID set to ensure that only
+    // authenticated uses can navigate around the application. This is also a
+    // convenient way of logging out. When the user_ID is set to blank, there will
+    // no longer be an authenticated user. The change triggers this useEffect hook
+    // and the application will navigate to the default Landing page.
+    //    
+    var user_ID = sessionStorage.getItem("user_ID");
+    var JWT = sessionStorage.getItem('JWT');
 
     useEffect(() => {
-        if (!userID.trim() || !JWT.trim()) {
+        if (!user_ID.trim() || !JWT.trim()) {
             // The page is being accessed by an unauthorised user so redirect them
             // back to the landing page.
             return navigate("/"); 
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [userID, JWT]);
+    }, [user_ID, JWT]);
 
     let userName = sessionStorage.getItem("FirstName") + " " + sessionStorage.getItem("LastName");  
-    let userImage = "./userImages/" + userID + ".png";    
+    let userImage = "./userImages/" + user_ID + ".png";    
     var userRole = "";   
     switch (sessionStorage.getItem("UserAuthority")) {
         case "A":
@@ -96,8 +96,8 @@ function Home() {
     //
     return (
         <div>
-            <TopNav title="" userID = {userID} userImage = {userImage}
-                    userName={userName} userRole={userRole} />
+            <TopNav title = "" user_ID = {user_ID} userImage = {userImage}
+                    userName = {userName} userRole = {userRole} />
             
             <div className="flex flex-col">                              
                 <div className="flex flex-row absolute top-24 bottom-0

@@ -20,12 +20,12 @@
 import './Main.css';
 
 import TopNav from "./components/TopNav";
-import { getBaseURL } from "./getBaseURL";
+import { getBaseURL } from "./components/getBaseURL";
 import { useEffect, useState, useRef} from "react";
 import { useNavigate } from "react-router-dom";
 import { states, pages } from "./Constants";
 import { Salutations, Countries} from "./components/LookUpLists";
-import { formatDate, decodeISOdate, validateDate } from "./DateLib";
+import { formatDate, decodeISOdate, validateDate } from "./components/DateLib";
 import Modal from "./components/Modal";
 import eye from "./images/password_eye.png";
 
@@ -77,23 +77,23 @@ export default function EditMyProfile() {
     //
     // Authentication and Navigation()
     // ===============================
-    // Checks to see if the local storage has a userID set to ensure that
+    // Checks to see if the local storage has a user_ID set to ensure that
     // only authenticated uses can navigate around the application. This
-    // is also a convenient way of logging out. When the UserID is set to
+    // is also a convenient way of logging out. When the user_ID is set to
     // blank via the Sign-out button click, there is no longer an
     // authenticated user.
     //    
-    var userID = sessionStorage.getItem("userID");      
+    var user_ID = sessionStorage.getItem("user_ID");      
     const JWT = sessionStorage.getItem('JWT');
     
     useEffect(() => {
-        if (!userID.trim() || !JWT.trim()) {
+        if (!user_ID.trim() || !JWT.trim()) {
             // The page is being accessed by an unauthorised user so redirect them
             // back to the landing page.
             return navigate("/"); 
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [userID, JWT]);
+    }, [user_ID, JWT]);
     
     //
     // Editing state control()
@@ -104,7 +104,7 @@ export default function EditMyProfile() {
     // state controls which page of the tabbed dialog is currently displayed.
     //
     const [state, setState] = useState(states.LOADING);
-    const [currentPage, setCurrentPage] = useState();
+    const [currentPage, setCurrentPage] = useState(pages.UNDEFINED);
 
     useEffect(() => {
         switch (state) {
@@ -112,7 +112,7 @@ export default function EditMyProfile() {
             // This is the initial stage that loads the user's profile ready
             // for editing.            
             setCurrentPage(pages.PAGE_1);                        
-            getUser(userID);            
+            getUser(user_ID);            
             break;  
 
         case states.EDITING:                              
@@ -165,10 +165,10 @@ export default function EditMyProfile() {
     // Checks if the alias selected by the use is already assigned to another user. This is called when
     // the editingStatus is set to VALIDATING_STAGE_1.
     //
-    const checkDuplicateAlias = async (userID, alias) => {  
+    const checkDuplicateAlias = async (user_ID, alias) => {  
         if (alias.trim()) { 
             try {
-                let response = await axios.get(baseURL + "duplicateAlias?user_ID=" + userID + "&alias=" + alias + "&JWT=" + JWT);
+                let response = await axios.get(baseURL + "duplicateAlias?user_ID=" + user_ID + "&alias=" + alias + "&JWT=" + JWT);
                 // Another user is already using that alias.                
                 if (response.status === 200) {
                     console.log("duplicateAlias 200");    
@@ -197,10 +197,10 @@ export default function EditMyProfile() {
     // Checks if the email address specified by the use is already assigned to another user. This is called when
     // the editingStatus is set to VALIDATING_STAGE_2.
     //
-    const checkDuplicateEmail = async (userID, email_address) => {  
+    const checkDuplicateEmail = async (user_ID, email_address) => {  
         if (email_address.trim()) { 
             try {
-                let response = await axios.get(baseURL + "duplicateEmail?user_ID=" + userID + "&email_address=" + email_address + "&JWT=" + JWT);
+                let response = await axios.get(baseURL + "duplicateEmail?user_ID=" + user_ID + "&email_address=" + email_address + "&JWT=" + JWT);
                 // Another user is already using that alias.                
                 if (response.status === 200) {
                     errors.EmailAddress="That email address is in use";                
@@ -338,9 +338,9 @@ export default function EditMyProfile() {
     // Note since this method operates within an aync Promise, it is the safest place to
     // set the editingState so that that state does not get triggered before the read is complete.
     //
-    const getUser = async (userID) => {         
+    const getUser = async (user_ID) => {         
         try {
-            let response = await axios.get(baseURL + "getUser?user_ID=" + userID + "&JWT=" + JWT);
+            let response = await axios.get(baseURL + "getUser?user_ID=" + user_ID + "&JWT=" + JWT);
             if (response.status === 200) {                               
                 setUserID(response.data.user_ID);  
                 setUserAuthority(response.data.user_authority || "");                
@@ -439,8 +439,8 @@ export default function EditMyProfile() {
             <TopNav title="" />
 
             <div className="flex flex-col absolute top-24 bottom-0
-                        items-center justify-center
-                        left-0 right-0 bg-gray-800 overflow-hidden">    
+                            items-center justify-center
+                            left-0 right-0 bg-gray-800 overflow-hidden">    
 
                 <div className="flex flex-col box-border border-2 rounded-lg    
                                 ml-10 mr-10 h-auto w-auto">
@@ -448,12 +448,12 @@ export default function EditMyProfile() {
                         <div>
                             <button className="bg-white text-black text-sm py-1 px-1 border
                                                 mb-0 mt-0 ml-0"
-                                id="Page1"
-                                style={{ width: "175px" }}
-                                onClick={() => {
-                                    setTabColor(currentPage, pages.PAGE_1);
-                                    setCurrentPage(pages.PAGE_1);
-                                }}>
+                                    id="Page1"
+                                    style={{ width: "175px" }}
+                                    onClick={() => {
+                                        setTabColor(currentPage, pages.PAGE_1);
+                                        setCurrentPage(pages.PAGE_1);
+                                    }}>
                                 My Contact Information
                             </button> 
                         </div>
@@ -461,12 +461,12 @@ export default function EditMyProfile() {
                         <div>
                             <button className="bg-gray-400 text-black text-sm py-1 border
                                                 mb-0 mt-0 ml-0"
-                                id="Page2"
-                                style={{ width: "175px" }}
-                                onClick={() => {
-                                    setTabColor(currentPage, pages.PAGE_2);
-                                    setCurrentPage(pages.PAGE_2);
-                                }}>
+                                    id="Page2"
+                                    style={{ width: "175px" }}
+                                    onClick={() => {
+                                        setTabColor(currentPage, pages.PAGE_2);
+                                        setCurrentPage(pages.PAGE_2);
+                                    }}>
                                 Picture and Password
                             </button> 
                         </div>
@@ -474,12 +474,12 @@ export default function EditMyProfile() {
                         <div>
                             <button className="bg-gray-400 text-black text-sm py-1 border
                                                 mb-0 mt-0 ml-0"
-                                id="Page3"
-                                style={{ width: "175px" }}
-                                onClick={() => {
-                                    setTabColor(currentPage, pages.PAGE_3);
-                                    setCurrentPage(pages.PAGE_3);
-                                }}>
+                                    id="Page3"
+                                    style={{ width: "175px" }}
+                                    onClick={() => {
+                                        setTabColor(currentPage, pages.PAGE_3);
+                                        setCurrentPage(pages.PAGE_3);
+                                    }}>
                                 Agreement
                             </button> 
                         </div>
@@ -487,16 +487,17 @@ export default function EditMyProfile() {
                         <div>
                             <button className="bg-gray-400 text-black text-sm py-1 border
                                                 mb-0 mt-0 ml-0"
-                                id="Page4"
-                                style={{ width: "175px" }}
-                                onClick={() => {
-                                    setTabColor(currentPage, pages.PAGE_4);
-                                    setCurrentPage(pages.PAGE_4);
-                                }}>
+                                    id="Page4"
+                                    style={{ width: "175px" }}
+                                    onClick={() => {
+                                        setTabColor(currentPage, pages.PAGE_4);
+                                        setCurrentPage(pages.PAGE_4);
+                                    }}>
                                 Something else
                             </button> 
                         </div>
                     </div>
+
                     <hr className="h-px my-0 bg-white border-0"></hr> 
 
                     {(currentPage === pages.PAGE_1) && (
@@ -526,7 +527,7 @@ export default function EditMyProfile() {
 
                     {(currentPage === pages.PAGE_2) && (
                         <Page_2
-                            userID={userID}
+                            userID={UserID}
                             UserImage={UserImage} setUserImage={setUserImage}
                             JWT={JWT}
                             Password={Password} setPassword={setPassword}                            
@@ -538,43 +539,41 @@ export default function EditMyProfile() {
                     )};    
 
                     {(currentPage === pages.PAGE_3) && (
-                        <Page_3
-                        />
+                        <Page_3/>
                     )};  
 
                     {(currentPage === pages.PAGE_4) && (
-                        <Page_4
-                        />
+                        <Page_4/>
                     )};  
 
                     <div className="flex flex-row justify-center">                        
                         <button className="bg-cyan-600 text-white font-bold text-sm py-2 px-2 rounded
                                            mb-6 mt-2"
-                            id="Update"
-                            style={{ width: "100px" }}
-                            onClick={() => {
-                                // This stops the user clicking Update while
-                                // the ConfirmCancel dialogue is open.
-                                if (state == states.EDITING) {
-                                    setState(states.VALIDATING_STAGE_1);
-                                }    
-                            }}>
+                                id="Update"
+                                style={{ width: "100px" }}
+                                onClick={() => {
+                                    // This stops the user clicking Update while
+                                    // the ConfirmCancel dialogue is open.
+                                    if (state == states.EDITING) {
+                                        setState(states.VALIDATING_STAGE_1);
+                                    }    
+                                }}>
                             Update
                         </button>    
 
-                        <button className="bg-cyan-600 text-white font-bold text-sm py-2 px-2 rounded
-                                           mb-6 mt-2 ml-8"
-                            id="Cancel"
-                            style={{ width: "100px" }}
-                            onClick={() => {                                
-                                if (IsChanged) {
-                                    setTabColor(currentPage, pages.PAGE_1);
-                                    setCurrentPage(pages.PAGE_1);
-                                    setState(states.CANCELLING);
-                                } else {
-                                    setState(states.EXITING);            
-                                }    
-                            }}>
+                        <button className="bg-cyan-600 text-white font-bold text-sm py-2 px-2
+                                           rounded mb-6 mt-2 ml-8"
+                                id="Cancel"
+                                style={{ width: "100px" }}
+                                onClick={() => {                                
+                                    if (IsChanged) {
+                                        setTabColor(currentPage, pages.PAGE_1);
+                                        setCurrentPage(pages.PAGE_1);
+                                        setState(states.CANCELLING);
+                                    } else {
+                                        setState(states.EXITING);            
+                                    }    
+                                }}>
                             Cancel
                         </button>                         
                     </div>
@@ -622,18 +621,17 @@ function Page_1(params) {
             <div className="flex flex-row">
                 <div>
                     <p className="ml-5 mb-1 mt-1 text-white text-left">Title or salutation</p>
-                    <select
-                        className="ml-5 mr-5 mt-1 w-48 pl-0 h-6"
-                        id="Salutation"
-                        ref={autofocusID}
-                        value={params.Salutation}
-                        onKeyDown={params.handleKeys}
-                        onChange={(e) => {
-                            if (params.state === states.EDITING) {
-                                params.setSalutation(e.target.value);
-                                params.setIsChanged(true);
-                            }    
-                        }}>
+                    <select className="ml-5 mr-5 mt-1 w-48 pl-0 h-6"
+                            id="Salutation"
+                            ref={autofocusID}
+                            value={params.Salutation}
+                            onKeyDown={params.handleKeys}
+                            onChange={(e) => {
+                                if (params.state === states.EDITING) {
+                                    params.setSalutation(e.target.value);
+                                    params.setIsChanged(true);
+                                }    
+                            }}>
                         <Salutations />
                     </select>
                     <p className="ml-5 mb-1 mt-1 text-cyan-300 text-left text-sm">{params.errors.Salutation}&nbsp;</p>
@@ -642,17 +640,17 @@ function Page_1(params) {
                 <div>
                     <p className="ml-5 mb-1 mt-1 text-white text-left">First name</p>
                     <input className="ml-5 mr-5 mt-1 w-48 pl-1"
-                        id="FirstName"
-                        type="text" 
-                        placeholder=""                       
-                        value={params.FirstName}
-                        onKeyDown={params.handleKeys}
-                        onChange={(e) => {
-                            if (params.state === states.EDITING) {
-                                params.setFirstName(e.target.value);
-                                params.setIsChanged(true);
-                            }    
-                        }}
+                           id="FirstName"
+                           type="text" 
+                           placeholder=""                       
+                           value={params.FirstName}
+                           onKeyDown={params.handleKeys}
+                           onChange={(e) => {
+                                if (params.state === states.EDITING) {
+                                    params.setFirstName(e.target.value);
+                                    params.setIsChanged(true);
+                                }    
+                            }}
                     />
                     <p className="ml-5 mb-1 mt-1 text-cyan-300 text-left text-sm">{params.errors.FirstName}&nbsp;</p>
                 </div>
@@ -660,17 +658,17 @@ function Page_1(params) {
                 <div>
                     <p className="ml-5 mb-1 mt-1 text-white text-left">Last name</p>
                     <input className="ml-5 mr-0 mt-1 w-48 pl-1"
-                        id="LastName"
-                        type="text"
-                        placeholder=""
-                        value={params.LastName}
-                        onKeyDown={params.handleKeys}
-                        onChange={(e) => {
-                            if (params.state === states.EDITING) {
-                                params.setLastName(e.target.value);
-                                params.setIsChanged(true); 
-                            }      
-                        }}
+                           id="LastName"
+                           type="text"
+                           placeholder=""
+                           value={params.LastName}
+                           onKeyDown={params.handleKeys}
+                           onChange={(e) => {
+                                if (params.state === states.EDITING) {
+                                    params.setLastName(e.target.value);
+                                    params.setIsChanged(true); 
+                                }      
+                            }}
                     />
                     <p className=" ml-5 mb-1 mt-1 text-cyan-300 text-left text-sm">{params.errors.LastName}&nbsp;</p>
                 </div>
@@ -692,17 +690,17 @@ function Page_1(params) {
                             Alias or sign-in short name
                         </p>
                         <input className="ml-5 mr-5 mt-1 w-48 pl-1"
-                            id="Alias"
-                            type="text"
-                            placeholder=""
-                            value={params.Alias}
-                            onKeyDown={params.handleKeys}
-                            onChange={(e) => {
-                                if (params.state === states.EDITING) {
-                                    params.setAlias(e.target.value);
-                                    params.setIsChanged(true);  
-                                } 
-                            }}                                                        
+                               id="Alias"
+                               type="text"
+                               placeholder=""
+                               value={params.Alias}
+                               onKeyDown={params.handleKeys}
+                               onChange={(e) => {
+                                    if (params.state === states.EDITING) {
+                                        params.setAlias(e.target.value);
+                                        params.setIsChanged(true);  
+                                    } 
+                                }}                                                        
                         />
                         <p className=" ml-5 mb-1 mt-1 text-cyan-300 text-left text-sm">{params.errors.Alias}&nbsp;</p>
                     </div>
@@ -710,17 +708,17 @@ function Page_1(params) {
                     <div>
                         <p className=" ml-5 mb-1 mt-1 text-white text-left">Email address</p>
                         <input className="ml-5 mr-5 mt-1 w-48 pl-1"
-                            id="EmailAddress"
-                            type="text"
-                            placeholder=""
-                            value={params.EmailAddress}
-                            onKeyDown={params.handleKeys}
-                            onChange={(e) => {
-                                if (params.state === states.EDITING) {
-                                    params.setEmailAddress(e.target.value);
-                                    params.setIsChanged(true); 
-                                }      
-                            }}
+                               id="EmailAddress"
+                               type="text"
+                               placeholder=""
+                               value={params.EmailAddress}
+                               onKeyDown={params.handleKeys}
+                               onChange={(e) => {
+                                    if (params.state === states.EDITING) {
+                                        params.setEmailAddress(e.target.value);
+                                        params.setIsChanged(true); 
+                                    }      
+                                }}
                         />
                         <p className=" ml-5 mb-1 mt-1 text-cyan-300 text-left text-sm">{params.errors.EmailAddress}&nbsp;</p>
                     </div>
@@ -728,17 +726,17 @@ function Page_1(params) {
                     <div>
                         <p className=" ml-5 mb-1 mt-1 text-white text-left">Phone number</p>
                         <input className="ml-5 mr-0 mt-1 w-48 pl-1"
-                            id="PhoneNumber"
-                            type="text"
-                            placeholder=""
-                            value={params.PhoneNumber}
-                            onKeyDown={params.handleKeys}
-                            onChange={(e) => {
-                                if (params.state === states.EDITING) {
-                                    params.setPhoneNumber(e.target.value);
-                                    params.setIsChanged(true); 
-                                }      
-                            }}
+                               id="PhoneNumber"
+                               type="text"
+                               placeholder=""
+                               value={params.PhoneNumber}
+                               onKeyDown={params.handleKeys}
+                               onChange={(e) => {
+                                    if (params.state === states.EDITING) {
+                                        params.setPhoneNumber(e.target.value);
+                                        params.setIsChanged(true); 
+                                    }      
+                                }}
                         />
                         <p className=" ml-5 mb-1 mt-1 text-cyan-300 text-left text-sm">{params.errors.PhoneNumber}&nbsp;</p>
                     </div>
@@ -748,17 +746,17 @@ function Page_1(params) {
                     <div>
                         <p className=" ml-5 mb-1 mt-1 text-white text-left">Address line one</p>
                         <input className="ml-5 mr-5 mt-1 w-48 pl-1"
-                            id="Address1"
-                            type="text"
-                            placeholder=""
-                            value={params.Address1}
-                            onKeyDown={params.handleKeys}
-                            onChange={(e) => {
-                                if (params.state === states.EDITING) {
-                                    params.setAddress1(e.target.value);
-                                    params.setIsChanged(true); 
-                                }          
-                            }}
+                               id="Address1"
+                               type="text"
+                               placeholder=""
+                               value={params.Address1}
+                               onKeyDown={params.handleKeys}
+                               onChange={(e) => {
+                                    if (params.state === states.EDITING) {
+                                        params.setAddress1(e.target.value);
+                                        params.setIsChanged(true); 
+                                    }          
+                                }}
                         />
                         <p className=" ml-5 mb-1 mt-1 text-cyan-300 text-left text-sm">{params.errors.Address1}&nbsp;</p>
                     </div>
@@ -767,19 +765,18 @@ function Page_1(params) {
                         <p className=" ml-5 mb-1 mt-1 text-white text-left">
                             Address line two
                         </p>
-                        <input
-                            className="ml-5 mr-5 mt-1 w-48 pl-1"
-                            id="Address2"
-                            type="text"
-                            placeholder=""
-                            value={params.Address2}
-                            onKeyDown={params.handleKeys}
-                            onChange={(e) => {
-                                if (params.state === states.EDITING) {
-                                    params.setAddress2(e.target.value);
-                                    params.setIsChanged(true);  
-                                }     
-                            }}
+                        <input className="ml-5 mr-5 mt-1 w-48 pl-1"
+                               id="Address2"
+                               type="text"
+                               placeholder=""
+                               value={params.Address2}
+                               onKeyDown={params.handleKeys}
+                               onChange={(e) => {
+                                    if (params.state === states.EDITING) {
+                                        params.setAddress2(e.target.value);
+                                        params.setIsChanged(true);  
+                                    }     
+                                }}
                         />
                         <p className=" ml-5 mb-1 mt-1 text-cyan-300 text-left text-sm">&nbsp;</p>
                     </div>
@@ -788,19 +785,18 @@ function Page_1(params) {
                         <p className=" ml-5 mb-1 mt-1 text-white text-left">
                             Address line three
                         </p>
-                        <input
-                            className="ml-5 mr-0 mt-1 w-48 pl-1"
-                            id="Address3"
-                            type="text"
-                            placeholder=""
-                            value={params.Address3}
-                            onKeyDown={params.handleKeys}
-                            onChange={(e) => {
-                                if (params.state === states.EDITING) {
-                                    params.setAddress3(e.target.value);
-                                    params.setIsChanged(true);
-                                }       
-                            }}
+                        <input className="ml-5 mr-0 mt-1 w-48 pl-1"
+                               id="Address3"
+                               type="text"
+                               placeholder=""
+                               value={params.Address3}
+                               onKeyDown={params.handleKeys}
+                               onChange={(e) => {
+                                    if (params.state === states.EDITING) {
+                                        params.setAddress3(e.target.value);
+                                        params.setIsChanged(true);
+                                    }       
+                                }}
                         />
                         <p className=" ml-5 mb-1 mt-1 text-cyan-300 text-left text-sm">&nbsp;</p>
                     </div>
@@ -809,57 +805,54 @@ function Page_1(params) {
                 <div className="flex flex-row">
                     <div>
                         <p className=" ml-5 mb-1 mt-1 text-white text-left">Suburb</p>
-                        <input
-                            className="ml-5 mr-5 mt-1 w-48 pl-1"
-                            id="Suburb"
-                            type="text"
-                            placeholder=""
-                            value={params.Suburb}
-                            onKeyDown={params.handleKeys}
-                            onChange={(e) => {
-                                if (params.state === states.EDITING) {
-                                    params.setSuburb(e.target.value);
-                                    params.setIsChanged(true);
-                                }       
-                            }}
+                        <input className="ml-5 mr-5 mt-1 w-48 pl-1"
+                               id="Suburb"
+                               type="text"
+                               placeholder=""
+                               value={params.Suburb}
+                               onKeyDown={params.handleKeys}
+                               onChange={(e) => {
+                                    if (params.state === states.EDITING) {
+                                        params.setSuburb(e.target.value);
+                                        params.setIsChanged(true);
+                                    }       
+                                }}
                         />
                         <p className=" ml-5 mb-1 mt-1 text-cyan-300 text-left text-sm">{params.errors.Suburb}&nbsp;</p>
                     </div>
 
                     <div>
                         <p className=" ml-5 mb-1 mt-1 text-white text-left">City</p>
-                        <input
-                            className="ml-5 mr-5 mt-1 w-48 pl-1"
-                            id="City"
-                            type="text"
-                            placeholder=""
-                            value={params.City}
-                            onKeyDown={params.handleKeys}
-                            onChange={(e) => {
-                                if (params.state === states.EDITING) {
-                                    params.setCity(e.target.value);
-                                    params.setIsChanged(true); 
-                                }      
-                            }}
+                        <input className="ml-5 mr-5 mt-1 w-48 pl-1"
+                               id="City"
+                               type="text"
+                               placeholder=""
+                               value={params.City}
+                               onKeyDown={params.handleKeys}
+                               onChange={(e) => {
+                                    if (params.state === states.EDITING) {
+                                        params.setCity(e.target.value);
+                                        params.setIsChanged(true); 
+                                    }      
+                                }}
                         />
                         <p className=" ml-5 mb-1 mt-1 text-cyan-300 text-left text-sm">{params.errors.City}&nbsp;</p>
                     </div>
 
                     <div>
                         <p className=" ml-5 mb-1 mt-1 text-white text-left">Postcode</p>
-                        <input
-                            className="ml-5 mr-0 mt-1 w-48 pl-1"
-                            id="Postcode"
-                            type="text"
-                            placeholder=""
-                            value={params.Postcode}
-                            onKeyDown={params.handleKeys}
-                            onChange={(e) => {
-                                if (params.state === states.EDITING) {
-                                    params.setPostcode(e.target.value);
-                                    params.setIsChanged(true);  
-                                }     
-                            }}
+                        <input className="ml-5 mr-0 mt-1 w-48 pl-1"
+                               id="Postcode"
+                               type="text"
+                               placeholder=""
+                               value={params.Postcode}
+                               onKeyDown={params.handleKeys}
+                               onChange={(e) => {
+                                    if (params.state === states.EDITING) {
+                                        params.setPostcode(e.target.value);
+                                        params.setIsChanged(true);  
+                                    }     
+                                }}
                         />
                         <p className=" ml-5 mb-1 mt-1 text-cyan-300 text-left text-sm">{params.errors.Postcode}&nbsp;</p>
                     </div>
@@ -869,15 +862,15 @@ function Page_1(params) {
                     <div>
                         <p className=" ml-5 mb-1 mt-1 text-white text-left">State</p>
                         <input className="ml-5 mr-5 mt-1 w-48 pl-1"
-                            id="State"
-                            type="text"
-                            placeholder=""
-                            value={params.StateProvince}
-                            onKeyDown={params.handleKeys}
-                            onChange={(e) => {
-                                if (params.state === states.EDITING) {
-                                    params.setStateProvince(e.target.value);
-                                    params.setIsChanged(true);  
+                               id="State"
+                               type="text"
+                               placeholder=""
+                               value={params.StateProvince}
+                               onKeyDown={params.handleKeys}
+                               onChange={(e) => {
+                                    if (params.state === states.EDITING) {
+                                        params.setStateProvince(e.target.value);
+                                        params.setIsChanged(true);  
                                 }     
                             }}
                         />
@@ -887,15 +880,15 @@ function Page_1(params) {
                     <div>
                         <p className=" ml-5 mb-1 mt-1 text-white text-left">Country</p>
                         <select className="ml-5 mr-5 mt-1 w-48 pl-0 h-6"
-                            id="Country"
-                            value={params.Country}  
-                            onKeyDown={params.handleKeys}                                           
-                            onChange={(e) => {
-                                if (params.state === states.EDITING) {
-                                    params.setCountry(e.target.value);
-                                    params.setIsChanged(true); 
-                                }     
-                            }}>                                             
+                                id="Country"
+                                value={params.Country}  
+                                onKeyDown={params.handleKeys}                                           
+                                onChange={(e) => {
+                                    if (params.state === states.EDITING) {
+                                        params.setCountry(e.target.value);
+                                        params.setIsChanged(true); 
+                                    }     
+                                }}>                                             
                             <Countries />
                         </select>
                         <p className="ml-5 mb-1 mt-1 text-cyan-300 text-left text-sm">{params.errors.Country}&nbsp;</p>
@@ -903,18 +896,17 @@ function Page_1(params) {
                             
                     <div>
                         <p className=" ml-5 mb-1 mt-1 text-white text-left">Date of birth</p>                    
-                        <input 
-                            className="ml-5 mr-0 mt-1 w-48 pl-0 h-6"
-                            id="DateOfBirth"                        
-                            type="date"                                           
-                            value = {params.DateOfBirth}  
-                            onKeyDown={params.handleKeys}
-                            onChange={(e) => {
-                                if (params.state === states.EDITING) {
-                                    params.setDateOfBirth(e.target.value);                            
-                                    params.setIsChanged(true);
-                                }                                
-                            }}                        
+                        <input className="ml-5 mr-0 mt-1 w-48 pl-0 h-6"
+                               id="DateOfBirth"                        
+                               type="date"                                           
+                               value = {params.DateOfBirth}  
+                               onKeyDown={params.handleKeys}
+                               onChange={(e) => {
+                                    if (params.state === states.EDITING) {
+                                        params.setDateOfBirth(e.target.value);                            
+                                        params.setIsChanged(true);
+                                    }                                
+                                }}                        
                         />                     
                         <p className=" ml-5 mb-1 mt-1 text-cyan-300 text-left text-sm">{params.errors.DateOfBirth}&nbsp;</p>
                     </div>
@@ -1017,15 +1009,15 @@ function Page_2(params) {
                 <div className="flex flex-row">
                     <div className="w-36 h-40">                    
                         <img className="ml-5 mb-5 mt-0"
-                            src={preview}
-                            alt="/"
-                            draggable={false}
-                            width={150} 
-                            height={150}                        
-                            onError={({currentTarget}) => {
-                                    currentTarget.onerror = null; // prevents looping
-                                    currentTarget.src="./userImages/template.png";                                    
-                                    }}
+                             src={preview}
+                             alt="/"
+                             draggable={false}
+                             width={150} 
+                             height={150}                        
+                             onError={({currentTarget}) => {
+                                     currentTarget.onerror = null; // prevents looping
+                                     currentTarget.src="./userImages/template.png";                                    
+                             }}
                         />
                     </div> 
                       
@@ -1043,14 +1035,14 @@ function Page_2(params) {
                                 <form onSubmit={encodeFile}
                                     id="submit">                 
                                     <label className="bg-cyan-600 text-white font-bold text-sm py-3 px-3 rounded ml-12 h-10"                    
-                                        htmlFor="ChoosePicture">                        
+                                           htmlFor="ChoosePicture">                        
                                         Choose picture    
                                     </label>       
                                     <input className="hidden"
-                                        id="ChoosePicture"               
-                                        type="file"  
-                                        onClick={(e) => {setUploadState(states.IDLE)}}                      
-                                        onChange={changeFiles}                                     
+                                           id="ChoosePicture"               
+                                           type="file"  
+                                           onClick={(e) => {setUploadState(states.IDLE)}}                      
+                                           onChange={changeFiles}                                     
                                     /> 
                                     <button className="bg-cyan-600 text-white font-bold text-sm py-2 px-2 rounded ml-5 h-10 w-32"
                                             id="upload"                                
@@ -1094,13 +1086,13 @@ function Page_2(params) {
 
             <div className="flex flex-row">                           
                 <input className="ml-5 mt-1 w-[280px] pl-1"
-                        id = "Password"
-                        type = {params.PasswordVisibility}
-                        placeholder = ""
-                        autoComplete = "new-password"
-                        value = {params.Password}
-                        onChange = {(e) => {params.setPassword(e.target.value.trim());
-                                            params.setIsChanged(true);}
+                       id = "Password"
+                       type = {params.PasswordVisibility}
+                       placeholder = ""
+                       autoComplete = "new-password"
+                       value = {params.Password}
+                       onChange = {(e) => {params.setPassword(e.target.value.trim());
+                                           params.setIsChanged(true);}
                         }
                 />
                 <img className="mr-5 ml-0 mt-1 h-6 w-7"
@@ -1116,19 +1108,19 @@ function Page_2(params) {
                 />
 
                 <input className="ml-5 mt-1 w-[280px] pl-1"
-                    id = "PasswordCopy"
-                    type = {params.PasswordVisibility}
-                    placeholder = ""
-                    autoComplete = "new-password"
-                    value = {params.PasswordCopy}
-                    onChange = {(e) => {params.setPasswordCopy(e.target.value.trim());
-                                        params.setIsChanged(true);}                                          
+                       id = "PasswordCopy"
+                       type = {params.PasswordVisibility}
+                       placeholder = ""
+                       autoComplete = "new-password"
+                       value = {params.PasswordCopy}
+                       onChange = {(e) => {params.setPasswordCopy(e.target.value.trim());
+                                           params.setIsChanged(true);}                                          
                     }
                 />
                 <img className="mr-5 ml-0 mt-1 h-6 w-7"
-                    src={eye}
-                    alt="/"
-                    onClick={() => {
+                     src={eye}
+                     alt="/"
+                     onClick={() => {
                         if (params.PasswordVisibility === "password") {
                             params.setPasswordVisibility("text");
                         } else {
@@ -1211,21 +1203,21 @@ function ConfirmCancel(params) {
                         <div className="flex flex-row flex-auto">
                             <button className="bg-cyan-600 text-white font-bold text-sm py-2 px-2 rounded
                                             mb-6 mt-2 ml-10"
-                                id="Yes"
-                                style={{ width: "100px" }}
-                                onClick={() => {
-                                    params.setState(states.EXITING);
-                                }}>
+                                    id="Yes"
+                                    style={{ width: "100px" }}
+                                    onClick={() => {
+                                        params.setState(states.EXITING);
+                                    }}>
                                 Yes
                             </button>    
 
                             <button className="bg-cyan-600 text-white font-bold text-sm py-2 px-2 rounded
                                             mb-6 mt-2 ml-8"
-                                id="No"
-                                style={{ width: "100px" }}
-                                onClick={() => {                                    
-                                    params.setState(states.EDITING);
-                                }}>
+                                    id="No"
+                                    style={{ width: "100px" }}
+                                    onClick={() => {                                    
+                                        params.setState(states.EDITING);
+                                    }}>
                                 No
                             </button> 
                         </div>                                 

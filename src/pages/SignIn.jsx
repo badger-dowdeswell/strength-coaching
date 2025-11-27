@@ -20,7 +20,7 @@ import "./Main.css";
 
 import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
-import { getBaseURL } from "./getBaseURL";
+import { getBaseURL } from "./components/getBaseURL";
 import { states } from "./Constants";
 
 import Axios from "axios";
@@ -59,8 +59,12 @@ export default function SignIn() {
     //
     // Editing state control
     // =====================
-    // This section defines the state machine that controls the sign-in
-    // process. The useState Hook ensures that the environment gets
+    // This section defines the state machine that manages each state the system
+    // can operate in during the sign-in process. It controls the initial page 
+    // loading, the navigation between each sub-page, updates, errors, and finally 
+    // navigating back to the previous or next page. The useState and useEffect
+    // hooks ensure that the environment is re-configured appropriately each time
+    // the state changes. The useState Hook ensures that the environment gets
     // re-configured each time the state changes.
     //
     const [state, setState] = useState(states.LOADING);
@@ -69,8 +73,9 @@ export default function SignIn() {
         case states.LOADING:            
             // This is the initial stage that allows the user to enter their user
             // ID or email and then supply their password. Reset their credentials
-            // if they are in a session where they authenticated successfully earlier.
-            sessionStorage.setItem("userID", "");
+            // if they are in a session where they authenticated successfully 
+            // earlier.
+            sessionStorage.setItem("user_ID", "");
             sessionStorage.setItem("FirstName", "");
             sessionStorage.setItem("LastName", "");
             sessionStorage.setItem("UserAuthority", "");
@@ -108,7 +113,7 @@ export default function SignIn() {
         case states.AUTHENTICATED:
             // This is set when the user has been authenticated and can begin using the
             // adminstration services inside.            
-            sessionStorage.setItem("userID", UserID);
+            sessionStorage.setItem("user_ID", UserID);
             sessionStorage.setItem("FirstName", FirstName);            
             sessionStorage.setItem("LastName", LastName);
             sessionStorage.setItem("UserAuthority", UserAuthority);

@@ -24,7 +24,7 @@ import Sign_In_People from "./images/Sign_In_People.png";
 function Landing() {
     // Ensure that any authenticated user returning to this page after signing-in
     // previously is deauthenticated.
-    sessionStorage.setItem("userID", "");
+    sessionStorage.setItem("user_ID", "");
     sessionStorage.setItem("FirstName", "");
     sessionStorage.setItem("LastName", "");
     sessionStorage.setItem("UserAuthority", "");
@@ -89,11 +89,11 @@ function Landing() {
                             <div> 
                                 <button className="bg-cyan-600 text-white font-bold text-sm py-2 px-2 rounded
                                                                         mt-2 ml-5"                                                                         
-                                    id="SignIn"
-                                    ref={autofocusID}
-                                    style={{ width: "125px" }}
-                                    onKeyDown={handleKeys}
-                                    onClick={() => navigate("/SignIn")}>
+                                        id="SignIn"
+                                        ref={autofocusID}
+                                        style={{ width: "125px" }}
+                                        onKeyDown={handleKeys}
+                                        onClick={() => navigate("/SignIn")}>
                                     Sign in
                                 </button>
                             </div>
@@ -111,11 +111,11 @@ function Landing() {
 
                     <div className="relative flex items-center justify-center mt-0 ml-3">
                         <img className="rounded" 
-                            src={Sign_In_People}
-                            alt="/"
-                            draggable={false}
-                            height={110}
-                            width={255}
+                             src={Sign_In_People}
+                             alt="/"
+                             draggable={false}
+                             height={110}
+                             width={255}
                         />
                     </div>                    
             </div>        

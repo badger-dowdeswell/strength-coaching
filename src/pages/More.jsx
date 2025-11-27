@@ -23,7 +23,7 @@ import './Main.css';
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import {validateEmail} from "./components/UtilLib";
-import { getBaseURL } from "./getBaseURL";
+import { getBaseURL } from "./components/getBaseURL";
 
 import Axios from 'axios';
 const axios = Axios;

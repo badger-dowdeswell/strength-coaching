@@ -1,7 +1,7 @@
 //
 // CONSTANTS
 // =========
-// Library of constants used by Strength Research Online.
+// Library of constants used by Strength Coaching Online.
 //
 // Revision History
 // ================
@@ -89,14 +89,18 @@ export const states = {
 //
 // pages
 // =====
-// Predefined constants for numbering pages in tabbed dialogue components.
+// Predefined constants for numbering pages in tabbed dialogue components
+// or nested multi-page environments like MyBlockSchedule.
 //
 export const pages = {
+    UNDEFINED: 0,
     PAGE_1: 1,
+    PAGE_DAY: 1,
     PAGE_2: 2,
+    PAGE_EXERCISE: 2,
     PAGE_3: 3,
     PAGE_4: 4,
-    PAGE_5: 5
+    PAGE_5: 5  
 }    
 
 //

@@ -1,5 +1,5 @@
 //
-// TopNav
+// TOPNAV
 // ======
 // This is the top navigation bar component. It is shared by all
 // pages and configured using parameters passed in from each page
@@ -7,7 +7,7 @@
 //
 // params.title     The title of the page to be displayed in the
 //                  top left corner of the navigation bar.
-// params.userID    The numeric user identification number of
+// params.user_ID   The numeric user identification number of
 //                  the user who has signed in.
 // params.userName  The name concaternated with the last name of 
 //                  the user. This is only displayed after the user
@@ -36,8 +36,8 @@ import StrengthCoachingLogo from "./componentImages/Strength_Coaching_Logo.png";
 function TopNav(params) { 
     let navigate = useNavigate();    
 
-    var userID = sessionStorage.getItem("userID");  
-    let userName = sessionStorage.getItem("FirstName") + " " + sessionStorage.getItem("LastName");      
+    var user_ID = sessionStorage.getItem("user_ID");  
+    var userName = sessionStorage.getItem("FirstName") + " " + sessionStorage.getItem("LastName");      
     const [userImage, setUserImage] = useState("./userImages/" + sessionStorage.getItem("UserImage"));    
         
     var userRole = "";   
@@ -65,9 +65,9 @@ function TopNav(params) {
 
     return (
         <div className="fixed w-full h-24
-                       flex flex-row
-                       top-0 left-0 m-0 
-                       bg-gray-900 text-white overflow-y-hidden">
+                        flex flex-row
+                        top-0 left-0 m-0 
+                        bg-gray-900 text-white overflow-y-hidden">
 
             <div className="relative flex items-center justify-center mt-1">
                 <img src={StrengthCoachingLogo}
@@ -92,12 +92,11 @@ function TopNav(params) {
                     <div>
                         {params.userName !="" && (
                             <img className="mt-6"
-                                src={userImage}
-                                alt="/"
-                                draggable={false}
-                                height={57}
-                                width={57}
-                                
+                                 src={userImage}
+                                 alt="/"
+                                 draggable={false}
+                                 height={57}
+                                 width={57}                                
                             />
                         )}
                     </div>

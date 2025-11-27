@@ -2,7 +2,7 @@
 // MY BLOCK TRAINING SCHEDULE
 // ==========================
 // This is the complete schedule for the client's training sessions for the
-// current block, listed by week and day.
+// current block, listed by week and day, and individual exercise.
 //
 // Revision History
 // ================
@@ -20,27 +20,16 @@ import Modal from "./components/Modal";
 
 import { useEffect, useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
-import { states } from "./Constants";
+import { states, pages } from "./Constants";
 
-import ReactPlayer from 'react-player';
+//import ReactPlayer from 'react-player';
 
 import training_video_image from "./images/training_video.png";
 
 import Axios from 'axios';
-import { getBaseURL } from "./getBaseURL";
+import { getBaseURL } from "./components/getBaseURL";
 const baseURL = getBaseURL();
 const axios = Axios;
-
-//
-// pages
-// =====
-// Constants that controls the type of page currently being displayed.
-// These constants are used to set the currentPage state.
-//
-const pages = {
-    PAGE_DAY: 1,
-    PAGE_EXERCISE: 2
-}    
 
 //
 // MyBlockSchedule
@@ -66,11 +55,12 @@ function MyBlockSchedule() {
     // ===============================
     // Checks to see if the local storage has a user_ID set to ensure that only
     // authenticated uses can navigate around the application. This is also a
-    // convenient way of logging out. When the user_ID is set to blank, via the
-    // there will no longer an authenticated user.
+    // convenient way of logging out. When the user_ID is set to blank, there will
+    // no longer be an authenticated user. The change triggers this useEffect hook
+    // and the application will navigate to the default Landing page.
     //    
-    var user_ID = sessionStorage.getItem("userID");      
-    const JWT = sessionStorage.getItem('JWT');
+    var user_ID = sessionStorage.getItem("user_ID");      
+    var JWT = sessionStorage.getItem('JWT');
     
     useEffect(() => {
         if (!user_ID.trim() || !JWT.trim()) {
@@ -84,13 +74,14 @@ function MyBlockSchedule() {
     //
     // State control()
     // ===============
-    // This section defines the state machine that controls the schedule display
-    // and enables the client to add details. The useState and useEffect hooks 
-    // ensure that the environment is re-configured appropriately each time the
-    // state changes. 
+    // This section defines the state machine that manages each state the system
+    // can operate in. It controls the initial page loading, the navigation between
+    // each page, updates, errors, and finally navigating back to the previous
+    // page. The useState and useEffect hooks ensure that the environment is 
+    // re-configured appropriately each time the state changes. 
     //
     const [state, setState] = useState(states.UNDEFINED);
-    const [currentPage, setCurrentPage] = useState(pages.PAGE_DAY);
+    const [currentPage, setCurrentPage] = useState(pages.UNDEFINED);
 
     useEffect(() => {    
         switch (state) {            
@@ -101,12 +92,10 @@ function MyBlockSchedule() {
                 break;            
 
             case states.LOADED:
-                // A schedule was found for this client for this period.
-                //debugSchedule(); 
+                // A schedule was found for this client for this block.  
+                setCurrentPage(pages.PAGE_DAY);               
                 setCurrentWeek(1); 
-                setCurrentDay(1);  
-                //Schedule[0].exercise_name = "ha ha"; 
-                //console.log("LOADED " + Schedule[0].exercise_name);           
+                setCurrentDay(1); 
                 break;
                 
             case states.NOT_AUTHENTICATED:
