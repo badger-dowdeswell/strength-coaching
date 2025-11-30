@@ -353,6 +353,19 @@ function MyBlockSchedule() {
                             activeDay = {CurrentDay} 
                             setVideoVisible = {setVideoVisible} 
                             setVideoLink = {setVideoLink}
+                            currentPage = {currentPage} setCurrentPage = {setCurrentPage}
+                            navigate = {navigate}                                                                  
+                        />                   
+                    )};
+
+                    {(currentPage === pages.PAGE_EXERCISE) && (
+                        <Page_Exercise
+                            Schedule = {Schedule}
+                            activeWeek = {CurrentWeek}
+                            activeDay = {CurrentDay} 
+                            setVideoVisible = {setVideoVisible} 
+                            setVideoLink = {setVideoLink}
+                            currentPage = {currentPage} setCurrentPage = {setCurrentPage}
                             navigate = {navigate}                                                                  
                         />                   
                     )};
@@ -423,33 +436,102 @@ function Page_Day(params) {
                         notes = {line.notes}
                         E1RM = {line.E1RM} 
                         setVideoVisible = {params.setVideoVisible} 
+                        currentPage = {params.currentPage} setCurrentPage = {params.setCurrentPage}
                         setVideoLink = {params.setVideoLink}                                                                  
                     />                        
                 ))}
             </div>
 
-            <div className = "mt-auto">    
-                <div className = "flex flex-row justify-center mt-5">
-                    <button className = "bg-cyan-600 text-white font-bold text-sm py-2 px-2 rounded mb-6 mt-2 ml-8"
-                            id = "Save"p
-                            style = {{ width: "100px" }}
-                            onClick = {() => { 
+            <div className="mt-auto">    
+                <div className="flex flex-row justify-center mt-5">
+                    <button className="bg-cyan-600 text-white font-bold text-sm 
+                                       py-2 px-2 rounded mb-6 mt-2 ml-8"
+                            id="Save"
+                            style={{ width: "100px" }}
+                            onClick={() => { 
                             }}>
                         Save
                     </button>  
 
-                    <button className = "bg-cyan-600 text-white font-bold text-sm py-2 px-2 rounded mb-6 mt-2 ml-8"
-                            id = "Back"
-                            style = {{ width: "100px" }}
-                            onClick = {() => {                                 
+                    <button className="bg-cyan-600 text-white font-bold text-sm py-2 px-2
+                                       rounded mb-6 mt-2 ml-8"
+                            id="Back"
+                            style={{ width: "100px" }}
+                            onClick={() => {                                 
                                 params.navigate("/Home"); 
                             }}>
-                            Back
+                        Back
                     </button>                      
                 </div>
             </div> 
         </div>
     )  
+}
+
+//
+// Page_Exercise()
+// ==============
+// Displays the exercise selected from the current day and allows the fields to be edited.
+//
+function Page_Exercise(params){
+    return (
+        <div>
+            <hr className="h-px my-0 bg-white border-0"></hr> 
+            <p className="text-white text-center font-bold text-xl mt-5">
+                Exercise name ...
+            </p>                   
+            
+            <div className="flex flex.row text-white">                        
+                <p className="text-center border mb-0 mt-5 ml-0 w-40">
+                    Exercise 
+                </p>
+                <p className="text-center border mb-0 mt-5 ml-0 w-20">
+                    Sets 
+                </p>
+                <p className="text-base text-center border mb-0 mt-5 ml-0 w-20">
+                    Reps 
+                </p>
+                <p className="text-base text-center border mb-0 mt-5 ml-0 w-32">
+                    Weights 
+                </p>
+                <p className="text-base text-center border mb-0 mt-5 ml-0 w-32">
+                    My Weights 
+                </p>
+                <p className="text-base text-center border mb-0 mt-5 ml-0 w-48">
+                    Velocity-Based Metrics 
+                </p>
+                <p className="text-base text-center border mb-0 mt-5 ml-0 w-48">
+                    Notes
+                </p>  
+                <p className="text-base text-center border mb-0 mt-5 ml-0 w-14">
+                    E1RM
+                </p>     
+            </div>            
+
+            <div className="mt-auto">    
+                <div className="flex flex-row justify-center mt-5">
+                    <button className="bg-cyan-600 text-white font-bold text-sm 
+                                       py-2 px-2 rounded mb-6 mt-2 ml-8"
+                            id="Save"
+                            style={{ width: "100px" }}
+                            onClick={() => { 
+                            }}>
+                        Save
+                    </button>  
+
+                    <button className="bg-cyan-600 text-white font-bold text-sm py-2 px-2
+                                       rounded mb-6 mt-2 ml-8"
+                            id="Back"
+                            style={{ width: "100px" }}
+                            onClick={() => {                                 
+                                params.setCurrentPage(pages.PAGE_DAY); 
+                            }}>
+                        Back
+                    </button>                      
+                </div>
+            </div> 
+        </div>
+    ) 
 }
 
 //
@@ -466,31 +548,28 @@ function Page_Day(params) {
 // element is returned so that line is not displayed on the wrong page.
 //
 function ScheduleLine(params) { 
-    if ((params.activeWeek === params.week) && (params.activeDay === params.day)) { 
-        console.log("ScheduleLine() index " + params.index);
+    if ((params.activeWeek === params.week) && (params.activeDay === params.day)) {         
         return (
             <div>                
-                <div className="flex flex.row"> 
-                    <p className="text-white text-base border pl-1 mb-0 mt-0 ml-0 w-40">                        
-                        {params.exercise_name}
-                       
+                <div className="flex flex.row"
+                    onClick={() => {  
+                        //showExercise(params.week, params.day, params.seq_ID, params.index); 
+                        console.log("\nExercise clicked = " + params.week + " day = " + params.day + 
+                                    " seq_ID = " + params.seq_ID + " index = " + params.index);
+                        params.setCurrentPage(pages.PAGE_EXERCISE);                               
+                    }}> 
+                    <p  className="text-white text-base border pl-1 mb-0 mt-0 ml-0 w-40">                                               
+                        {params.exercise_name} 
                         <img className="ml-auto"
                              src={training_video_image}
                              title="The training video for this exercise" 
                              draggable={false} 
-                             height={30} width={30}
-                             onClick={() => {  
-                                showExercise(params.week, params.day, params.seq_ID, params.index);
-                                
-                                //console.log("Video link " + params.video_link);
-                                //params.setVideoLink(params.video_link);                             
-                                //params.setVideoVisible(true);
-                             }}
+                             height={30} width={30}                             
                         />                            
                     </p>  
 
                     <div className="flex flex.col">
-                        <p className ="bg-gray-800 text-white  text-base text-center border mb-0 mt-0 ml-0 w-10">
+                        <p className="bg-gray-800 text-white  text-base text-center border mb-0 mt-0 ml-0 w-10">                            
                             {params.sets} 
                         </p> 
                         <p className = "bg-gray-800 text-white  text-base text-center border mb-0 mt-0 ml-0 w-10">
@@ -529,8 +608,9 @@ function ScheduleLine(params) {
     // showExercise() RA_BRD
     // =====================
     function showExercise(week, day, seq_ID, index) {
-        console.log("\nExercise clicked = " + week + " day = " + day + 
-                    " seq_ID = " + seq_ID + " index = " + index);
+    //    console.log("\nExercise clicked = " + week + " day = " + day + 
+    //                " seq_ID = " + seq_ID + " index = " + index);
+    //    setCurrentPage(pages.PAGE_EXERCISE);            
     }     
 };
 
