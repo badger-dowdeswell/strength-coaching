@@ -51,11 +51,11 @@ function MyBlockSchedule() {
     const [Schedule, setSchedule] = useState([]);
 
     // Editing fields
-    const [index, setIndex] = useState();    
+    const [Index, setIndex] = useState();    
     const [ExerciseName, setExerciseName] = useState("");
-    const [Sets, setSets] = useState(0);
+    //const [Sets, setSets] = useState(0);
     const [ActualSets, setActualSets] = useState(0);
-    const [Reps, setReps] = useState(0);
+    //const [Reps, setReps] = useState(0);
     const [ActualReps, setActualReps] = useState(0);
 
 
@@ -350,14 +350,33 @@ function MyBlockSchedule() {
     }, [CurrentWeek, CurrentDay] );
 
     //
-    // setEditParams
-    // =============
-    function setEditParams(index, exercise_name) {
+    // setEditParams()
+    // ===============
+    // This function saves each editable value for an exercise to usState variables when
+    // a exercise line is clicked in the list of exercises for the day. This allows normal
+    // editing text boxes to be used to change values. The function nnn() is used later
+    // to save changed values back into the ScheduleLine array.
+    // 
+    function setEditParams(params) {
+        console.log("setEditParams " + params.index + " " + params.exercise_name); 
 
-        console.log("setEditParams " + index + " " + exercise_name); 
-        setIndex(index);
-        setExerciseName(exercise_name);
+        setIndex(params.index);
+        setExerciseName(params.exercise_name);
+        setActualSets(params.actual_sets);
+        setActualReps(params.actual_reps);
+        
     }
+
+    // //
+    // // setEditParams
+    // // =============
+    // // 
+    // function setEditParams(params) {
+
+    //     console.log("setEditParams " + params.index + " " + params.exercise_name); 
+    //     setIndex(params.index);
+    //     setExerciseName(params.exercise_name);
+    // }
 
     //
     // MyBlockSchedule
@@ -403,12 +422,15 @@ function MyBlockSchedule() {
                     {(currentPage === pages.PAGE_EXERCISE) && (
                         <Page_Exercise
                             Schedule = {Schedule}
+                            index = {Index}
                             activeWeek = {CurrentWeek}
                             activeDay = {CurrentDay} 
                             setVideoVisible = {setVideoVisible} 
                             setVideoLink = {setVideoLink}
                             currentPage = {currentPage} setCurrentPage = {setCurrentPage}
                             navigate = {navigate} 
+                            actualSets = {ActualSets} setActualSets = {setActualSets}
+                            actualReps = {ActualReps} setActualReps = {setActualReps}
                             setEditParams = {setEditParams}                                                                 
                         />                   
                     )};
@@ -518,8 +540,8 @@ function Page_Day(params) {
 // Displays the exercise selected from the current day and allows the fields to be edited.
 //
 function Page_Exercise(params){
-    //console.log("[" + params.Schedule[params.index].exercise_name + "]");
-    //console.log("[" + params.index + "]");
+    console.log("Page_Exercise " + params.Schedule[params.index].exercise_name + "]");
+    
     return (
         <div>
             <hr className="h-px my-0 bg-white border-0"></hr> 
@@ -554,24 +576,40 @@ function Page_Exercise(params){
                 </p>     
             </div> 
 
-            <p className="text-white text-base border pl-1 mb-0 mt-0 ml-0 w-40">                                               
-                {params.exercise_name} 
-                <img className="ml-auto"
-                     src={training_video_image}
-                     title="The training video for this exercise" 
-                     draggable={false} 
-                     height={30} width={30}                             
-                />                            
-            </p>  
+            <div className="flex flex.row">
+                <p className="text-white text-base border pl-1 mb-0 mt-0 ml-0 w-40">                                               
+                    {params.Schedule[params.index].exercise_name} 
+                    <img className="ml-auto"
+                        src={training_video_image}
+                        title="The training video for this exercise" 
+                        draggable={false} 
+                        height={30} width={30}                             
+                    />                            
+                </p> 
 
-
-            {/* <div className="flex flex.col">
                 <p className="bg-gray-800 text-white  text-base text-center border mb-0 mt-0 ml-0 w-10">                            
-                    {params.sets} 
+                    {params.Schedule[params.index].sets} 
                 </p> 
-                <p className = "bg-gray-800 text-white  text-base text-center border mb-0 mt-0 ml-0 w-10">
-                    {params.actual_sets} 
+
+                <p className = "bg-white text-black text-base text-center border mb-0 mt-0 ml-0 w-10">
+                    {params.actualSets} 
                 </p> 
+
+                <p className="bg-gray-800 text-white  text-base text-center border mb-0 mt-0 ml-0 w-10">                            
+                    {params.Schedule[params.index].reps} 
+                </p> 
+
+                <p className = "bg-white text-black text-base text-center border mb-0 mt-0 ml-0 w-10">
+                    {params.actualReps} 
+                </p> 
+
+
+            </div>
+
+
+            {/* 
+                
+                
                 <p className = "bg-gray-800 text-white  text-base text-center border mb-0 mt-0 ml-0 w-10">
                     {params.reps} 
                 </p>
@@ -641,11 +679,12 @@ function ScheduleLine(params) {
                 <div className="flex flex.row"
                     onClick={() => {  
                         //showExercise(params.week, params.day, params.seq_ID, params.index); 
-                        console.log("\nExercise clicked = " + params.week + " day = " + params.day + 
-                                    " seq_ID = " + params.seq_ID + " index = " + params.index +
-                                    " exercise = " + params.exercise_name
-                                    );
-                        params.setEditParams(params.index, params.exercise_name);
+                        //console.log("\nExercise clicked = " + params.week + " day = " + params.day + 
+                        //            " seq_ID = " + params.seq_ID + " index = " + params.index +
+                        //            " exercise = " + params.exercise_name
+                        //            );
+                        //params.setEditParams(params.index, params.exercise_name);
+                        params.setEditParams(params)
                         params.setCurrentPage(pages.PAGE_EXERCISE);                               
                     }}> 
                     <p  className="text-white text-base border pl-1 mb-0 mt-0 ml-0 w-40">                                               
