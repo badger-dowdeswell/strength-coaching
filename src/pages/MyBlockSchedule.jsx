@@ -210,34 +210,6 @@ function MyBlockSchedule() {
             console.log(line);            
         } 
     }; 
-
-    //
-    // FindWeek()
-    // ==========
-    // Scans the Schedule to determine if there are any activities scheduled for
-    // the specified week. This allows the WeekTabBar to only display tabs for
-    // the required weeks. Refer to the findIndex() documentation at:
-    //
-    // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/
-    // Global_Objects/Array/findIndex
-    //
-    // for an explanation of how the JavsScript array findIndex() function works.
-    // 
-    function FindWeek(reqWeek) {
-       var found = false;
-
-       // Callback function that returns true or false if the element matches the
-       // parameters.
-       const isFound = (element) => element.week == reqWeek;
-
-       // Search the array to find the index of the first matching element that
-       // meets the requirements.
-       const index = Schedule.findIndex(isFound);
-       if (index > -1) {        
-          found = true;
-        }
-        return found;
-    }
         
     //
     // WeekTabBar()
@@ -271,26 +243,30 @@ function MyBlockSchedule() {
     }
 
     //
-    // FindDay()
+    // FindWeek()
     // ==========
     // Scans the Schedule to determine if there are any activities scheduled for
     // the specified week. This allows the WeekTabBar to only display tabs for
-    // the required weeks.
+    // the required weeks. Refer to the findIndex() documentation at:
+    //
+    // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/
+    // Global_Objects/Array/findIndex
+    //
+    // for an explanation of how the JavsScript array findIndex() function works.
     // 
-    function FindDay(reqWeek, reqDay) {
-       var found = false;
+    function FindWeek(reqWeek) {
+        var found = false;
 
-       // Callback function that returns true or false if the element matches the
-       // parameters
-       const isFound = (element) => ((element.week == reqWeek) 
-                                      && (element.day == reqDay));
+        // Callback function that returns true or false if the element matches the
+        // parameters.
+        const isFound = (element) => element.week == reqWeek;
 
-       // Search the array to find the index of the first matching element that 
-       // meets the requirements.
-       const index = Schedule.findIndex(isFound);
-       if (index > -1) {        
-          found = true;
-        }        
+        // Search the array to find the index of the first matching element that
+        // meets the requirements.
+        const index = Schedule.findIndex(isFound);
+        if (index > -1) {        
+            found = true;
+        }
         return found;
     }
 
@@ -326,6 +302,30 @@ function MyBlockSchedule() {
         };
         return items; 
     };
+
+    //
+    // FindDay()
+    // ==========
+    // Scans the Schedule to determine if there are any activities scheduled for
+    // the specified week. This allows the WeekTabBar to only display tabs for
+    // the required weeks.
+    // 
+    function FindDay(reqWeek, reqDay) {
+        var found = false;
+
+        // Callback function that returns true or false if the element matches the
+        // parameters
+        const isFound = (element) => ((element.week == reqWeek) 
+                                      && (element.day == reqDay));
+
+        // Search the array to find the index of the first matching element that 
+        // meets the requirements.
+        const index = Schedule.findIndex(isFound);
+        if (index > -1) {        
+            found = true;
+        }        
+        return found;
+    }
 
     //
     // setTabColour() 
