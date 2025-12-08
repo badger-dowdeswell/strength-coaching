@@ -49,7 +49,11 @@ function MyBlockSchedule() {
     // The array of objects that hold one one line for each exercise specified
     // for this block.   
     const [Schedule, setSchedule] = useState([]);
-    
+
+    // Editing fields
+    const [index, setIndex] = useState();    
+    const [ExerciseName, setExerciseName] = useState("");
+
     //
     // Authentication and Navigation()
     // ===============================
@@ -319,6 +323,16 @@ function MyBlockSchedule() {
     }, [CurrentWeek, CurrentDay] );
 
     //
+    // setEditParams
+    // =============
+    function setEditParams(index, exercise_name) {
+
+        console.log("setEditParams " + index + " " + exercise_name); 
+        setIndex(index);
+        setExerciseName(exercise_name);
+    }
+
+    //
     // MyBlockSchedule
     // ===============
     // Render the Block Schedule pages with a separate tab for each week. These 
@@ -354,7 +368,8 @@ function MyBlockSchedule() {
                             setVideoVisible = {setVideoVisible} 
                             setVideoLink = {setVideoLink}
                             currentPage = {currentPage} setCurrentPage = {setCurrentPage}
-                            navigate = {navigate}                                                                  
+                            navigate = {navigate} 
+                            setEditParams = {setEditParams}                                                                 
                         />                   
                     )};
 
@@ -366,7 +381,8 @@ function MyBlockSchedule() {
                             setVideoVisible = {setVideoVisible} 
                             setVideoLink = {setVideoLink}
                             currentPage = {currentPage} setCurrentPage = {setCurrentPage}
-                            navigate = {navigate}                                                                  
+                            navigate = {navigate} 
+                            setEditParams = {setEditParams}                                                                 
                         />                   
                     )};
                 </div> 
@@ -424,7 +440,7 @@ function Page_Day(params) {
                         week = {line.week}                                
                         key = {line.schedule_ID}
                         seq_ID = {line.seq_ID}
-                        exercise_name = {line.exercise_name}
+                        exercise_name = {line.exercise_name}                                              
                         video_link = {line.video_link}
                         sets = {line.sets}
                         actual_sets = {line.actual_sets}
@@ -437,7 +453,8 @@ function Page_Day(params) {
                         E1RM = {line.E1RM} 
                         setVideoVisible = {params.setVideoVisible} 
                         currentPage = {params.currentPage} setCurrentPage = {params.setCurrentPage}
-                        setVideoLink = {params.setVideoLink}                                                                  
+                        setVideoLink = {params.setVideoLink}  
+                        setEditParams = {params.setEditParams}                                                                
                     />                        
                 ))}
             </div>
@@ -474,11 +491,13 @@ function Page_Day(params) {
 // Displays the exercise selected from the current day and allows the fields to be edited.
 //
 function Page_Exercise(params){
+    //console.log("[" + params.Schedule[params.index].exercise_name + "]");
+    //console.log("[" + params.index + "]");
     return (
         <div>
             <hr className="h-px my-0 bg-white border-0"></hr> 
             <p className="text-white text-center font-bold text-xl mt-5">
-                Exercise name ...
+                {params.activeWeek}
             </p>                   
             
             <div className="flex flex.row text-white">                        
@@ -555,7 +574,10 @@ function ScheduleLine(params) {
                     onClick={() => {  
                         //showExercise(params.week, params.day, params.seq_ID, params.index); 
                         console.log("\nExercise clicked = " + params.week + " day = " + params.day + 
-                                    " seq_ID = " + params.seq_ID + " index = " + params.index);
+                                    " seq_ID = " + params.seq_ID + " index = " + params.index +
+                                    " exercise = " + params.exercise_name
+                                    );
+                        params.setEditParams(params.index, params.exercise_name);
                         params.setCurrentPage(pages.PAGE_EXERCISE);                               
                     }}> 
                     <p  className="text-white text-base border pl-1 mb-0 mt-0 ml-0 w-40">                                               
