@@ -53,6 +53,29 @@ function MyBlockSchedule() {
     // Editing fields
     const [index, setIndex] = useState();    
     const [ExerciseName, setExerciseName] = useState("");
+    const [Sets, setSets] = useState(0);
+    const [ActualSets, setActualSets] = useState(0);
+    const [Reps, setReps] = useState(0);
+    const [ActualReps, setActualReps] = useState(0);
+
+
+                
+                // <p className = "bg-gray-800 text-white  text-base text-center border mb-0 mt-0 ml-0 w-32">
+                //     {params.weights}
+                // </p>
+                // <p className = "bg-gray-800 text-white  text-base text-center border mb-0 mt-0 ml-0 w-32">
+                //     {params.actual_weights} 
+                // </p>
+                // <p className = "bg-gray-800 text-white text-base text-center border mb-0 mt-0 ml-0 w-48">
+                //     {params.velocity_based_metrics} 
+                // </p>
+                // <p className = "bg-gray-800 text-white text-base text-center border mb-0 mt-0 ml-0 w-48">
+                //     {params.notes} 
+                // </p>
+                // <p className = "bg-gray-800 text-white text-base text-center border mb-0 mt-0 ml-0 w-14">
+                //     {params.E1RM} 
+                // </p>
+
 
     //
     // Authentication and Navigation()
@@ -224,11 +247,13 @@ function MyBlockSchedule() {
     // where activities have been scheduled are visible.
     // 
     function WeekTabBar() {         
-        const items = [];         
+        const items = []; 
+        var keyIndex = -1;                
         for (let index = 0; index < MaxWeek; index++) {  
-            if (FindWeek(index + 1)) { 
-                items.push( 
-                    <div>
+            if (FindWeek(index + 1)) {
+                keyIndex++; 
+                items.push(
+                     <div key={keyIndex}>
                         <button className="bg-gray-400 text-black text-sm py-1
                                            px-1 border mb-0 mt-0 ml-0"                                                                
                                 id={"TabWeek_" + (index + 1)} 
@@ -279,11 +304,13 @@ function MyBlockSchedule() {
     function DayTabBar() {         
         const days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", 
                       "Saturday", "Sunday"];             
-        const items = [];         
+        const items = []; 
+        var keyIndex = -1;        
         for (let index = 0; index < 7; index++) { 
-            if (FindDay(CurrentWeek, index + 1)) {                  
+            if (FindDay(CurrentWeek, index + 1)) {
+                keyIndex++;                  
                 items.push(
-                    <div>
+                    <div key={keyIndex}>
                         <button className="bg-gray-400 text-black text-sm py-1
                                            px-1 border mb-0 mt-0 ml-0"                                                                
                                 id={"TabDay_" + (index + 1)} 
@@ -525,7 +552,48 @@ function Page_Exercise(params){
                 <p className="text-base text-center border mb-0 mt-5 ml-0 w-14">
                     E1RM
                 </p>     
-            </div>            
+            </div> 
+
+            <p className="text-white text-base border pl-1 mb-0 mt-0 ml-0 w-40">                                               
+                {params.exercise_name} 
+                <img className="ml-auto"
+                     src={training_video_image}
+                     title="The training video for this exercise" 
+                     draggable={false} 
+                     height={30} width={30}                             
+                />                            
+            </p>  
+
+
+            {/* <div className="flex flex.col">
+                <p className="bg-gray-800 text-white  text-base text-center border mb-0 mt-0 ml-0 w-10">                            
+                    {params.sets} 
+                </p> 
+                <p className = "bg-gray-800 text-white  text-base text-center border mb-0 mt-0 ml-0 w-10">
+                    {params.actual_sets} 
+                </p> 
+                <p className = "bg-gray-800 text-white  text-base text-center border mb-0 mt-0 ml-0 w-10">
+                    {params.reps} 
+                </p>
+                <p className = "bg-gray-800 text-white  text-base text-center border mb-0 mt-0 ml-0 w-10">
+                    {params.actual_reps} 
+                </p>
+                <p className = "bg-gray-800 text-white  text-base text-center border mb-0 mt-0 ml-0 w-32">
+                    {params.weights}
+                </p>
+                <p className = "bg-gray-800 text-white  text-base text-center border mb-0 mt-0 ml-0 w-32">
+                    {params.actual_weights} 
+                </p>
+                <p className = "bg-gray-800 text-white text-base text-center border mb-0 mt-0 ml-0 w-48">
+                    {params.velocity_based_metrics} 
+                </p>
+                <p className = "bg-gray-800 text-white text-base text-center border mb-0 mt-0 ml-0 w-48">
+                    {params.notes} 
+                </p>
+                <p className = "bg-gray-800 text-white text-base text-center border mb-0 mt-0 ml-0 w-14">
+                    {params.E1RM} 
+                </p>
+            </div>  */}
 
             <div className="mt-auto">    
                 <div className="flex flex-row justify-center mt-5">
