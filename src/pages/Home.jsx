@@ -16,8 +16,8 @@ import { useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 
 import My_Block_Schedule from "./images/My_Block_Schedule.png";
-import Block_Review from "./images/Block_Review.png";
-import Resources_Hub from "./images/Block_Review.png";
+import Block_Review from "./images/My_Block_Review.png";
+import Resources_Hub from "./images/Resources_Hub.png";
 import Edit_My_Profile from "./images/Edit_My_Profile.png";
 //
 // Home
@@ -123,14 +123,14 @@ function Home() {
             
                             <div className="mr-10">
                                 <img className="rounded"
-                                        src={Block_Review}
-                                        alt="/"
-                                        draggable={false}                            
-                                        width={275}
-                                        onClick={() => {navigate("/Home")}}>
+                                     src={Block_Review}
+                                     alt="/"
+                                     draggable={false}                            
+                                     width={275}
+                                     onClick={() => {navigate("/Home")}}>
                                 </img>                                     
                                 <p className="text-center text-white text-sm font-bold">
-                                    Block Review     
+                                    My Block Review     
                                 </p> 
                             </div>  
                         </div>                     
@@ -164,7 +164,7 @@ function Home() {
 
                                 <p className="text-center text-white text-sm font-bold"
                                    onClick={() => {navigate("/EditMyProfile")}}>
-                                    Edit my Profile
+                                    My Profile
                                 </p> 
                             </div>    
                         </div>                     
