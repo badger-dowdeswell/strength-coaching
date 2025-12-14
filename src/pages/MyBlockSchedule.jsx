@@ -593,26 +593,36 @@ function Page_Exercise(params){
                     {params.Schedule[params.index].sets} 
                 </p> 
 
-                <input className="bg-white text-black text-base text-center border mb-0 mt-0 ml-0 w-10"
-                       id="ActualSets"
-                       type="number"
-                       placeholder=""
-                       value={params.actualSets}
-                       onChange={(e) => {
-                            params.setActualSets(e.target.value);
-                            params.setIsChanged(true);            
-                       }} 
-                /> 
+                <div className="flex flex-col">                    
+                    <input className="bg-white text-black text-center w-10 h-[27px]"
+                        id="ActualSets"
+                        type="number"
+                        placeholder=""
+                        value={params.actualSets}
+                        onChange={(e) => {
+                                params.setActualSets(e.target.value);
+                                params.setIsChanged(true);            
+                        }} 
+                    />                     
+                    <p className="bg-white text-black w-10 h-[60px]">
+                        
+                    </p>                    
+                </div>  
 
                 <p className="bg-gray-800 text-white  text-base text-center border mb-0 mt-0 ml-0 w-10">                            
                     {params.Schedule[params.index].reps} 
                 </p> 
-
-                <p className = "bg-white text-black text-base text-center border mb-0 mt-0 ml-0 w-10">
-                    {params.actualReps} 
-                </p> 
-
-
+                
+                <textarea className="bg-white text-black border text-center text-wrap w-10 h-auto"
+                       id="ActualReps"
+                       type="text"
+                       placeholder=""
+                       value={params.actualReps}
+                       onChange={(e) => {
+                            params.setActualReps(e.target.value);
+                            params.setIsChanged(true);            
+                       }} 
+                /> 
             </div>
 
 
