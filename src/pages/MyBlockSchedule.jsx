@@ -57,6 +57,7 @@ function MyBlockSchedule() {
     const [ActualSets, setActualSets] = useState(0);
     //const [Reps, setReps] = useState(0);
     const [ActualReps, setActualReps] = useState(0);
+    const [IsChanged, setIsChanged] = useState(false);  
 
 
                 
@@ -415,7 +416,7 @@ function MyBlockSchedule() {
                             setVideoLink = {setVideoLink}
                             currentPage = {currentPage} setCurrentPage = {setCurrentPage}
                             navigate = {navigate} 
-                            setEditParams = {setEditParams}                                                                 
+                            setEditParams = {setEditParams}                                                                                            
                         />                   
                     )};
 
@@ -431,7 +432,8 @@ function MyBlockSchedule() {
                             navigate = {navigate} 
                             actualSets = {ActualSets} setActualSets = {setActualSets}
                             actualReps = {ActualReps} setActualReps = {setActualReps}
-                            setEditParams = {setEditParams}                                                                 
+                            setEditParams = {setEditParams} 
+                            setIsChanged = {setIsChanged}                                                                
                         />                   
                     )};
                 </div> 
@@ -540,7 +542,7 @@ function Page_Day(params) {
 // Displays the exercise selected from the current day and allows the fields to be edited.
 //
 function Page_Exercise(params){
-    console.log("Page_Exercise " + params.Schedule[params.index].exercise_name + "]");
+    console.log("Page_Exercise " + params.Schedule[params.index].exercise_name +  " " + params.actualSets + " ]");
     
     return (
         <div>
@@ -591,9 +593,16 @@ function Page_Exercise(params){
                     {params.Schedule[params.index].sets} 
                 </p> 
 
-                <p className = "bg-white text-black text-base text-center border mb-0 mt-0 ml-0 w-10">
-                    {params.actualSets} 
-                </p> 
+                <input className="bg-white text-black text-base text-center border mb-0 mt-0 ml-0 w-10"
+                       id="ActualSets"
+                       type="number"
+                       placeholder=""
+                       value={params.actualSets}
+                       onChange={(e) => {
+                            params.setActualSets(e.target.value);
+                            params.setIsChanged(true);            
+                       }} 
+                /> 
 
                 <p className="bg-gray-800 text-white  text-base text-center border mb-0 mt-0 ml-0 w-10">                            
                     {params.Schedule[params.index].reps} 

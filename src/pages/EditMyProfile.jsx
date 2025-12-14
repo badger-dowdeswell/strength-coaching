@@ -574,7 +574,7 @@ export default function EditMyProfile() {
                                         setState(states.EXITING);            
                                     }    
                                 }}>
-                            Cancel
+                            Back
                         </button>                         
                     </div>
                 </div>    
