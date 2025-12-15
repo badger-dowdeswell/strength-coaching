@@ -50,13 +50,17 @@ function MyBlockSchedule() {
     // for this block.   
     const [Schedule, setSchedule] = useState([]);
 
-    // Editing fields
+    // Editing fields. These are set by the function setEditingParams() and used
+    // by the function updateParams() to update the Schedule array during editing.
     const [Index, setIndex] = useState();    
     const [ExerciseName, setExerciseName] = useState("");
     //const [Sets, setSets] = useState(0);
     const [ActualSets, setActualSets] = useState(0);
     //const [Reps, setReps] = useState(0);
     const [ActualReps, setActualReps] = useState(0);
+    const [ActualWeight, setActualWeight] = useState(0);
+    const [Notes, setNotes] = useState("");
+
     const [IsChanged, setIsChanged] = useState(false);  
 
 
@@ -364,20 +368,28 @@ function MyBlockSchedule() {
         setIndex(params.index);
         setExerciseName(params.exercise_name);
         setActualSets(params.actual_sets);
-        setActualReps(params.actual_reps);
-        
+        setActualReps(params.actual_reps);     
+        setActualWeight(params.actual_weight);
+        setNotes(params.notes);   
     }
 
-    // //
-    // // setEditParams
-    // // =============
-    // // 
-    // function setEditParams(params) {
+    //
+    // updateParams()
+    // ==============
+    // This function updates the Schedule array entry for the line that is currently being
+    // edited.
+    //
+    function updateParams(params) {
+        console.log("updateParams:\n" +
+                    "index = " + Index + "\n" +
+                    "sets = " + ActualSets + " reps = " + ActualReps + "\n" 
+        );
 
-    //     console.log("setEditParams " + params.index + " " + params.exercise_name); 
-    //     setIndex(params.index);
-    //     setExerciseName(params.exercise_name);
-    // }
+        Schedule[Index].actual_sets = ActualSets;
+        Schedule[Index].actual_reps = ActualReps;
+        Schedule[Index].actual_weight = ActualWeight;
+        Schedule[Index].notes = Notes.trim();
+    }
 
     //
     // MyBlockSchedule
@@ -432,8 +444,11 @@ function MyBlockSchedule() {
                             navigate = {navigate} 
                             actualSets = {ActualSets} setActualSets = {setActualSets}
                             actualReps = {ActualReps} setActualReps = {setActualReps}
+                            actualWeight = {ActualWeight} setActualWeight = {setActualWeight}
+                            notes = {Notes} setNotes = {setNotes}
                             setEditParams = {setEditParams} 
-                            setIsChanged = {setIsChanged}                                                                
+                            setIsChanged = {setIsChanged} 
+                            updateParams = {updateParams}                                                               
                         />                   
                     )};
                 </div> 
@@ -498,39 +513,30 @@ function Page_Day(params) {
                         reps = {line.reps}
                         actual_reps = {line.actual_reps}
                         weights = {line.lower_weight + " - " + line.upper_weight}
-                        actual_weights = {line.actual_weight}
+                        actual_weight = {line.actual_weight}
                         velocity_based_metrics = {line.velocity_based_metrics}
                         notes = {line.notes}
                         E1RM = {line.E1RM} 
                         setVideoVisible = {params.setVideoVisible} 
                         currentPage = {params.currentPage} setCurrentPage = {params.setCurrentPage}
                         setVideoLink = {params.setVideoLink}  
-                        setEditParams = {params.setEditParams}                                                                
+                        setEditParams = {params.setEditParams}
+                        updateParams = {params.updateParams}                                                               
                     />                        
                 ))}
             </div>
 
-            <div className="mt-auto">    
-                <div className="flex flex-row justify-center mt-5">
-                    <button className="bg-cyan-600 text-white font-bold text-sm 
-                                       py-2 px-2 rounded mb-6 mt-2 ml-8"
-                            id="Save"
-                            style={{ width: "100px" }}
-                            onClick={() => { 
-                            }}>
-                        Save
-                    </button>  
-
-                    <button className="bg-cyan-600 text-white font-bold text-sm py-2 px-2
-                                       rounded mb-6 mt-2 ml-8"
-                            id="Back"
-                            style={{ width: "100px" }}
-                            onClick={() => {                                 
-                                params.navigate("/Home"); 
-                            }}>
-                        Back
-                    </button>                      
-                </div>
+            <div className="flex flex-col items-center mt-auto"> 
+                <button className="bg-cyan-600 text-white font-bold text-sm py-2 px-2
+                                    rounded mb-6 mt-10 ml-8"
+                        id="Back"
+                        style={{ width: "100px" }}
+                        onClick={() => {                                 
+                            params.navigate("/Home"); 
+                        }}>
+                    Back
+                </button>                      
+                
             </div> 
         </div>
     )  
@@ -542,13 +548,13 @@ function Page_Day(params) {
 // Displays the exercise selected from the current day and allows the fields to be edited.
 //
 function Page_Exercise(params){
-    console.log("Page_Exercise " + params.Schedule[params.index].exercise_name +  " " + params.actualSets + " ]");
+    //console.log("Page_Exercise " + params.Schedule[params.index].exercise_name +  " " + params.actualSets + " ]");
     
     return (
         <div>
             <hr className="h-px my-0 bg-white border-0"></hr> 
             <p className="text-white text-center font-bold text-xl mt-5">
-                {params.activeWeek}
+                {params.Schedule[params.index].exercise_name}
             </p>                   
             
             <div className="flex flex.row text-white">                        
@@ -623,56 +629,58 @@ function Page_Exercise(params){
                             params.setIsChanged(true);            
                        }} 
                 /> 
+
+                <p className = "bg-gray-800 text-white  text-base text-center border mb-0 mt-0 ml-0 w-32">
+                    {params.Schedule[params.index].lower_weight + " - " + params.Schedule[params.index].upper_weight}
+                </p>
+
+                <div className="flex flex-col">                    
+                    <input className="bg-white text-black text-center w-32 h-[27px]"
+                        id="ActualWeight"
+                        type="number"
+                        placeholder=""
+                        value={params.actualWeight}
+                        onChange={(e) => {
+                            params.setActualWeight(e.target.value);
+                            params.setIsChanged(true);            
+                        }} 
+                    />                     
+                    <p className="bg-white text-black w-32 h-[60px]">
+                        
+                    </p>                    
+                </div> 
+                
+                <p className = "bg-gray-800 text-white text-base text-center border mb-0 mt-0 ml-0 w-48">
+                    {params.Schedule[params.index].velocity_based_metrics} 
+                </p>
+
+                <textarea className="bg-white text-black border text-center text-wrap w-48 h-auto" 
+                          id="Notes"
+                          type="text"
+                          placeholder=""
+                          value={params.notes}
+                          onChange={(e) => {
+                              params.setNotes(e.target.value);
+                              params.setIsChanged(true);            
+                          }} 
+                /> 
+
+                <p className = "bg-gray-800 text-white text-base text-center border mb-0 mt-0 ml-0 w-14">
+                    {params.Schedule[params.index].E1RM} 
+                </p>
             </div>
 
-
-            {/* 
-                
-                
-                <p className = "bg-gray-800 text-white  text-base text-center border mb-0 mt-0 ml-0 w-10">
-                    {params.reps} 
-                </p>
-                <p className = "bg-gray-800 text-white  text-base text-center border mb-0 mt-0 ml-0 w-10">
-                    {params.actual_reps} 
-                </p>
-                <p className = "bg-gray-800 text-white  text-base text-center border mb-0 mt-0 ml-0 w-32">
-                    {params.weights}
-                </p>
-                <p className = "bg-gray-800 text-white  text-base text-center border mb-0 mt-0 ml-0 w-32">
-                    {params.actual_weights} 
-                </p>
-                <p className = "bg-gray-800 text-white text-base text-center border mb-0 mt-0 ml-0 w-48">
-                    {params.velocity_based_metrics} 
-                </p>
-                <p className = "bg-gray-800 text-white text-base text-center border mb-0 mt-0 ml-0 w-48">
-                    {params.notes} 
-                </p>
-                <p className = "bg-gray-800 text-white text-base text-center border mb-0 mt-0 ml-0 w-14">
-                    {params.E1RM} 
-                </p>
-            </div>  */}
-
-            <div className="mt-auto">    
-                <div className="flex flex-row justify-center mt-5">
-                    <button className="bg-cyan-600 text-white font-bold text-sm 
-                                       py-2 px-2 rounded mb-6 mt-2 ml-8"
-                            id="Save"
-                            style={{ width: "100px" }}
-                            onClick={() => { 
-                            }}>
-                        Save
-                    </button>  
-
-                    <button className="bg-cyan-600 text-white font-bold text-sm py-2 px-2
-                                       rounded mb-6 mt-2 ml-8"
-                            id="Back"
-                            style={{ width: "100px" }}
-                            onClick={() => {                                 
-                                params.setCurrentPage(pages.PAGE_DAY); 
-                            }}>
-                        Back
-                    </button>                      
-                </div>
+            <div className="flex flex-col items-center mt-auto">  
+                <button className="bg-cyan-600 text-white font-bold text-sm py-2 px-2
+                                   rounded mb-6 mt-10 ml-8"
+                        id="Back"
+                        style={{ width: "100px" }}
+                        onClick={() => { 
+                            params.updateParams();                                
+                            params.setCurrentPage(pages.PAGE_DAY); 
+                        }}>
+                    Back
+                </button> 
             </div> 
         </div>
     ) 
@@ -733,7 +741,7 @@ function ScheduleLine(params) {
                             {params.weights}
                         </p>
                         <p className = "bg-gray-800 text-white  text-base text-center border mb-0 mt-0 ml-0 w-32">
-                            {params.actual_weights} 
+                            {params.actual_weight} 
                         </p>
                         <p className = "bg-gray-800 text-white text-base text-center border mb-0 mt-0 ml-0 w-48">
                             {params.velocity_based_metrics} 
@@ -806,7 +814,7 @@ function SchedulDay(params) {
                             {params.weights}
                         </p>
                         <p className="bg-white text-black text-base text-center border mb-0 mt-0 ml-0 w-32">
-                            {params.actual_weights} 
+                            {params.actual_weight} 
                         </p>
                         <p className="text-white text-base text-center border mb-0 mt-0 ml-0 w-48">
                             {params.velocity_based_metrics} 
