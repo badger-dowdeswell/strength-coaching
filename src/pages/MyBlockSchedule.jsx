@@ -53,34 +53,13 @@ function MyBlockSchedule() {
     // Editing fields. These are set by the function setEditingParams() and used
     // by the function updateParams() to update the Schedule array during editing.
     const [Index, setIndex] = useState();    
-    const [ExerciseName, setExerciseName] = useState("");
-    //const [Sets, setSets] = useState(0);
-    const [ActualSets, setActualSets] = useState(0);
-    //const [Reps, setReps] = useState(0);
+    const [ExerciseName, setExerciseName] = useState("");    
+    const [ActualSets, setActualSets] = useState(0);    
     const [ActualReps, setActualReps] = useState(0);
     const [ActualWeight, setActualWeight] = useState(0);
     const [Notes, setNotes] = useState("");
 
     const [IsChanged, setIsChanged] = useState(false);  
-
-
-                
-                // <p className = "bg-gray-800 text-white  text-base text-center border mb-0 mt-0 ml-0 w-32">
-                //     {params.weights}
-                // </p>
-                // <p className = "bg-gray-800 text-white  text-base text-center border mb-0 mt-0 ml-0 w-32">
-                //     {params.actual_weights} 
-                // </p>
-                // <p className = "bg-gray-800 text-white text-base text-center border mb-0 mt-0 ml-0 w-48">
-                //     {params.velocity_based_metrics} 
-                // </p>
-                // <p className = "bg-gray-800 text-white text-base text-center border mb-0 mt-0 ml-0 w-48">
-                //     {params.notes} 
-                // </p>
-                // <p className = "bg-gray-800 text-white text-base text-center border mb-0 mt-0 ml-0 w-14">
-                //     {params.E1RM} 
-                // </p>
-
 
     //
     // Authentication and Navigation()
@@ -113,7 +92,7 @@ function MyBlockSchedule() {
     // re-configured appropriately each time the state changes. 
     //
     const [state, setState] = useState(states.UNDEFINED);
-    const [currentPage, setCurrentPage] = useState(pages.UNDEFINED);
+    const [CurrentPage, setCurrentPage] = useState(pages.UNDEFINED);
 
     useEffect(() => {    
         switch (state) {            
@@ -165,9 +144,8 @@ function MyBlockSchedule() {
                 // RA_BRD - load temporary variables within this scope.
                 block = 1;
                 week = 1;
-                //console.log("loadSchedule - loaded client\n");
-
-                // load the schedule lines for this block, this week.
+                
+                // load the schedule lines for this block
                 try {
                     let response = await axios.get(baseURL + "getSchedule?user_ID=" + user_ID + "&JWT=" + JWT + 
                                             "&block=" + block);                        
@@ -235,8 +213,10 @@ function MyBlockSchedule() {
                                            px-1 border mb-0 mt-0 ml-0"                                                                
                                 id={"TabWeek_" + (index + 1)} 
                                 style={{ width: "100px" }}                                                      
-                                onClick={(e) => {                                
-                                    setCurrentWeek(index + 1);                                                 
+                                onClick={(e) => { 
+                                    if (CurrentPage == pages.PAGE_DAY) {                                
+                                        setCurrentWeek(index + 1); 
+                                    }                                                    
                                 }}>
                             {"Week " + (index + 1)}
                         </button>
@@ -296,8 +276,10 @@ function MyBlockSchedule() {
                                            px-1 border mb-0 mt-0 ml-0"                                                                
                                 id={"TabDay_" + (index + 1)} 
                                 style={{ width: "100px" }}                                                      
-                                onClick={(e) => {                                
-                                    setCurrentDay(index + 1);                                                 
+                                onClick={(e) => { 
+                                    if (CurrentPage == pages.PAGE_DAY) {                               
+                                        setCurrentDay(index + 1); 
+                                    }                                                
                                 }}>
                             {days[index]}
                         </button>
@@ -305,6 +287,9 @@ function MyBlockSchedule() {
                 ) 
             }               
         };
+        
+                        
+        
         return items; 
     };
 
@@ -336,9 +321,10 @@ function MyBlockSchedule() {
     // setTabColour() 
     // ==============
     // Switches the colour of the tab for the current week and day that is
-    // being activated.
+    // being activated. The CurrentPage is also watched since the tab colour
+    // needs to be refreshed when the page changes.
     // 
-    useEffect(() => {
+    useEffect(() => {        
         if (CurrentWeek > 0) {
             let el = document.getElementById("TabWeek_" + CurrentWeek); 
             if (el != null) {
@@ -352,19 +338,17 @@ function MyBlockSchedule() {
                 el.style.backgroundColor = "#ffffff"; 
             }           
         }
-    }, [CurrentWeek, CurrentDay] );
+    }, [CurrentWeek, CurrentDay, CurrentPage] );
 
     //
     // setEditParams()
     // ===============
-    // This function saves each editable value for an exercise to usState variables when
+    // This function saves each editable value for an exercise to usState() variables when
     // a exercise line is clicked in the list of exercises for the day. This allows normal
-    // editing text boxes to be used to change values. The function nnn() is used later
-    // to save changed values back into the ScheduleLine array.
+    // editing text boxes to be used to change values. The function updateParams function 
+    // is used later to save changed values back into the ScheduleLine array.
     // 
-    function setEditParams(params) {
-        console.log("setEditParams " + params.index + " " + params.exercise_name); 
-
+    function setEditParams(params) {        
         setIndex(params.index);
         setExerciseName(params.exercise_name);
         setActualSets(params.actual_sets);
@@ -379,12 +363,7 @@ function MyBlockSchedule() {
     // This function updates the Schedule array entry for the line that is currently being
     // edited.
     //
-    function updateParams(params) {
-        console.log("updateParams:\n" +
-                    "index = " + Index + "\n" +
-                    "sets = " + ActualSets + " reps = " + ActualReps + "\n" 
-        );
-
+    function updateParams(params) {   
         Schedule[Index].actual_sets = ActualSets;
         Schedule[Index].actual_reps = ActualReps;
         Schedule[Index].actual_weight = ActualWeight;
@@ -411,28 +390,28 @@ function MyBlockSchedule() {
                     <div className="flex flex-row">
                         <WeekTabBar
                             Schedule = {Schedule}
-
                         /> 
                     </div>
 
                     <div className="flex flex-row">    
                         <DayTabBar/>         
                     </div> 
+                    <hr className="h-px my-0 bg-white border-0"></hr>
 
-                    {(currentPage === pages.PAGE_DAY) && (
+                    {(CurrentPage === pages.PAGE_DAY) && (
                         <Page_Day
                             Schedule = {Schedule}
                             activeWeek = {CurrentWeek}
                             activeDay = {CurrentDay} 
                             setVideoVisible = {setVideoVisible} 
                             setVideoLink = {setVideoLink}
-                            currentPage = {currentPage} setCurrentPage = {setCurrentPage}
+                            CurrentPage = {CurrentPage} setCurrentPage = {setCurrentPage}
                             navigate = {navigate} 
                             setEditParams = {setEditParams}                                                                                            
                         />                   
                     )};
 
-                    {(currentPage === pages.PAGE_EXERCISE) && (
+                    {(CurrentPage === pages.PAGE_EXERCISE) && (
                         <Page_Exercise
                             Schedule = {Schedule}
                             index = {Index}
@@ -440,7 +419,7 @@ function MyBlockSchedule() {
                             activeDay = {CurrentDay} 
                             setVideoVisible = {setVideoVisible} 
                             setVideoLink = {setVideoLink}
-                            currentPage = {currentPage} setCurrentPage = {setCurrentPage}
+                            CurrentPage = {CurrentPage} setCurrentPage = {setCurrentPage}
                             navigate = {navigate} 
                             actualSets = {ActualSets} setActualSets = {setActualSets}
                             actualReps = {ActualReps} setActualReps = {setActualReps}
@@ -464,10 +443,10 @@ function MyBlockSchedule() {
 //
 function Page_Day(params) {
     return (
-        <div>
-            <hr className="h-px my-0 bg-white border-0"></hr> 
-            <p className="text-white text-center font-bold text-xl mt-5">
-                Training Schedule</p>                   
+        <div>            
+            <p className="text-white text-center font-bold text-xl mt-4">
+                Training Schedule
+            </p>                   
             
             <div className="flex flex.row text-white">                        
                 <p className="text-center border mb-0 mt-5 ml-0 w-40">
@@ -518,7 +497,7 @@ function Page_Day(params) {
                         notes = {line.notes}
                         E1RM = {line.E1RM} 
                         setVideoVisible = {params.setVideoVisible} 
-                        currentPage = {params.currentPage} setCurrentPage = {params.setCurrentPage}
+                        CurrentPage = {params.CurrentPage} setCurrentPage = {params.setCurrentPage}
                         setVideoLink = {params.setVideoLink}  
                         setEditParams = {params.setEditParams}
                         updateParams = {params.updateParams}                                                               
@@ -527,16 +506,16 @@ function Page_Day(params) {
             </div>
 
             <div className="flex flex-col items-center mt-auto"> 
-                <button className="bg-cyan-600 text-white font-bold text-sm py-2 px-2
-                                    rounded mb-6 mt-10 ml-8"
-                        id="Back"
-                        style={{ width: "100px" }}
-                        onClick={() => {                                 
-                            params.navigate("/Home"); 
-                        }}>
+                <button
+                    className="bg-cyan-600 text-white font-bold text-sm py-2 px-2
+                               rounded mb-6 mt-10 ml-8"
+                    id="Back"
+                    style={{ width: "100px" }}
+                    onClick={() => {                                 
+                        params.navigate("/Home"); 
+                    }}>
                     Back
-                </button>                      
-                
+                </button>  
             </div> 
         </div>
     )  
@@ -544,16 +523,13 @@ function Page_Day(params) {
 
 //
 // Page_Exercise()
-// ==============
+// ===============
 // Displays the exercise selected from the current day and allows the fields to be edited.
 //
-function Page_Exercise(params){
-    //console.log("Page_Exercise " + params.Schedule[params.index].exercise_name +  " " + params.actualSets + " ]");
-    
+function Page_Exercise(params){    
     return (
-        <div>
-            <hr className="h-px my-0 bg-white border-0"></hr> 
-            <p className="text-white text-center font-bold text-xl mt-5">
+        <div>                       
+            <p className="text-white text-center font-bold text-xl mt-0">
                 {params.Schedule[params.index].exercise_name}
             </p>                   
             
@@ -587,7 +563,8 @@ function Page_Exercise(params){
             <div className="flex flex.row">
                 <p className="text-white text-base border pl-1 mb-0 mt-0 ml-0 w-40">                                               
                     {params.Schedule[params.index].exercise_name} 
-                    <img className="ml-auto"
+                    <img
+                        className="ml-auto"
                         src={training_video_image}
                         title="The training video for this exercise" 
                         draggable={false} 
@@ -600,34 +577,34 @@ function Page_Exercise(params){
                 </p> 
 
                 <div className="flex flex-col">                    
-                    <input className="bg-white text-black text-center w-10 h-[27px]"
+                    <input
+                        className="bg-white text-black text-center w-10 h-[27px]"
                         id="ActualSets"
                         type="number"
                         placeholder=""
                         value={params.actualSets}
                         onChange={(e) => {
-                                params.setActualSets(e.target.value);
-                                params.setIsChanged(true);            
+                            params.setActualSets(e.target.value);
+                            params.setIsChanged(true);            
                         }} 
                     />                     
-                    <p className="bg-white text-black w-10 h-[60px]">
-                        
-                    </p>                    
+                    <p className="bg-white text-black w-10 h-[60px]"></p>                    
                 </div>  
 
                 <p className="bg-gray-800 text-white  text-base text-center border mb-0 mt-0 ml-0 w-10">                            
                     {params.Schedule[params.index].reps} 
                 </p> 
                 
-                <textarea className="bg-white text-black border text-center text-wrap w-10 h-auto"
-                       id="ActualReps"
-                       type="text"
-                       placeholder=""
-                       value={params.actualReps}
-                       onChange={(e) => {
-                            params.setActualReps(e.target.value);
-                            params.setIsChanged(true);            
-                       }} 
+                <textarea
+                    className="bg-white text-black border text-center text-wrap w-10 h-auto"
+                    id="ActualReps"
+                    type="text"
+                    placeholder=""
+                    value={params.actualReps}
+                    onChange={(e) => {
+                        params.setActualReps(e.target.value);
+                        params.setIsChanged(true);            
+                    }} 
                 /> 
 
                 <p className = "bg-gray-800 text-white  text-base text-center border mb-0 mt-0 ml-0 w-32">
@@ -635,7 +612,8 @@ function Page_Exercise(params){
                 </p>
 
                 <div className="flex flex-col">                    
-                    <input className="bg-white text-black text-center w-32 h-[27px]"
+                    <input
+                        className="bg-white text-black text-center w-32 h-[27px]"
                         id="ActualWeight"
                         type="number"
                         placeholder=""
@@ -654,15 +632,16 @@ function Page_Exercise(params){
                     {params.Schedule[params.index].velocity_based_metrics} 
                 </p>
 
-                <textarea className="bg-white text-black border text-center text-wrap w-48 h-auto" 
-                          id="Notes"
-                          type="text"
-                          placeholder=""
-                          value={params.notes}
-                          onChange={(e) => {
-                              params.setNotes(e.target.value);
-                              params.setIsChanged(true);            
-                          }} 
+                <textarea 
+                    className="bg-white text-black border text-center text-wrap w-48 h-auto" 
+                    id="Notes"
+                    type="text"
+                    placeholder=""
+                    value={params.notes}
+                    onChange={(e) => {
+                        params.setNotes(e.target.value);
+                        params.setIsChanged(true);            
+                    }} 
                 /> 
 
                 <p className = "bg-gray-800 text-white text-base text-center border mb-0 mt-0 ml-0 w-14">
@@ -671,14 +650,15 @@ function Page_Exercise(params){
             </div>
 
             <div className="flex flex-col items-center mt-auto">  
-                <button className="bg-cyan-600 text-white font-bold text-sm py-2 px-2
-                                   rounded mb-6 mt-10 ml-8"
-                        id="Back"
-                        style={{ width: "100px" }}
-                        onClick={() => { 
-                            params.updateParams();                                
-                            params.setCurrentPage(pages.PAGE_DAY); 
-                        }}>
+                <button
+                    className="bg-cyan-600 text-white font-bold text-sm py-2 px-2
+                               rounded mb-6 mt-10 ml-8"
+                    id="Back"
+                    style={{ width: "100px" }}
+                    onClick={() => { 
+                        params.updateParams();                                
+                        params.setCurrentPage(pages.PAGE_DAY); 
+                    }}>
                     Back
                 </button> 
             </div> 
@@ -703,24 +683,21 @@ function ScheduleLine(params) {
     if ((params.activeWeek === params.week) && (params.activeDay === params.day)) {         
         return (
             <div>                
-                <div className="flex flex.row"
-                    onClick={() => {  
-                        //showExercise(params.week, params.day, params.seq_ID, params.index); 
-                        //console.log("\nExercise clicked = " + params.week + " day = " + params.day + 
-                        //            " seq_ID = " + params.seq_ID + " index = " + params.index +
-                        //            " exercise = " + params.exercise_name
-                        //            );
-                        //params.setEditParams(params.index, params.exercise_name);
+                <div 
+                    className="flex flex.row"
+                    onClick={() => {
                         params.setEditParams(params)
                         params.setCurrentPage(pages.PAGE_EXERCISE);                               
                     }}> 
                     <p  className="text-white text-base border pl-1 mb-0 mt-0 ml-0 w-40">                                               
                         {params.exercise_name} 
-                        <img className="ml-auto"
-                             src={training_video_image}
-                             title="The training video for this exercise" 
-                             draggable={false} 
-                             height={30} width={30}                             
+                        <img
+                            className="ml-auto"
+                            src={training_video_image}
+                            title="The training video for this exercise" 
+                            draggable={false} 
+                            height={30}
+                            width={30}                             
                         />                            
                     </p>  
 
@@ -758,16 +735,7 @@ function ScheduleLine(params) {
         )
     } else {
         return null;
-    } 
-    
-    //
-    // showExercise() RA_BRD
-    // =====================
-    function showExercise(week, day, seq_ID, index) {
-    //    console.log("\nExercise clicked = " + week + " day = " + day + 
-    //                " seq_ID = " + seq_ID + " index = " + index);
-    //    setCurrentPage(pages.PAGE_EXERCISE);            
-    }     
+    }      
 };
 
 //
@@ -784,16 +752,17 @@ function SchedulDay(params) {
                     <p className="text-white text-base border pl-1 mb-0 mt-0 ml-0 w-40">                        
                         {params.exercise_name}
                        
-                        <img className="ml-auto"
-                             src={training_video_image}
-                             title="The training video for this exercise" 
-                             draggable={false} 
-                             height={30} width={30}
-                             onClick={() => {  
+                        <img
+                            className="ml-auto"
+                            src={training_video_image}
+                            title="The training video for this exercise" 
+                            draggable={false} 
+                            height={30} width={30}
+                            onClick={() => {  
                                 //console.log("Video link " + params.video_link);
                                 params.setVideoLink(params.video_link);                             
                                 params.setVideoVisible(true);
-                             }}
+                            }}
                         />                            
                     </p>  
 
@@ -951,130 +920,3 @@ export default MyBlockSchedule;
     //                        src = "ht
 
     //
-//    
-// ShowBlockWeek
-// =============
-// function ShowBlockWeek() {
-//     return (
-//         <div>            
-//             <TopNav title=""/>
-//             <div className="flex flex-col absolute top-24 bottom-0
-//                             items-center justify-center
-//                             left-0 right-0 bg-gray-800 overflow-hidden">
-
-//                 <div className="flex flex-col box-border border-2 rounded-lg    
-//                                 ml-10 mr-10 h-[500px] w-auto">
-
-//                     {/*  Display the video player window
-//                         video_link = {params.video_link}
-//                     */}
-//                     <div>
-//                         {(VideoVisible) && (
-//                             <ShowVideo 
-//                                 user_ID = {user_ID}
-//                                 JWT = {JWT}
-//                                 setVideoVisible = {setVideoVisible}
-//                                 VideoLink = {VideoLink}                                
-//                             />
-//                         )}
-//                     </div>                 
-                    
-//                     <div className="flex flex-row">
-//                         <WeekTabBar/>         
-//                     </div>    
-                    
-//                     <div className="flex flex-row">
-//                         <DayTabBar/>         
-//                     </div> 
-//                     <hr className="h-px my-0 bg-white border-0"></hr>   
-
-//                     <p className="text-white text-center font-bold text-xl mt-5">
-//                         My Block {Block} Week {CurrentWeek} Day {CurrentDay} Training Schedule</p>                   
-                    
-//                     <div className="flex flex.row text-white">                        
-//                         <p className="text-center border mb-0 mt-5 ml-0 w-40">
-//                             Exercises 
-//                         </p>
-//                         <p className="text-center border mb-0 mt-5 ml-0 w-20">
-//                             Sets 
-//                         </p>
-//                         <p className="text-base text-center border mb-0 mt-5 ml-0 w-20">
-//                             Reps 
-//                         </p>
-//                         <p className="text-base text-center border mb-0 mt-5 ml-0 w-32">
-//                             Weights 
-//                         </p>
-//                         <p className="text-base text-center border mb-0 mt-5 ml-0 w-32">
-//                             My Weights 
-//                         </p>
-//                         <p className="text-base text-center border mb-0 mt-5 ml-0 w-48">
-//                             Velocity-Based Metrics 
-//                         </p>
-//                         <p className="text-base text-center border mb-0 mt-5 ml-0 w-48">
-//                             Notes
-//                         </p>  
-//                         <p className="text-base text-center border mb-0 mt-5 ml-0 w-14">
-//                             E1RM
-//                         </p>     
-//                     </div>            
-
-//                     <div>
-//                         {Schedule.map(line => (
-//                             <ScheduleLine
-//                                 activeWeek = {CurrentWeek}
-//                                 activeDay = {CurrentDay}                                
-//                                 day = {line.day}
-//                                 week = {line.week}                                
-//                                 key = {line.schedule_ID}
-//                                 seq_ID = {line.seq_ID}
-//                                 exercise_name = {line.exercise_name}
-//                                 video_link = {line.video_link}
-//                                 sets = {line.sets}
-//                                 actual_sets = {line.actual_sets}
-//                                 reps = {line.reps}
-//                                 actual_reps = {line.actual_reps}
-//                                 weights = {line.lower_weight + " - " + line.upper_weight}
-//                                 actual_weights = {line.actual_weight}
-//                                 velocity_based_metrics = {line.velocity_based_metrics}
-//                                 notes = {line.notes}
-//                                 E1RM = {line.E1RM} 
-//                                 setVideoVisible = {setVideoVisible} 
-//                                 setVideoLink = {setVideoLink}                                                                  
-//                             />                        
-//                         ))}
-//                     </div>
-
-//                     <div className="mt-auto">    
-//                         <div className="flex flex-row justify-center mt-5">
-//                             <button className="bg-cyan-600 text-white font-bold text-sm py-2 px-2 rounded
-//                                                 mb-6 mt-2 ml-8"
-//                                 id="Save"
-//                                 style={{ width: "100px" }}
-//                                 onClick={() => { 
-//                                 }}>
-//                                 Save
-//                             </button>  
-
-//                             <button className="bg-cyan-600 text-white font-bold text-sm py-2 px-2 rounded
-//                                                 mb-6 mt-2 ml-8"
-//                                 id="Back"
-//                                 style={{ width: "100px" }}
-//                                 onClick={() => { 
-//                                     // RA_BRD                                
-//                                     //if (IsChanged) {
-//                                         //setTabColor(currentPage, pages.PAGE_1);
-//                                     //   setCurrentPage(pages.PAGE_1);
-//                                         //setState(states.CANCELLING);
-//                                     //} else {
-//                                         navigate("/Home");         
-//                                     //}    
-//                                 }}>
-//                                 Back
-//                             </button>  
-//                         </div> 
-//                     </div>
-//                 </div>                
-//             </div>  
-//         </div>
-//     )
-// }

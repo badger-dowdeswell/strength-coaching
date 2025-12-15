@@ -7,7 +7,9 @@
     "dev": "vite",
     "build": "vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "rel": "sudo lsof -i :3010",
+    "kill": "kill -9 "
   },
   "dependencies": {
     "axios": "^1.8.2",
