@@ -457,6 +457,9 @@ function Page_Day(params) {
                 </p>
                 <p className="text-base text-center border mb-0 mt-5 ml-0 w-20">
                     Reps 
+                </p>    
+                <p className="text-base text-center border mb-0 mt-5 ml-0 w-10">
+                    RPE
                 </p>
                 <p className="text-base text-center border mb-0 mt-5 ml-0 w-32">
                     Weights 
@@ -491,6 +494,7 @@ function Page_Day(params) {
                         actual_sets = {line.actual_sets}
                         reps = {line.reps}
                         actual_reps = {line.actual_reps}
+                        rpe = {line.rpe}
                         weights = {line.lower_weight + " - " + line.upper_weight}
                         actual_weight = {line.actual_weight}
                         velocity_based_metrics = {line.velocity_based_metrics}
@@ -713,6 +717,9 @@ function ScheduleLine(params) {
                         </p>
                         <p className = "bg-gray-800 text-white  text-base text-center border mb-0 mt-0 ml-0 w-10">
                             {params.actual_reps} 
+                        </p>
+                        <p className = "bg-gray-800 text-white  text-base text-center border mb-0 mt-0 ml-0 w-10">
+                            {params.rpe} 
                         </p>
                         <p className = "bg-gray-800 text-white  text-base text-center border mb-0 mt-0 ml-0 w-32">
                             {params.weights}
