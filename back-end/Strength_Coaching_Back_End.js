@@ -831,6 +831,72 @@ app.get('/api/getSchedule', async(request, response) => {
     }    
 }); 
 
+//
+// updateSchedule()
+// ================
+// Updates the data for an existing user record. It uses a transaction 
+// with a commit and rollback in the event of an issue.
+//
+app.put('/api/updateSchedule', async(request, response) => {
+    const JWT = request.query.JWT;    
+
+    if (!verifyJWT(JWT)) {
+        response.status(403).send("Not authorised");        
+    } else {
+        var sqlUpdateCmd = 'DO $$\n' +
+            'BEGIN \n' +
+                'UPDATE "User" SET ' +
+                ' "user_authority" = ' + "'" + request.body.user_authority + "' , ";
+
+        var password = request.body.password.trim();
+        if (password !== "") {
+            // The user has provided a new password to update their record.
+            // logmsg("Password is being changed...[" + password + "] - encrypting it...\n");
+            var hashedPassword = await encryptPassword((password.replace(/'/g, "''")));
+            sqlUpdateCmd = sqlUpdateCmd + ' "password" = ' + "'" + hashedPassword + "' , ";
+        } 
+        
+        sqlUpdateCmd = sqlUpdateCmd +         
+                    ' "salutation" = ' + "'" + request.body.salutation + "' , " +
+                    ' "first_name" = ' + "'" + request.body.first_name.replace(/'/g, "''") + "' , " +
+                    ' "last_name" = ' + "'" + request.body.last_name.replace(/'/g, "''") + "' , " +
+                    ' "alias" = ' + "'" + request.body.alias.replace(/'/g, "''") + "' , " +
+                    ' "phone_number" = ' + "'" + request.body.phone_number.replace(/'/g, "''") + "' , " +
+                    ' "email_address" = ' + "'" + request.body.email_address.replace(/'/g, "''") + "' , " +
+                    ' "address_1" = ' + "'" + request.body.address_1.replace(/'/g, "''") + "' , " +
+                    ' "address_2" = ' + "'" + request.body.address_2.replace(/'/g, "''") + "' , " +
+                    ' "address_3" = ' + "'" + request.body.address_3.replace(/'/g, "''") + "' , " +
+                    ' "suburb" = ' + "'" + request.body.suburb.replace(/'/g, "''") + "' , " +
+                    ' "city" = ' + "'" + request.body.city.replace(/'/g, "''") + "' , " +
+                    ' "postcode" = ' + "'" + request.body.postcode.replace(/'/g, "''") + "' , " +
+                    ' "state_province" = ' + "'" + request.body.state_province.replace(/'/g, "''") + "' , " +
+                    ' "country" = ' + "'" + request.body.country.replace(/'/g, "''") + "' , " +
+                    ' "date_of_birth" = ' + "'" + request.body.date_of_birth.replace(/'/g, "''") + "', " +
+                    ' "user_image" = ' + "'" + request.body.user_image.replace(/'/g, "''") + "' " +
+                    ' WHERE "user_ID" = ' + "'" + request.body.user_ID + "';\n" +                
+                    'EXCEPTION\n ' +
+                    'WHEN OTHERS THEN\n' +
+                    'ROLLBACK\n; ' +
+                    'END; $$\n';
+
+        logmsg("/api/updateUser \n" + sqlUpdateCmd + "\n");
+
+        db.query(
+            sqlUpdateCmd, (err, result) => {                 
+                if (!err) {
+                    response.status(200).send("/api/updateUser: user updated.");
+                    logmsg("/api/updateUser() user updated.");                    
+                } else {
+                    response.status(500).send("/api/updateUser: Unexpected error " + err.message);
+                    logmsg("/api/updateUser() returned an unexpected error :" + err.message + "\n" +
+                           "query: " + sqlUpdateCmd);
+                }
+            }
+        );
+    }
+}); 
+
+
 // 
 // sendMail()
 // ==========
