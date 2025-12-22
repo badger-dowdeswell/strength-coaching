@@ -57,6 +57,7 @@ function MyBlockSchedule() {
     const [ActualSets, setActualSets] = useState(0);    
     const [ActualReps, setActualReps] = useState(0);
     const [ActualWeight, setActualWeight] = useState(0);
+    const [ActualRPE, setActualRPE] = useState(0);
     const [Notes, setNotes] = useState("");
 
     const [IsChanged, setIsChanged] = useState(false);  
@@ -354,6 +355,7 @@ function MyBlockSchedule() {
         setActualSets(params.actual_sets);
         setActualReps(params.actual_reps);     
         setActualWeight(params.actual_weight);
+        setActualRPE(params.actual_rpe);
         setNotes(params.notes);   
     }
 
@@ -367,6 +369,7 @@ function MyBlockSchedule() {
         Schedule[Index].actual_sets = ActualSets;
         Schedule[Index].actual_reps = ActualReps;
         Schedule[Index].actual_weight = ActualWeight;
+        Schedule[Index].actual_rpe = ActualRPE;
         Schedule[Index].notes = Notes.trim();
     }
 
@@ -423,6 +426,7 @@ function MyBlockSchedule() {
                             navigate = {navigate} 
                             actualSets = {ActualSets} setActualSets = {setActualSets}
                             actualReps = {ActualReps} setActualReps = {setActualReps}
+                            actual_rpe = {ActualRPE} setActualRPE = {setActualRPE}
                             actualWeight = {ActualWeight} setActualWeight = {setActualWeight}
                             notes = {Notes} setNotes = {setNotes}
                             setEditParams = {setEditParams} 
@@ -458,7 +462,7 @@ function Page_Day(params) {
                 <p className="text-base text-center border mb-0 mt-5 ml-0 w-20">
                     Reps 
                 </p>    
-                <p className="text-base text-center border mb-0 mt-5 ml-0 w-10">
+                <p className="text-base text-center border mb-0 mt-5 ml-0 w-20">
                     RPE
                 </p>
                 <p className="text-base text-center border mb-0 mt-5 ml-0 w-32">
@@ -495,6 +499,7 @@ function Page_Day(params) {
                         reps = {line.reps}
                         actual_reps = {line.actual_reps}
                         rpe = {line.rpe}
+                        actual_rpe = {line.actual_rpe}
                         weights = {line.lower_weight + " - " + line.upper_weight}
                         actual_weight = {line.actual_weight}
                         velocity_based_metrics = {line.velocity_based_metrics}
@@ -547,6 +552,9 @@ function Page_Exercise(params){
                 <p className="text-base text-center border mb-0 mt-5 ml-0 w-20">
                     Reps 
                 </p>
+                <p className="text-base text-center border mb-0 mt-5 ml-0 w-20">
+                    RPE
+                </p>    
                 <p className="text-base text-center border mb-0 mt-5 ml-0 w-32">
                     Weights 
                 </p>
@@ -602,7 +610,7 @@ function Page_Exercise(params){
                 <textarea
                     className="bg-white text-black border text-center text-wrap w-10 h-auto"
                     id="ActualReps"
-                    type="text"
+                    type="number"
                     placeholder=""
                     value={params.actualReps}
                     onChange={(e) => {
@@ -610,6 +618,31 @@ function Page_Exercise(params){
                         params.setIsChanged(true);            
                     }} 
                 /> 
+
+                <p className="bg-gray-800 text-white  text-base text-center border mb-0 mt-0 ml-0 w-10">
+                    {params.Schedule[params.index].rpe} 
+                </p>                
+
+                <div className="flex flex-col">                    
+                    <input
+                        className="bg-white text-black text-center w-10 h-[27px]"
+                        id="ActualRPE"
+                        type="number"
+                        placeholder=""
+                        value={params.actual_rpe}
+                        onChange={(e) => {
+                            var val = e.target.value;
+                            if (val < 0) {
+                                val = 0;
+                            } else if (val > 10) {
+                                val = 10;
+                            }
+                            params.setActualRPE(val);
+                            params.setIsChanged(true);            
+                        }} 
+                    />                     
+                    <p className="bg-white text-black w-10 h-[60px]"></p>                    
+                </div> 
 
                 <p className = "bg-gray-800 text-white  text-base text-center border mb-0 mt-0 ml-0 w-32">
                     {params.Schedule[params.index].lower_weight + " - " + params.Schedule[params.index].upper_weight}
@@ -720,6 +753,9 @@ function ScheduleLine(params) {
                         </p>
                         <p className = "bg-gray-800 text-white  text-base text-center border mb-0 mt-0 ml-0 w-10">
                             {params.rpe} 
+                        </p>
+                        <p className = "bg-gray-800 text-white  text-base text-center border mb-0 mt-0 ml-0 w-10">
+                            {params.actual_rpe} 
                         </p>
                         <p className = "bg-gray-800 text-white  text-base text-center border mb-0 mt-0 ml-0 w-32">
                             {params.weights}
