@@ -100,7 +100,7 @@ function MyBlockSchedule() {
             case states.UNDEFINED:
                 // Load the primary client information and block schedule lines.
                 setCurrentWeek(0);                
-                loadSchedule(user_ID);
+                loadSchedule(user_ID);                
                 break;            
 
             case states.LOADED:
@@ -108,6 +108,7 @@ function MyBlockSchedule() {
                 setCurrentPage(pages.PAGE_DAY);               
                 setCurrentWeek(1); 
                 setCurrentDay(1); 
+                debugSchedule();
                 break;
                 
             case states.NOT_AUTHENTICATED:
@@ -170,6 +171,43 @@ function MyBlockSchedule() {
             setState(states.NOT_FOUND);        
         }        
     };
+
+    //
+    // updateSchedule()
+    // ================
+    //  
+    const updateSchedule = async () => {  
+        console.log("updating schedule line " + Index);      
+        axios.put(baseURL + "updateSchedule?JWT=" + JWT, {
+            schedule_ID: Schedule[Index].schedule_ID,
+            seq_ID: Schedule[Index].seq_ID,
+            block: Schedule[Index].block,
+            week: Schedule[Index].week,
+            day: Schedule[Index].day,
+            exercise_ID: Schedule[Index].exercise_ID,
+            sets: Schedule[Index].sets,
+            actual_sets: Schedule[Index].actual_sets,
+            min_reps: Schedule[Index].min_reps,
+            max_reps: Schedule[Index].max_reps,
+            actual_reps: Schedule[Index].actual_reps,
+            rpe: Schedule[Index].rpe,
+            actual_rpe: Schedule[Index].rpe,
+            lower_weight: Schedule[Index].lower_weight,
+            upper_weight: Schedule[Index].upper_weight,
+            actual_weight: Schedule[Index].actual_weight,
+            velocity_based_metrics: Schedule[Index].velocity_based_metrics,
+            notes: Schedule[Index].notes,
+            E1RM: Schedule[Index].E1RM
+        })
+        .then((response) => {
+            //setState(states.EXITING);
+            console.log("updated...");
+        })
+        .catch(err => {            
+            // RA_Badger  
+            console.log("schedule not updated...");          
+        })
+    };
     
     //
     // debugSchedule()
@@ -184,10 +222,13 @@ function MyBlockSchedule() {
 
             line = Schedule[ptr].schedule_ID + " " +
                    Schedule[ptr].seq_ID + " " +
+                   Schedule[ptr].user_ID + " " +
+                   Schedule[ptr].block + " " +    
                    Schedule[ptr].exercise_name + " " +
                    Schedule[ptr].sets + " " +
                    Schedule[ptr].actual_sets + " " +
-                   Schedule[ptr].reps + " " +
+                   Schedule[ptr].min_reps + " " +
+                   Schedule[ptr].max_reps + " " +
                    Schedule[ptr].actual_reps + " " +
                    Schedule[ptr].velocity_based_metrics;
 
@@ -287,10 +328,7 @@ function MyBlockSchedule() {
                     </div>                             
                 ) 
             }               
-        };
-        
-                        
-        
+        }; 
         return items; 
     };
 
@@ -371,6 +409,10 @@ function MyBlockSchedule() {
         Schedule[Index].actual_weight = ActualWeight;
         Schedule[Index].actual_rpe = ActualRPE;
         Schedule[Index].notes = Notes.trim();
+        if (IsChanged) {
+            updateSchedule();
+        }
+        setIsChanged(false);    
     }
 
     //
@@ -496,7 +538,8 @@ function Page_Day(params) {
                         video_link = {line.video_link}
                         sets = {line.sets}
                         actual_sets = {line.actual_sets}
-                        reps = {line.reps}
+                        min_reps = {line.min_reps}
+                        max_reps = {line.max_reps}
                         actual_reps = {line.actual_reps}
                         rpe = {line.rpe}
                         actual_rpe = {line.actual_rpe}
@@ -604,7 +647,7 @@ function Page_Exercise(params){
                 </div>  
 
                 <p className="bg-gray-800 text-white  text-base text-center border mb-0 mt-0 ml-0 w-10">                            
-                    {params.Schedule[params.index].reps} 
+                    {params.Schedule[params.index].min_reps} 
                 </p> 
                 
                 <textarea
@@ -746,7 +789,7 @@ function ScheduleLine(params) {
                             {params.actual_sets} 
                         </p> 
                         <p className = "bg-gray-800 text-white  text-base text-center border mb-0 mt-0 ml-0 w-10">
-                            {params.reps} 
+                            {params.min_reps} 
                         </p>
                         <p className = "bg-gray-800 text-white  text-base text-center border mb-0 mt-0 ml-0 w-10">
                             {params.actual_reps} 

@@ -795,9 +795,14 @@ app.get('/api/getSchedule', async(request, response) => {
     if (!verifyJWT(JWT)) {
         response.status(403).send("Not authorised");        
     } else {
-        const sqlSelectCmd = 'SELECT *, "Exercise"."name" AS "exercise_name", ' +
-                             ' "Exercise"."video_link" AS "video_link" ' +        
-                             'FROM "Schedule" LEFT JOIN "Exercise" AS "Exercise" ON ' +
+        const sqlSelectCmd = 'SELECT "schedule_ID", "seq_ID", "user_ID", "block", "week", "day", ' +  
+                             '"Exercise"."name" AS "exercise_name", "Exercise"."exercise_ID", ' +
+                             '"sets", "actual_sets", "min_reps", "max_reps", "actual_reps", "rpe", ' +
+                             '"actual_rpe", "lower_weight", "upper_weight", "actual_weight", ' +
+                             '"velocity_based_metrics", "notes", "E1RM", ' +
+                             '"Exercise"."video_link" AS "video_link" ' +        
+                             'FROM "Schedule" ' +
+                             'LEFT JOIN "Exercise" AS "Exercise" ON ' +
                              '"Exercise"."exercise_ID" = "Schedule"."exercise_ID" ' +
                              'WHERE "user_ID" = ' + "'" + user_ID + "' " +
                              'AND "block" = ' + "'" + block + "' " +                             
@@ -846,23 +851,24 @@ app.put('/api/updateSchedule', async(request, response) => {
     } else {
         var sqlUpdateCmd = 'DO $$\n' +
             'BEGIN \n' +
-                'UPDATE "Schedule " SET ' +
-                ' "seq_ID" = ' + "'" + request.seq_ID + "' , ";                
+                'UPDATE "Schedule" SET ' +
+                ' "seq_ID" = ' + "'" + request.seq_ID + "' , " +               
                 ' "block" = ' + "'" + request.block + "' , " +
                 ' "week" = ' + "'" + request.body.week + "' , " +
                 ' "day" = ' + "'" + request.body.day + "' , " +
-                ' "exercise_ID" = ' + "'" + request.exercise_ID.replace(/'/g, "''") + "' , " +
+                ' "exercise_ID" = ' + "'" + request.exercise_ID + "' , " +
                 ' "sets" = ' + "'" + request.body.sets + "' , " +
                 ' "actual_sets" = ' + "'" + request.body.actual_sets + "' , " +
-                ' "reps" = ' + "'" + request.body.reps + "' , " +
-                ' "actual_reps" = ' + "'" + request.body.actual_reps + "' , " +
+                ' "min_reps" = ' + "'" + request.body.min_reps + "' , " +
+                ' "max_reps" = ' + "'" + request.body.max_reps + "' , " +
+                ' "actual_reps" = ' + "'{" + request.body.actual_reps + "}' , " +
                 ' "rpe" = ' + "'" + request.body.rpe + "' , " +
                 ' "actual_rpe" = ' + "'" + request.body.actual_rpe + "' , " +
                 ' "lower_weight" = ' + "'" + request.body.lower_weight + "' , " +
                 ' "upper_weight" = ' + "'" + request.body.upper_weight + "' , " +
-                ' "actual_weight" = ' + "'" + request.body.actual_weight + "' , " +
-                ' "velocity_based_metrics" = ' + "'" + request.body.velocity_based_metrics(/'/g, "''") + "' , " +
-                ' "notes" = ' + "'" + request.body.notes.replace(/'/g, "''") + "', " +
+                ' "actual_weight" = ' + "'{" + request.body.actual_weight + "}' , " +
+                ' "velocity_based_metrics" = ' + "'" + request.body.velocity_based_metrics + "' , " +
+                ' "notes" = ' + "'" + request.body.notes + "', " +
                 ' "E1RM" = ' + "'" + request.body.E1RM + "' " +
                 ' WHERE "schedule_ID" = ' + "'" + request.body.schedule_ID + "';\n" +                
                 'EXCEPTION\n ' +
