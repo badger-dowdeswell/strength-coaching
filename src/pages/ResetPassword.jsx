@@ -529,7 +529,8 @@ function Page_1(params) {
                 <br></br>
                 Please type your email address here:
             </p>
-            <input className="ml-5 mr-5 mt-4 w-[270px] pl-1"
+            <input
+                className="ml-5 mr-5 mt-4 w-[270px] pl-1"
                 id="EmailAddress"
                 type="text"
                 ref={autofocusID}
@@ -543,24 +544,26 @@ function Page_1(params) {
             </p>
 
             <div className="flex flex-row">                         
-                <button className="bg-cyan-600 text-white font-bold text-sm py-2 px-2 rounded
-                                mt-2 ml-12"
-                        id="SendLink"
-                        style={{ width: "100px" }}
-                        onKeyDown={handleKeys}                    
-                        onClick={() => {params.setState(states.VERIFY_PAGE_1);}
-                        }>                    
+                <button
+                    className="bg-cyan-600 text-white font-bold text-sm py-2 px-2 rounded
+                                 mt-2 ml-12"
+                    id="SendLink"
+                    style={{ width: "100px" }}
+                    onKeyDown={handleKeys}                    
+                    onClick={() => {params.setState(states.VERIFY_PAGE_1);}
+                    }>                    
                     Send Link
                 </button>
 
-                <button className="bg-cyan-600 text-white font-bold text-sm py-2 px-2 rounded
-                                mt-2 ml-5"
-                        id="Cancel"
-                        style={{ width: "100px" }}
-                        onKeyDown={handleKeys}
-                        onClick={() => {
-                            params.navigate("/");
-                        }}>
+                <button
+                    className="bg-cyan-600 text-white font-bold text-sm py-2 px-2 rounded
+                               mt-2 ml-5"
+                    id="Cancel"
+                    style={{ width: "100px" }}
+                    onKeyDown={handleKeys}
+                    onClick={() => {
+                        params.navigate("/");
+                    }}>
                     Cancel
                 </button>
             </div>            
@@ -611,23 +614,25 @@ function Page_2(params) {
             </p>
             
             <div className="flex flex-row">                         
-                <button className="bg-cyan-600 text-white font-bold text-sm py-2 px-2 rounded
-                                mt-2 ml-12"
-                        id="Back"
-                        style={{ width: "100px" }} 
-                        onKeyDown={handleKeys}                   
-                        onClick={() => {params.setState(states.PAGE_1);}
-                        }>                    
+                <button
+                    className="bg-cyan-600 text-white font-bold text-sm py-2 px-2 rounded
+                                 mt-2 ml-12"
+                    id="Back"
+                    style={{ width: "100px" }} 
+                    onKeyDown={handleKeys}                   
+                    onClick={() => {params.setState(states.PAGE_1);}
+                    }>                    
                     Back
                 </button>
 
-                <button className="bg-cyan-600 text-white font-bold text-sm py-2 px-2 rounded
-                                mt-2 ml-5"
-                        id="Next"
-                        style={{ width: "100px" }}
-                        onClick={() => {
-                            params.navigate("/");
-                        }}>
+                <button
+                    className="bg-cyan-600 text-white font-bold text-sm py-2 px-2 rounded
+                               mt-2 ml-5"
+                    id="Next"
+                    style={{ width: "100px" }}
+                    onClick={() => {
+                        params.navigate("/");
+                    }}>
                     Next
                 </button>
             </div>            
@@ -678,15 +683,16 @@ function Page_3(params) {
             <p className="ml-5 mb-1 mt-4 w-72 text-white text-left">
                 Enter the verification code 
             </p>
-            <input className="ml-5 mb-0 mt-1 w-[275px] pl-1"
-                   id = "VerificationCode"
-                   ref={autofocusID}
-                   type = "text"
-                   placeholder = ""
-                   autoComplete = "new-password"
-                   value = {params.VerificationCode}
-                   onKeyDown={handleKeys}
-                   onChange = {(e) => params.setVerificationCode(e.target.value.trim())}
+            <input
+                className="ml-5 mb-0 mt-1 w-[275px] pl-1"
+                id = "VerificationCode"
+                ref={autofocusID}
+                type = "text"
+                placeholder = ""
+                autoComplete = "new-password"
+                value = {params.VerificationCode}
+                onKeyDown={handleKeys}
+                onChange = {(e) => params.setVerificationCode(e.target.value.trim())}
             />
             <p className="ml-5 mb-1 mt-2 text-cyan-300 text-left text-sm">
                 {params.VerificationCodeError}&nbsp;
@@ -696,16 +702,18 @@ function Page_3(params) {
                 Enter your new password                
             </p>        
             <div className="flex flex-row">            
-                <input className="ml-5 mt-1 w-[277px] pl-1"
-                       id = "Password"                        
-                       type = {params.PasswordVisibility}
-                       placeholder = ""
-                       autoComplete = "new-password"
-                       value = {params.Password}
-                       onKeyDown={handleKeys}
-                       onChange = {(e) => params.setPassword(e.target.value.trim())}
+                <input
+                    className="ml-5 mt-1 w-[277px] pl-1"
+                    id = "Password"                        
+                    type = {params.PasswordVisibility}
+                    placeholder = ""
+                    autoComplete = "new-password"
+                    value = {params.Password}
+                    onKeyDown={handleKeys}
+                    onChange = {(e) => params.setPassword(e.target.value.trim())}
                 />
-                <img className="mr-5 ml-0 mt-1 h-6 w-7"
+                <img
+                    className="mr-5 ml-0 mt-1 h-6 w-7"
                     src={eye}
                     alt="/"
                     onClick={() => {
@@ -725,7 +733,8 @@ function Page_3(params) {
                 Please enter your new password again
             </p>
             <div className="flex flex-row">    
-                <input className="ml-5 mt-1 w-72 pl-1"
+                <input
+                    className="ml-5 mt-1 w-72 pl-1"
                     id = "PasswordCopy"
                     type = {params.PasswordVisibility}
                     placeholder = ""
@@ -734,7 +743,8 @@ function Page_3(params) {
                     onKeyDown={handleKeys}
                     onChange = {(e) => params.setPasswordCopy(e.target.value.trim())}
                 />
-                <img className="mr-5 ml-0 mt-1 h-6 w-7"
+                <img
+                    className="mr-5 ml-0 mt-1 h-6 w-7"
                     src={eye}
                     alt="/"
                     onClick={() => {
@@ -751,7 +761,8 @@ function Page_3(params) {
             </p>
 
             <div className="flex flex-row mt-1">
-                <button className="bg-cyan-600 text-white font-bold text-sm py-2 px-2 rounded
+                <button
+                    className="bg-cyan-600 text-white font-bold text-sm py-2 px-2 rounded
                                     mt-2 ml-12"
                     id = "Back"
                     style = {{ width: "100px" }}
@@ -759,7 +770,8 @@ function Page_3(params) {
                     Cancel
                 </button>
 
-                <button className="bg-cyan-600 text-white font-bold text-sm py-2 px-2 rounded
+                <button
+                    className="bg-cyan-600 text-white font-bold text-sm py-2 px-2 rounded
                                 mt-2 ml-5"
                     id = "Sign_In"
                     style = {{ width: "100px" }}

@@ -107,7 +107,8 @@ function Home() {
                     <div className="flex flex-col"> 
                         <div className="flex flex-row ml-20">
                             <div className="mr-10">
-                                <img className="rounded"
+                                <img
+                                    className="rounded"
                                     src={My_Block_Schedule}
                                     alt="/"
                                     draggable={false}                            
@@ -115,19 +116,21 @@ function Home() {
                                     onClick={() => {navigate("/MyBlockSchedule")}}>         
                                 </img>                                
             
-                                <p className="text-center text-white text-sm font-bold"
+                                <p
+                                    className="text-center text-white text-sm font-bold"
                                     onClick={() => {navigate("/MyBlockSchedule")}}>
                                     My Block Schedule        
                                 </p> 
                             </div>   
             
                             <div className="mr-10">
-                                <img className="rounded"
-                                     src={Block_Review}
-                                     alt="/"
-                                     draggable={false}                            
-                                     width={275}
-                                     onClick={() => {navigate("/Home")}}>
+                                <img
+                                    className="rounded"
+                                    src={Block_Review}
+                                    alt="/"
+                                    draggable={false}                            
+                                    width={275}
+                                    onClick={() => {navigate("/Home")}}>
                                 </img>                                     
                                 <p className="text-center text-white text-sm font-bold">
                                     My Block Review     
@@ -139,7 +142,8 @@ function Home() {
                        
                         <div className="flex flex-row ml-20">
                             <div className="mr-10">
-                                <img className="rounded"
+                                <img
+                                    className="rounded"
                                     src={Resources_Hub}
                                     alt="/"
                                     draggable={false}                            
@@ -147,23 +151,26 @@ function Home() {
                                     onClick={() => {navigate("/Home")}}>         
                                 </img>                                
             
-                                <p className="text-center text-white text-sm font-bold"
-                                   onClick={() => {navigate("/Home")}}>
+                                <p
+                                    className="text-center text-white text-sm font-bold"
+                                    onClick={() => {navigate("/Home")}}>
                                     Resources Hub   
                                 </p> 
                             </div>   
             
                             <div className="mr-10">
-                                <img className="rounded"
-                                     src={Edit_My_Profile}
-                                     alt="/"
-                                     draggable={false}                            
-                                     width={275}
-                                     onClick={() => {navigate("/EditMyProfile")}}>  
+                                <img
+                                    className="rounded"
+                                    src={Edit_My_Profile}
+                                    alt="/"
+                                    draggable={false}                            
+                                    width={275}
+                                    onClick={() => {navigate("/EditMyProfile")}}>  
                                 </img>  
 
-                                <p className="text-center text-white text-sm font-bold"
-                                   onClick={() => {navigate("/EditMyProfile")}}>
+                                <p
+                                    className="text-center text-white text-sm font-bold"
+                                    onClick={() => {navigate("/EditMyProfile")}}>
                                     My Profile
                                 </p> 
                             </div>    
@@ -172,12 +179,13 @@ function Home() {
                         <br></br>
 
                         <div className="flex flex-row ml-16">
-                            <button className="bg-cyan-600 text-white font-bold text-sm py-2 px-2 rounded mt-2 ml-5"
-                                    id="SignOut"
-                                    style={{ width: "100px"}} 
-                                    ref={autofocusID}                                   
-                                    onKeyDown={handleKeys}
-                                    onClick={() => {navigate("/")}}>                                 
+                            <button
+                                className="bg-cyan-600 text-white font-bold text-sm py-2 px-2 rounded mt-2 ml-5"
+                                id="SignOut"
+                                style={{ width: "100px"}} 
+                                ref={autofocusID}                                   
+                                onKeyDown={handleKeys}
+                                onClick={() => {navigate("/")}}>                                 
                                 Sign Out
                             </button> 
                         </div> 

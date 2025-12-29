@@ -235,7 +235,8 @@ export default function SignIn() {
                         Your email address or alias                        
                     </p>
 
-                    <input className="bg-white text-black ml-5 mr-5 mt-1 pl-1"
+                    <input
+                        className="bg-white text-black ml-5 mr-5 mt-1 pl-1"
                         id="UserID"
                         type="text"
                         ref={autofocusID}
@@ -254,7 +255,8 @@ export default function SignIn() {
                     </p>
                 
                     <div className="flex flex-row">
-                        <input className="bg-white text-black ml-5 mt-1 w-72 pl-1"
+                        <input
+                            className="bg-white text-black ml-5 mt-1 w-72 pl-1"
                             id="Password"
                             type={PasswordVisibility}
                             placeholder="********"
@@ -263,7 +265,8 @@ export default function SignIn() {
                             onKeyDown={handleKeys}
                             onChange={(e) => setPassword(e.target.value)}
                         />
-                        <img className="mr-5 ml-0 mt-1 h-6 w-7"
+                        <img
+                            className="mr-5 ml-0 mt-1 h-6 w-7"
                             src={eye}
                             alt="/"
                             onClick={() => {
@@ -280,7 +283,8 @@ export default function SignIn() {
                     </p>
 
                     <div className="flex flex-row">  
-                        <input className="ml-5 mt-0 h-6 bg-cyan-600 text-left text-sm"
+                        <input
+                            className="ml-5 mt-0 h-6 bg-cyan-600 text-left text-sm"
                             type="checkbox"
                             value={RememberMe}
                             checked={RememberMe}                                
@@ -291,21 +295,22 @@ export default function SignIn() {
                         </p>
                     </div> 
 
-                    <p className=" ml-5 mb-0 mt-0 text-cyan-300 text-left text-sm"
-                            onClick={() => {setState(states.FORGOT_PASSWORD)}
+                    <p  className=" ml-5 mb-0 mt-0 text-cyan-300 text-left text-sm"
+                        onClick={() => {setState(states.FORGOT_PASSWORD)}
                         }>
                         Forgot your password? Click here to reset it...
                     </p>
 
-                    <p className=" ml-5 mb-1 mt-3 text-cyan-300 text-left text-sm"
-                            onClick={() => {setState(states.REGISTER)}
+                    <p  className=" ml-5 mb-1 mt-3 text-cyan-300 text-left text-sm"
+                        onClick={() => {setState(states.REGISTER)}
                         }>
                         Not registered? Click here to register...
                     </p>
 
                     <div className="flex flex-row">                         
-                        <button className="bg-cyan-600 text-white font-bold text-sm py-2 px-2 rounded
-                                        mt-2 ml-12"
+                        <button
+                            className="bg-cyan-600 text-white font-bold text-sm py-2 px-2 rounded
+                                       mt-2 ml-12"
                             id="SignIn"
                             style={{ width: "100px" }}
                             onClick={() => {
@@ -314,8 +319,9 @@ export default function SignIn() {
                             Sign In
                         </button>
 
-                        <button className="bg-cyan-600 text-white font-bold text-sm py-2 px-2 rounded
-                                        mt-2 ml-5"
+                        <button
+                            className="bg-cyan-600 text-white font-bold text-sm py-2 px-2 rounded
+                                       mt-2 ml-5"
                             id="Cancel"
                             style={{ width: "100px" }}
                             onClick={() => {
@@ -330,7 +336,8 @@ export default function SignIn() {
                 </div>                
                 
                 <div className="relative flex items-center justify-center mt-0 ml-3 h-82 w-80">
-                    <img className="absolute rounded"                    
+                    <img
+                        className="absolute rounded"                    
                         src={Sign_In_Michaela}
                         alt="/"
                         draggable={false}                            

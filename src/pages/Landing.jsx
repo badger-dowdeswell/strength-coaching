@@ -87,37 +87,40 @@ function Landing() {
 
                     <div className="flex flex-row">                                
                             <div> 
-                                <button className="bg-cyan-600 text-white font-bold text-sm py-2 px-2 rounded
-                                                                        mt-2 ml-5"                                                                         
-                                        id="SignIn"
-                                        ref={autofocusID}
-                                        style={{ width: "125px" }}
-                                        onKeyDown={handleKeys}
-                                        onClick={() => navigate("/SignIn")}>
+                                <button
+                                    className="bg-cyan-600 text-white font-bold text-sm py-2 px-2 rounded
+                                                mt-2 ml-5"                                                                         
+                                    id="SignIn"
+                                    ref={autofocusID}
+                                    style={{ width: "125px" }}
+                                    onKeyDown={handleKeys}
+                                    onClick={() => navigate("/SignIn")}>
                                     Sign in
                                 </button>
                             </div>
                             <div>  
-                                <button className="bg-cyan-600 text-white font-bold text-sm py-2 px-2 rounded
-                                                                        mt-2 ml-5"
-                                        id="Tell_me_more"
-                                        style={{ width: "125px" }}
-                                        onClick={() => navigate("/More")}> 
+                                <button
+                                    className="bg-cyan-600 text-white font-bold text-sm py-2 px-2 rounded
+                                                mt-2 ml-5"
+                                    id="Tell_me_more"
+                                    style={{ width: "125px" }}
+                                    onClick={() => navigate("/More")}> 
                                     Tell me more ...
                                 </button>  
                             </div> 
-                        </div> 
-                    </div>                    
+                    </div> 
+                </div>                    
 
-                    <div className="relative flex items-center justify-center mt-0 ml-3">
-                        <img className="rounded" 
-                             src={Sign_In_People}
-                             alt="/"
-                             draggable={false}
-                             height={110}
-                             width={255}
-                        />
-                    </div>                    
+                <div className="relative flex items-center justify-center mt-0 ml-3">
+                    <img
+                        className="rounded" 
+                        src={Sign_In_People}
+                        alt="/"
+                        draggable={false}
+                        height={110}
+                        width={255}
+                    />
+                </div>                    
             </div>        
         </div>      
     )

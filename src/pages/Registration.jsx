@@ -367,7 +367,8 @@ export default function Registration() {
                 </div>
 
                 <div className="relative flex items-center justify-center mt-0 ml-3">
-                    <img className="rounded"
+                    <img
+                        className="rounded"
                         src={Registration_Person}
                         alt="/"
                         height={110}
@@ -400,59 +401,64 @@ function Page_1(params) {
             <p className="text-white text-center font-bold text-xl mt-5">Registration</p>
 
             <p className=" ml-7 mb-1 mt-3 text-white text-left">Email address</p>
-            <input className="ml-7 mr-5 mt-1 w-64 pl-1"   
-                   id="EmailAddress"
-                   ref={autofocusID}
-                   type="text"
-                   placeholder=""
-                   autoComplete="new-password"
-                   value={params.EmailAddress}
-                   onChange={(e) => {params.setEmailAddress(e.target.value);}}
+            <input
+                className="ml-7 mr-5 mt-1 w-64 pl-1"   
+                id="EmailAddress"
+                ref={autofocusID}
+                type="text"
+                placeholder=""
+                autoComplete="new-password"
+                value={params.EmailAddress}
+                onChange={(e) => {params.setEmailAddress(e.target.value);}}
             />
             <p className="ml-7 mb-0 mt-2 text-cyan-300 text-left text-sm">
-                         {params.EmailAddressError}&nbsp;
+                {params.EmailAddressError}&nbsp;
             </p>
 
             <p className=" ml-7 mb-1 mt-2 text-white text-left">First name</p>
-            <input className="ml-7 mr-5 mt-1 w-64 pl-1"
-                   id="FirstName"                
-                   type="text"
-                   placeholder=""
-                   autoComplete="new-password"
-                   value={params.FirstName}
-                   onChange={(e) => params.setFirstName(e.target.value)}
+            <input
+                className="ml-7 mr-5 mt-1 w-64 pl-1"
+                id="FirstName"                
+                type="text"
+                placeholder=""
+                autoComplete="new-password"
+                value={params.FirstName}
+                onChange={(e) => params.setFirstName(e.target.value)}
             />
             <p className="ml-7 mb-1 mt-2 text-cyan-300 text-left text-sm">
-                         {params.FirstNameError}&nbsp;
+                {params.FirstNameError}&nbsp;
             </p>
 
             <p className=" ml-7 mb-1 mt-2 text-white text-left">Last name</p>
-            <input className="ml-7 mr-5 mt-1 w-64 pl-1"
-                   id="LastName"
-                   type="text"
-                   placeholder=""
-                   autoComplete="new-password"
-                   value={params.LastName}
-                   onChange={(e) => {params.setLastName(e.target.value);}}
+            <input
+                className="ml-7 mr-5 mt-1 w-64 pl-1"
+                id="LastName"
+                type="text"
+                placeholder=""
+                autoComplete="new-password"
+                value={params.LastName}
+                onChange={(e) => {params.setLastName(e.target.value);}}
             />
             <p className="ml-7 mb-1 mt-2 text-cyan-300 text-left text-sm">
-                         {params.LastNameError}&nbsp;
+                {params.LastNameError}&nbsp;
             </p>
 
             <div className="flex flex-row">
-                <button className="bg-cyan-600 text-white font-bold text-sm py-2 px-2
-                                  rounded mt-2 ml-12 mb-0"
-                        id="Cancel"
-                        style={{ width: "100px" }}                
-                        onClick={() => {params.navigate("/")}} >
+                <button
+                    className="bg-cyan-600 text-white font-bold text-sm py-2 px-2
+                               rounded mt-2 ml-12 mb-0"
+                    id="Cancel"
+                    style={{ width: "100px" }}                
+                    onClick={() => {params.navigate("/")}} >
                     Cancel
                 </button>
 
-                <button className="bg-cyan-600 text-white font-bold text-sm py-2 px-2 
-                                  rounded mt-2 ml-5"
-                        id="Next"
-                        style={{ width: "100px" }}                
-                        onClick={() => {params.setState(states.VERIFY_PAGE_1);}} >
+                <button
+                    className="bg-cyan-600 text-white font-bold text-sm py-2 px-2 
+                               rounded mt-2 ml-5"
+                    id="Next"
+                    style={{ width: "100px" }}                
+                    onClick={() => {params.setState(states.VERIFY_PAGE_1);}} >
                     Next &gt;
                 </button>
             </div>
@@ -474,24 +480,27 @@ function Emailing() {
             </p> 
         
             <div className="flex items-center justify-center">
-                <img className="rounded w-[100px]"
-                     src={Spinner}
-                     alt="/"
+                <img
+                    className="rounded w-[100px]"
+                    src={Spinner}
+                    alt="/"
                 />                                                   
             </div>
 
             <div className="flex flex-row mt-20">
-                <button className="bg-cyan-600 text-white font-bold text-sm py-2 px-2 rounded
+                <button
+                    className="bg-cyan-600 text-white font-bold text-sm py-2 px-2 rounded
                                 mt-2 ml-12"
-                        id = "Back"
-                        style = {{ width: "100px" }}>  
+                    id = "Back"
+                    style = {{ width: "100px" }}>  
                     &lt; Back
                 </button>
 
-                <button className="bg-cyan-600 text-white font-bold text-sm py-2 px-2 rounded
-                            mt-2 ml-5"
-                        id = "Next"
-                        style = {{ width: "100px" }}>      
+                <button
+                    className="bg-cyan-600 text-white font-bold text-sm py-2 px-2 rounded
+                        mt-2 ml-5"
+                    id = "Next"
+                    style = {{ width: "100px" }}>      
                     Next &gt;
                 </button>               
             </div>    
@@ -528,14 +537,15 @@ function Page_2(params) {
                 Please enter the code you received:
             </p>
 
-            <input className="ml-20 mt-1 w-40  pl-1"
-                   id="VerificationCode"
-                   ref={autofocusID}                
-                   type = "text"
-                   placeholder = ""
-                   autoComplete = "new-password"
-                   value={params.VerificationCodeEntered}
-                   onChange={(e) => params.setVerificationCodeEntered(e.target.value)}
+            <input
+                className="ml-20 mt-1 w-40  pl-1"
+                id="VerificationCode"
+                ref={autofocusID}                
+                type = "text"
+                placeholder = ""
+                autoComplete = "new-password"
+                value={params.VerificationCodeEntered}
+                onChange={(e) => params.setVerificationCodeEntered(e.target.value)}
             />
             <p className="ml-5 mb-3 mt-3 text-cyan-300 text-left text-sm">
                 {params.VerificationCodeError}&nbsp;
@@ -548,19 +558,21 @@ function Page_2(params) {
             </p>
 
             <div className="flex flex-row">
-                <button className="bg-cyan-600 text-white font-bold text-sm py-2 px-2 rounded
-                                  mt-2 ml-12"
-                        id = "Back"
-                        style = {{ width: "100px" }}                    
-                        onClick = {() => {params.setState(states.PAGE_1);}} >      
+                <button
+                    className="bg-cyan-600 text-white font-bold text-sm py-2 px-2 rounded
+                               mt-2 ml-12"
+                    id = "Back"
+                    style = {{ width: "100px" }}                    
+                    onClick = {() => {params.setState(states.PAGE_1);}} >      
                     &lt; Back
                 </button>
 
-                <button className="bg-cyan-600 text-white font-bold text-sm py-2 px-2 rounded
-                                  mt-2 ml-5"
-                        id = "Next"
-                        style = {{ width: "100px" }}                    
-                        onClick={() => {params.setState(states.VERIFY_PAGE_2);}} >      
+                <button
+                    className="bg-cyan-600 text-white font-bold text-sm py-2 px-2 rounded
+                              mt-2 ml-5"
+                    id = "Next"
+                    style = {{ width: "100px" }}                    
+                    onClick={() => {params.setState(states.VERIFY_PAGE_2);}} >      
                     Next &gt;
                 </button>
             </div>
@@ -598,19 +610,21 @@ function Page_3(params) {
                 Enter the password you want to use                
             </p>        
             <div className="flex flex-row">            
-                <input className="ml-5 mt-1 w-72 pl-1"
-                       id="Password"
-                       ref={autofocusID}
-                       type={params.PasswordVisibility}
-                       placeholder=""
-                       autoComplete="new-password"
-                       value={params.Password}
-                       onChange={(e) => params.setPassword(e.target.value)}
+                <input
+                    className="ml-5 mt-1 w-72 pl-1"
+                    id="Password"
+                    ref={autofocusID}
+                    type={params.PasswordVisibility}
+                    placeholder=""
+                    autoComplete="new-password"
+                    value={params.Password}
+                    onChange={(e) => params.setPassword(e.target.value)}
                 />
-                <img className="mr-5 ml-0 mt-1 h-6 w-7"
-                     src={eye}
-                     alt="/"
-                     onClick={() => {
+                <img
+                    className="mr-5 ml-0 mt-1 h-6 w-7"
+                    src={eye}
+                    alt="/"
+                    onClick={() => {
                         if (params.PasswordVisibility === "password") {
                             params.setPasswordVisibility("text");
                         } else {
@@ -625,18 +639,20 @@ function Page_3(params) {
 
             <p className=" ml-5 mb-1 mt-2 text-white text-left">Please enter the same password again</p>
             <div className="flex flex-row">    
-                <input className="ml-5 mt-1 w-72 pl-1"
-                       id="PasswordCopy"
-                       type={params.PasswordVisibility}
-                       placeholder=""
-                       autoComplete="new-password"
-                       value={params.PasswordCopy}
-                       onChange={(e) => params.setPasswordCopy(e.target.value)}
+                <input
+                    className="ml-5 mt-1 w-72 pl-1"
+                    id="PasswordCopy"
+                    type={params.PasswordVisibility}
+                    placeholder=""
+                    autoComplete="new-password"
+                    value={params.PasswordCopy}
+                    onChange={(e) => params.setPasswordCopy(e.target.value)}
                 />
-                <img className="mr-5 ml-0 mt-1 h-6 w-7"
-                     src={eye}
-                     alt="/"
-                     onClick={() => {
+                <img
+                    className="mr-5 ml-0 mt-1 h-6 w-7"
+                    src={eye}
+                    alt="/"
+                    onClick={() => {
                         if (params.PasswordVisibility === "password") {
                             params.setPasswordVisibility("text");
                         } else {
@@ -650,19 +666,21 @@ function Page_3(params) {
             </p>
 
             <div className="flex flex-row mt-5">
-                <button className="bg-cyan-600 text-white font-bold text-sm py-2 px-2 rounded
-                                  mt-1 ml-12"
-                        id="Back"
-                        style={{ width: "100px" }}
-                        onClick={() => {params.setState(states.PAGE_2);}} >      
+                <button
+                    className="bg-cyan-600 text-white font-bold text-sm py-2 px-2 rounded
+                               mt-1 ml-12"
+                    id="Back"
+                    style={{ width: "100px" }}
+                    onClick={() => {params.setState(states.PAGE_2);}} >      
                     &lt; Back
                 </button>
 
-                <button className="bg-cyan-600 text-white font-bold text-sm py-2 px-2 rounded
-                                  mt-2 ml-5"
-                        id="Sign_In"
-                        style={{ width: "100px" }}
-                        onClick={() => {params.setState(states.VERIFY_PAGE_3);}} >      
+                <button
+                    className="bg-cyan-600 text-white font-bold text-sm py-2 px-2 rounded
+                               mt-2 ml-5"
+                    id="Sign_In"
+                    style={{ width: "100px" }}
+                    onClick={() => {params.setState(states.VERIFY_PAGE_3);}} >      
                     Sign In
                 </button>
             </div>

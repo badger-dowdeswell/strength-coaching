@@ -15,7 +15,7 @@
 // validateEmail()
 // ===============
 // Verifies that the email address is valid. This regular expression
-// checks the most important criteria of the email standard RFC 5322
+// checks the most important criteria of the email standard RFC 5322.
 //
 export function validateEmail(emailAddress) {
     if (!/\S+@\S+\.\S+/.test(emailAddress)) {

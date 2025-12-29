@@ -70,10 +70,12 @@ function TopNav(params) {
                         bg-gray-900 text-white overflow-y-hidden">
 
             <div className="relative flex items-center justify-center mt-1">
-                <img src={StrengthCoachingLogo}
-                     alt="/" draggable={false} 
-                     height={95} width={250}
-                     onClick={() => navigate("/")}/>
+                <img
+                    src={StrengthCoachingLogo}
+                    alt="/" draggable={false} 
+                    height={95} width={250}
+                    onClick={() => navigate("/")}
+                />
             </div>
 
             <div className="absolute left-64 top-8 w-auto 
@@ -91,12 +93,13 @@ function TopNav(params) {
 
                     <div>
                         {params.userName !="" && (
-                            <img className="mt-6"
-                                 src={userImage}
-                                 alt="/"
-                                 draggable={false}
-                                 height={57}
-                                 width={57}                                
+                            <img
+                                className="mt-6"
+                                src={userImage}
+                                alt="/"
+                                draggable={false}
+                                height={57}
+                                width={57}                                
                             />
                         )}
                     </div>
