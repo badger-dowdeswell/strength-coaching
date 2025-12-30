@@ -849,14 +849,15 @@ app.put('/api/updateSchedule', async(request, response) => {
     if (!verifyJWT(JWT)) {
         response.status(403).send("Not authorised");        
     } else {
-        var sqlUpdateCmd = 'DO $$\n' +
-            'BEGIN \n' +
+        //var sqlUpdateCmd = 'DO $$\n' +
+            //'BEGIN \n' +
+        var sqlUpdateCmd =    
                 'UPDATE "Schedule" SET ' +
-                ' "seq_ID" = ' + "'" + request.seq_ID + "' , " +               
-                ' "block" = ' + "'" + request.block + "' , " +
+                ' "seq_ID" = ' + "'" + request.body.seq_ID + "', " +               
+                ' "block" = ' + "'" + request.body.block + "', " +
                 ' "week" = ' + "'" + request.body.week + "' , " +
                 ' "day" = ' + "'" + request.body.day + "' , " +
-                ' "exercise_ID" = ' + "'" + request.exercise_ID + "' , " +
+                ' "exercise_ID" = ' + "'" + request.body.exercise_ID + "' , " +
                 ' "sets" = ' + "'" + request.body.sets + "' , " +
                 ' "actual_sets" = ' + "'" + request.body.actual_sets + "' , " +
                 ' "min_reps" = ' + "'" + request.body.min_reps + "' , " +
@@ -870,11 +871,11 @@ app.put('/api/updateSchedule', async(request, response) => {
                 ' "velocity_based_metrics" = ' + "'" + request.body.velocity_based_metrics + "' , " +
                 ' "notes" = ' + "'" + request.body.notes + "', " +
                 ' "E1RM" = ' + "'" + request.body.E1RM + "' " +
-                ' WHERE "schedule_ID" = ' + "'" + request.body.schedule_ID + "';\n" +                
-                'EXCEPTION\n ' +
-                'WHEN OTHERS THEN\n' +
-                    'ROLLBACK\n; ' +
-            'END; $$\n';
+                ' WHERE "schedule_ID" = ' + "'" + request.body.schedule_ID + "';\n" // +                
+            //    'EXCEPTION\n ' +
+            //    'WHEN OTHERS THEN\n' +
+            //        'ROLLBACK\n; ' +
+            //'END; $$\n';
 
         logmsg("/api/updateSchedule: \n" + sqlUpdateCmd + "\n");
 
