@@ -175,15 +175,7 @@ function MyBlockSchedule() {
     //
     // updateSchedule()
     // ================     
-    const updateSchedule = async () => {  
-        //console.log("updating schedule line " + Index); 
-        //console.log("seq_ID " + Schedule[Index].seq_ID);        
-        //var seq_ID = Schedule[Index].seq_ID;
-        //console.log("exercise_ID " + Schedule[Index].exercise_ID);
-        //var exercise_ID = Schedule[Index].exercise_ID;
-        //console.log("Block " + Block);
-        //var block = Block;
-        
+    const updateSchedule = async () => {                  
         axios.put(baseURL + "updateSchedule?JWT=" + JWT, {
             schedule_ID: Schedule[Index].schedule_ID,
             seq_ID: Schedule[Index].seq_ID,
