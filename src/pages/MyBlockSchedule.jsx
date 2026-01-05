@@ -37,11 +37,11 @@ const axios = Axios;
 function MyBlockSchedule() {
     let navigate = useNavigate();  
 
-    const [Block, setBlock] = useState(0);    
+    const [CurrentBlock, setCurrentBlock] = useState(0);    
     const [CurrentWeek, setCurrentWeek] = useState(0);
     const [CurrentDay, setCurrentDay] = useState(0);
     
-    const [MaxWeek, setMaxWeek]= useState(0);  
+    const [MaxWeek, setMaxWeek]= useState(9);  
     
     const [VideoVisible, setVideoVisible] = useState(false); 
     const [VideoLink, setVideoLink] = useState(""); 
@@ -98,17 +98,19 @@ function MyBlockSchedule() {
     useEffect(() => {    
         switch (state) {            
             case states.UNDEFINED:
-                // Load the primary client information and block schedule lines.
-                setCurrentWeek(0);                
-                loadSchedule(user_ID);                
-                break;            
+                // Load the primary client information.                 
+                getUser(user_ID);
+                break; 
+                
+            case states.LOADED_CLIENT:
+                // The client has been found. Load their block schedule.       
+                loadSchedule(user_ID); 
+                break;             
 
             case states.LOADED:
                 // A schedule was found for this client for this block.  
-                setCurrentPage(pages.PAGE_DAY);               
-                setCurrentWeek(1); 
-                setCurrentDay(1); 
-                debugSchedule();
+                setCurrentPage(pages.PAGE_DAY); 
+                //debugSchedule();
                 break;
                 
             case states.NOT_AUTHENTICATED:
@@ -125,6 +127,32 @@ function MyBlockSchedule() {
     }, [state] );
 
     //
+    // getUser()
+    // =========
+    // Reads the user's profile information to determine the current block, week,
+    // and day within their training schedule.
+    //
+    const getUser = async (user_ID) => {         
+        try {
+            let response = await axios.get(baseURL + "getUser?user_ID=" + user_ID + "&JWT=" + JWT);
+            if (response.status === 200) {                               
+                setCurrentBlock(response.data.current_block || 0);  
+                setCurrentWeek(response.data.current_week || 0);                
+                setCurrentDay(response.data.current_day || 0);   
+                // RA_BRD - should this be in the User record?
+                setMaxWeek(9); 
+                setState(states.LOADED_CLIENT);                                        
+            } else if (response.status === 403) {
+                setState(states.NOT_AUTHENTICATED);
+            } else if (response.status === 404) {                
+              setState(states.NOT_FOUND);
+            }            
+        } catch (err) {            
+            setState(states.NOT_FOUND);        
+        }        
+    };
+
+    //
     // loadSchedule()
     // ==============
     // Reads the user's profile information from the database and loads it into the editing fields.
@@ -132,44 +160,22 @@ function MyBlockSchedule() {
     // set the editingState so that that state does not get triggered before the read is complete.
     // Then, the block schedule lines for each day in that week are loaded.
     //
-    const loadSchedule = async (user_ID) => { 
-        var block = 0;
-        var week = 0;        
+    const loadSchedule = async (user_ID) => {        
         try {
-            // load the client information.
-            let response = await axios.get(baseURL + "getUser?user_ID=" + user_ID + "&JWT=" + JWT);
-            if (response.status === 200) { 
-                // RA_BRD - need to add to the clients profile.                
-                setBlock(1);                
-                setMaxWeek(9)
-                
-                // RA_BRD - load temporary variables within this scope.
-                block = 1;
-                week = 1;
-                
-                // load the schedule lines for this block
-                try {
-                    let response = await axios.get(baseURL + "getSchedule?user_ID=" + user_ID + "&JWT=" + JWT + 
-                                            "&block=" + block);                        
-                    if (response.status === 200) {                        
-                        setSchedule(response.data);  
-                        setState(states.LOADED); 
-                    } else if (response.status === 404) {
-                        setState(states.NOT_FOUND);
-                    }            
-                } catch (err) {  
-                    // The client does not have a schedule specified for this period
-                    // RA_BRD - resolve this later to display an approprite message
-                    //          because it is not a failure.          
-                    setState(states.NOT_FOUND);        
-                }        
+            let response = await axios.get(baseURL + "getSchedule?user_ID=" + user_ID + 
+                                           "&JWT=" + JWT + "&block=" + CurrentBlock);                        
+            if (response.status === 200) {                        
+                setSchedule(response.data);  
+                setState(states.LOADED); 
             } else if (response.status === 404) {
-                // The client was not found.
                 setState(states.NOT_FOUND);
             }            
-        } catch (err) {            
+        } catch (err) {  
+            // The client does not have a schedule specified for this period
+            // RA_BRD - resolve this later to display an approprite message
+            //          because it is not a failure.          
             setState(states.NOT_FOUND);        
-        }        
+        }     
     };
 
     //

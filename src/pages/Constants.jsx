@@ -16,10 +16,10 @@
 // =============
 // Using the states
 // ================
-// These constants are used to track the state of a record update or a process during
-// during maintenance. They are the discrete values used by the state machine implemented
-// as a useState hook. The example below shows the way the state variable is configured
-// initially for a typical React page:
+// These enumerated constants are used to track the state of a record update or a
+// process during maintenance or data entry. They are the discrete values used by
+// the state machine implemented via a useState hook. The example below shows the
+// way the state variable is configured initially for a typical React page:
 //
 // const [state, setState] = useState(states.SELECTING);
 //
@@ -28,11 +28,11 @@
 // useEffect(() => {
 //    switch (state) {
 //        case states.LOADING:
-//           ... action code;
+//           ... perform appropriate action code;
 //           break;
 //
 //        case states.EDITING:
-//           ... action code;
+//           ... different action code;
 //           break;
 //
 export const states = {
@@ -40,30 +40,33 @@ export const states = {
     IDLE: 1,
     SELECTING: 2,
     GET_CLIENT: 3,
-    LOADING: 4,
-    LOADED: 5,
-    UPLOADING: 6,
-    UPLOADED: 7,
-
-    NOT_AUTHENTICATED: 13,
-    AUTHENTICATING: 14,
-    AUTHENTICATED: 15,
-    
-    NOT_FOUND: 6,
-    ADDING: 7,
-    EDITING: 8,
-    CANCELLING: 9,
-    UPDATING: 10,
-    DELETING: 11,
-    EMAILING:22,
-    FORGOT_PASSWORD: 16,
-    CHANGING_PASSWORD: 17,
+    LOADED_CLIENT: 4,
+    LOADING: 5,
+    LOADED: 6,
+    UPLOADING: 7,
+    UPLOADED: 8,
+    NOT_FOUND: 9,
     EXITING: 12,
-        
-    VALIDATING: 18,  
-    VALIDATING_STAGE_1: 19,
-    VALIDATING_STAGE_2: 20,  
-    VALIDATING_STAGE_3: 21, 
+
+    NOT_AUTHENTICATED: 15,
+    AUTHENTICATING: 16,
+    AUTHENTICATED: 17,
+    
+    ADDING: 20,
+    EDITING: 21,
+    CANCELLING: 22,
+    UPDATING: 23,
+    DELETING: 24,
+
+    EMAILING:25,
+
+    FORGOT_PASSWORD: 26,
+    CHANGING_PASSWORD: 27,            
+    VALIDATING: 28,  
+    VALIDATING_STAGE_1: 29,
+    VALIDATING_STAGE_2: 30,  
+    VALIDATING_STAGE_3: 31, 
+    VALIDATING_STAGE_4: 32,
 
     PAGE_1: 100,
     VERIFY_PAGE_1: 101, 
@@ -90,7 +93,9 @@ export const states = {
 // pages
 // =====
 // Predefined constants for numbering pages in tabbed dialogue components
-// or nested multi-page environments like MyBlockSchedule.
+// or nested multi-page environments like MyBlockSchedule. The constants
+// PAGE_DAY and PAGE_EXERCICE are just more expressive versions that make
+// more sense in the context of the MyBlockSchedule page control.
 //
 export const pages = {
     UNDEFINED: 0,
@@ -118,10 +123,3 @@ export const dialogs = {
     SHOW_DIALOG: 3,
     HIDE_DIALOG: 4
 }
-
-//export const uploadStates = {
-//    IDLE: 0,
-//    UPLOADING: 1,
-//    UPLOADED: 2,
-//    ERROR: 3
-//}

@@ -429,8 +429,7 @@ app.get('/api/authenticateUser', async(request, response) => {
 // Route to return an individual user record based on their user_ID. This api
 // must receive a valid JWT for the current session before it executes.
 //
-app.get('/api/getUser', async (request, response) => {    
-    logmsg("/api/getUser with JWT\n");
+app.get('/api/getUser', async (request, response) => {   
     const JWT = request.query.JWT;
     if (!verifyJWT(JWT)) {
         logmsg("/api/getUser JWT does not verify");
@@ -818,7 +817,7 @@ app.get('/api/getSchedule', async(request, response) => {
                     // on the front end.
                     for (var key = 0; key < result.rows.length; key++) {                        
                         result.rows[key].key = key;
-                        console.log("map " + key + " [" + result.rows[key].key + "]");
+                        //console.log("map " + key + " [" + result.rows[key].key + "]");
                     }
 
                     response.setHeader("Content-Type", "application/json");                  
