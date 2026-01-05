@@ -505,13 +505,13 @@ function Page_Day(params) {
                 <p className="text-center border mb-0 mt-5 ml-0 w-20">
                     Sets 
                 </p>
-                <p className="text-base text-center border mb-0 mt-5 ml-0 w-20">
+                <p className="text-base text-center border mb-0 mt-5 ml-0 w-[90px]">
                     Reps 
                 </p>    
                 <p className="text-base text-center border mb-0 mt-5 ml-0 w-20">
                     RPE
                 </p>
-                <p className="text-base text-center border mb-0 mt-5 ml-0 w-32">
+                <p className="text-base text-center border mb-0 mt-5 ml-0 w-20">
                     Weights 
                 </p>
                 <p className="text-base text-center border mb-0 mt-5 ml-0 w-32">
@@ -547,7 +547,8 @@ function Page_Day(params) {
                         actual_reps = {line.actual_reps}
                         rpe = {line.rpe}
                         actual_rpe = {line.actual_rpe}
-                        weights = {line.lower_weight + " - " + line.upper_weight}
+                        lower_weight = {line.lower_weight}
+                        upper_weight = {line.upper_weight}
                         actual_weight = {line.actual_weight}
                         velocity_based_metrics = {line.velocity_based_metrics}
                         notes = {line.notes}
@@ -764,7 +765,22 @@ function Page_Exercise(params){
 // element is returned so that line is not displayed on the wrong page.
 //
 function ScheduleLine(params) { 
-    if ((params.activeWeek === params.week) && (params.activeDay === params.day)) {         
+    if ((params.activeWeek === params.week) && (params.activeDay === params.day)) {
+        var reps = params.min_reps;  
+        if (params.max_reps > 0) {
+            reps = reps + "-" + params.max_reps;
+        } 
+        var weights = params.lower_weight;
+        if (params.upper_weight > 0) {
+            weights = weights + "-" + params.upper_weight;
+        } 
+        
+        console.log("actual_reps " + params.actual_reps + " [" + params.actual_reps[1] + "] " + params.actual_reps.length);
+        var actual_reps = params.actual_reps[0];
+        for (var ptr = 1; ptr < params.actual_reps.length; ptr++) {
+            actual_reps = actual_reps + "," + params.actual_reps[ptr];
+        }
+
         return (
             <div>                
                 <div 
@@ -792,11 +808,11 @@ function ScheduleLine(params) {
                         <p className = "bg-gray-800 text-white  text-base text-center border mb-0 mt-0 ml-0 w-10">
                             {params.actual_sets} 
                         </p> 
-                        <p className = "bg-gray-800 text-white  text-base text-center border mb-0 mt-0 ml-0 w-10">
-                            {params.min_reps} 
+                        <p className = "bg-gray-800 text-white  text-base text-center border mb-0 mt-0 ml-0 w-[50px]">
+                            {reps} 
                         </p>
                         <p className = "bg-gray-800 text-white  text-base text-center border mb-0 mt-0 ml-0 w-10">
-                            {params.actual_reps} 
+                            {actual_reps} 
                         </p>
                         <p className = "bg-gray-800 text-white  text-base text-center border mb-0 mt-0 ml-0 w-10">
                             {params.rpe} 
@@ -804,8 +820,8 @@ function ScheduleLine(params) {
                         <p className = "bg-gray-800 text-white  text-base text-center border mb-0 mt-0 ml-0 w-10">
                             {params.actual_rpe} 
                         </p>
-                        <p className = "bg-gray-800 text-white  text-base text-center border mb-0 mt-0 ml-0 w-32">
-                            {params.weights}
+                        <p className = "bg-gray-800 text-white  text-base text-center border mb-0 mt-0 ml-0 w-20">
+                            {weights}
                         </p>
                         <p className = "bg-gray-800 text-white  text-base text-center border mb-0 mt-0 ml-0 w-32">
                             {params.actual_weight} 
@@ -869,7 +885,7 @@ function SchedulDay(params) {
                         <p className="bg-white text-black text-base text-center border mb-0 mt-0 ml-0 w-10">
                             {params.actual_reps} 
                         </p>
-                        <p className="text-white text-base text-center border mb-0 mt-0 ml-0 w-32">
+                        <p className="text-white text-base text-center border mb-0 mt-0 ml-0 w-20">
                             {params.weights}
                         </p>
                         <p className="bg-white text-black text-base text-center border mb-0 mt-0 ml-0 w-32">
