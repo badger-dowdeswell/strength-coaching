@@ -400,7 +400,7 @@ app.get('/api/authenticateUser', async(request, response) => {
                                                 user_authority: user_authority,
                                                 user_image: user_image,
                                                 JWT: token};
-                                logmsg("/api/authenticateUser: Packet returned:\n " + packet.user_ID);
+                                logmsg("/api/authenticateUser: Packet returned: user_ID: " + packet.user_ID);
                                 response.status(200).send(packet);
                             } else {
                                 logmsg("/api/authenticateUser error : " + err.message);

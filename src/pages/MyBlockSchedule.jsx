@@ -158,7 +158,7 @@ function MyBlockSchedule() {
     // Reads the user's profile information from the database and loads it into the editing fields.
     // Note since this method operates within an aync Promise, it is the safest place to
     // set the editingState so that that state does not get triggered before the read is complete.
-    // Then, the block schedule lines for each day in that week are loaded.
+    // Then, the block schedule lines for each day in that week are loaded. test
     //
     const loadSchedule = async (user_ID) => {        
         try {
@@ -212,34 +212,7 @@ function MyBlockSchedule() {
             console.log("schedule not updated...");          
         })
     };
-    
-    //
-    // debugSchedule()
-    // ===============
-    // RA_BRD
-    //
-    function debugSchedule() {
-        let line = "";
-        console.log("\ndebugSchedule()\n");        
-        console.log("Line count " + Schedule.length + "\n");
-        for (var ptr = 0; ptr <Schedule.length; ptr++ ) {
 
-            line = Schedule[ptr].schedule_ID + " " +
-                   Schedule[ptr].seq_ID + " " +
-                   Schedule[ptr].user_ID + " " +
-                   Schedule[ptr].block + " " +    
-                   Schedule[ptr].exercise_name + " " +
-                   Schedule[ptr].sets + " " +
-                   Schedule[ptr].actual_sets + " " +
-                   Schedule[ptr].min_reps + " " +
-                   Schedule[ptr].max_reps + " " +
-                   Schedule[ptr].actual_reps + " " +
-                   Schedule[ptr].velocity_based_metrics;
-
-            console.log(line);            
-        } 
-    }; 
-        
     //
     // WeekTabBar()
     // ============
@@ -348,7 +321,7 @@ function MyBlockSchedule() {
 
         // Callback function that returns true or false if the element matches the
         // parameters
-        const isFound = (element) => ((element.week == reqWeek) 
+        const isFound = (element) => ((element.week == reqWeek)
                                       && (element.day == reqDay));
 
         // Search the array to find the index of the first matching element that 
@@ -418,6 +391,33 @@ function MyBlockSchedule() {
         }
         setIsChanged(false);    
     }
+
+    //
+    // debugSchedule()
+    // ===============
+    // RA_BRD
+    //
+    function debugSchedule() {
+        let line = "";
+        console.log("\ndebugSchedule()\n");
+        console.log("Line count " + Schedule.length + "\n");
+        for (var ptr = 0; ptr <Schedule.length; ptr++ ) {
+
+            line = Schedule[ptr].schedule_ID + " " +
+            Schedule[ptr].seq_ID + " " +
+            Schedule[ptr].user_ID + " " +
+            Schedule[ptr].block + " " +
+            Schedule[ptr].exercise_name + " " +
+            Schedule[ptr].sets + " " +
+            Schedule[ptr].actual_sets + " " +
+            Schedule[ptr].min_reps + " " +
+            Schedule[ptr].max_reps + " " +
+            Schedule[ptr].actual_reps + " " +
+            Schedule[ptr].velocity_based_metrics;
+
+            console.log(line);
+        }
+    };
 
     //
     // MyBlockSchedule
@@ -764,6 +764,10 @@ function Page_Exercise(params){
 // data does not belong to the specified week, or the specific day, a null 
 // element is returned so that line is not displayed on the wrong page.
 //
+// <p className = "bg-gray-800 text-white text-base text-center border mb-0 mt-0 ml-0 h- w-10">
+//   {actual_reps}
+// </p>
+//
 function ScheduleLine(params) { 
     if ((params.activeWeek === params.week) && (params.activeDay === params.day)) {
         var reps = params.min_reps;  
@@ -778,65 +782,70 @@ function ScheduleLine(params) {
         console.log("actual_reps " + params.actual_reps + " [" + params.actual_reps[1] + "] " + params.actual_reps.length);
         var actual_reps = params.actual_reps[0];
         for (var ptr = 1; ptr < params.actual_reps.length; ptr++) {
-            actual_reps = actual_reps + "," + params.actual_reps[ptr];
+            actual_reps = actual_reps + ",\n" + params.actual_reps[ptr];
         }
 
         return (
-            <div>                
-                <div 
-                    className="flex flex.row"
-                    onClick={() => {
-                        params.setEditParams(params)
-                        params.setCurrentPage(pages.PAGE_EXERCISE);                               
-                    }}> 
-                    <p  className="text-white text-base border pl-1 mb-0 mt-0 ml-0 w-40">                                               
-                        {params.exercise_name} 
-                        <img
-                            className="ml-auto"
-                            src={training_video_image}
-                            title="The training video for this exercise" 
-                            draggable={false} 
-                            height={30}
-                            width={30}                             
-                        />                            
-                    </p>  
+            <div
+                className="flex flex.row flex-auto"
+                onClick={() => {
+                    params.setEditParams(params)
+                    params.setCurrentPage(pages.PAGE_EXERCISE);
+                }}>
+                <p  className="text-white text-base border pl-1 mb-0 mt-0 ml-0 w-40">
+                    {params.exercise_name}
+                    <img
+                        className="ml-auto"
+                        src={training_video_image}
+                        title="The training video for this exercise"
+                        draggable={false}
+                        height={30}
+                        width={30}
+                    />
+                </p>
 
-                    <div className="flex flex.col">
-                        <p className="bg-gray-800 text-white  text-base text-center border mb-0 mt-0 ml-0 w-10">                            
-                            {params.sets} 
-                        </p> 
-                        <p className = "bg-gray-800 text-white  text-base text-center border mb-0 mt-0 ml-0 w-10">
-                            {params.actual_sets} 
-                        </p> 
-                        <p className = "bg-gray-800 text-white  text-base text-center border mb-0 mt-0 ml-0 w-[50px]">
-                            {reps} 
-                        </p>
-                        <p className = "bg-gray-800 text-white  text-base text-center border mb-0 mt-0 ml-0 w-10">
-                            {actual_reps} 
-                        </p>
-                        <p className = "bg-gray-800 text-white  text-base text-center border mb-0 mt-0 ml-0 w-10">
-                            {params.rpe} 
-                        </p>
-                        <p className = "bg-gray-800 text-white  text-base text-center border mb-0 mt-0 ml-0 w-10">
-                            {params.actual_rpe} 
-                        </p>
-                        <p className = "bg-gray-800 text-white  text-base text-center border mb-0 mt-0 ml-0 w-20">
-                            {weights}
-                        </p>
-                        <p className = "bg-gray-800 text-white  text-base text-center border mb-0 mt-0 ml-0 w-32">
-                            {params.actual_weight} 
-                        </p>
-                        <p className = "bg-gray-800 text-white text-base text-center border mb-0 mt-0 ml-0 w-48">
-                            {params.velocity_based_metrics} 
-                        </p>
-                        <p className = "bg-gray-800 text-white text-base text-center border mb-0 mt-0 ml-0 w-48">
-                            {params.notes} 
-                        </p>
-                        <p className = "bg-gray-800 text-white text-base text-center border mb-0 mt-0 ml-0 w-14">
-                            {params.E1RM} 
-                        </p>
-                    </div> 
-                </div>           
+                <div className="flex flex.col h-auto">
+                    <p className="bg-gray-800 text-white text-base text-center border mb-0 mt-0 ml-0 w-10 h-auto">
+                        {params.sets}
+                    </p>
+                    <p className = "bg-gray-800 text-white text-base text-center border mb-0 mt-0 ml-0 w-10 h-auto">
+                        {params.actual_sets}
+                    </p>
+                    <p className = "bg-gray-800 text-white text-base text-center border mb-0 mt-0 ml-0 w-[50px] h-auto">
+                        {reps}
+                    </p>
+
+                    <textarea
+                        className="bg-gray-800 text-white text-base text-center text-wrap border scrollbar-hide w-10 h-auto"
+                        id="ActualReps"
+                        type="text"
+                        placeholder=""
+                        value={actual_reps}
+                        onChange={(e) => {}}
+                    />
+
+                    <p className = "bg-gray-800 text-white text-base text-center border mb-0 mt-0 ml-0 w-10 h-auto">
+                        {params.rpe}
+                    </p>
+                    <p className = "bg-gray-800 text-white text-base text-center border mb-0 mt-0 ml-0 w-10 h-auto">
+                        {params.actual_rpe}
+                    </p>
+                    <p className = "bg-gray-800 text-white text-base text-center border mb-0 mt-0 ml-0 w-20 h-auto">
+                        {weights}
+                    </p>
+                    <p className = "bg-gray-800 text-white text-base text-center border mb-0 mt-0 ml-0 w-32 h-auto">
+                        {params.actual_weight}
+                    </p>
+                    <p className = "bg-gray-800 text-white text-base text-center border mb-0 mt-0 ml-0 w-48 h-auto">
+                        {params.velocity_based_metrics}
+                    </p>
+                    <p className = "bg-gray-800 text-white text-base text-center border mb-0 mt-0 ml-0 w-48 h-auto">
+                        {params.notes}
+                    </p>
+                    <p className = "bg-gray-800 text-white text-base text-center border mb-0 mt-0 ml-0 w-14 h-auto">
+                        {params.E1RM}
+                    </p>
+                </div>
             </div>
         )
     } else {
