@@ -305,7 +305,7 @@ function MyBlockSchedule() {
                     </div>                             
                 ) 
             }               
-        }; 
+        };
         return items; 
     };
 
@@ -443,8 +443,8 @@ function MyBlockSchedule() {
                     </div>
 
                     <div className="flex flex-row">    
-                        <DayTabBar/>         
-                    </div> 
+                        <DayTabBar/>
+                    </div>
                     <hr className="h-px my-0 bg-white border-0"></hr>
 
                     {(CurrentPage === pages.PAGE_DAY) && (
@@ -452,6 +452,7 @@ function MyBlockSchedule() {
                             Schedule = {Schedule}
                             activeWeek = {CurrentWeek}
                             activeDay = {CurrentDay} 
+                            activeBlock = {CurrentBlock}
                             setVideoVisible = {setVideoVisible} 
                             setVideoLink = {setVideoLink}
                             CurrentPage = {CurrentPage} setCurrentPage = {setCurrentPage}
@@ -495,7 +496,7 @@ function Page_Day(params) {
     return (
         <div>            
             <p className="text-white text-center font-bold text-xl mt-4">
-                Training Schedule
+                Training Schedule - Block {params.activeBlock}
             </p>                   
             
             <div className="flex flex.row text-white">                        
@@ -528,7 +529,7 @@ function Page_Day(params) {
                 </p>     
             </div>            
 
-            <div>
+            <div className="h-[260px] overflow-y-scroll border">
                 {params.Schedule.map(line => (                    
                     <ScheduleLine
                         index = {line.key}
@@ -562,17 +563,17 @@ function Page_Day(params) {
                 ))}
             </div>
 
-            <div className="flex flex-col items-center mt-auto"> 
+            <div className="flex flex-col items-center">
                 <button
                     className="bg-cyan-600 text-white font-bold text-sm py-2 px-2
-                               rounded mb-6 mt-10 ml-8"
+                               rounded mt-5 mb-0"
                     id="Back"
                     style={{ width: "100px" }}
                     onClick={() => {                                 
                         params.navigate("/Home"); 
                     }}>
                     Back
-                </button>  
+                </button>
             </div> 
         </div>
     )  
