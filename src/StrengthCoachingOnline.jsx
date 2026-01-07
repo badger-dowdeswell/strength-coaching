@@ -31,32 +31,24 @@ import ReactDOM from 'react-dom/client';
 import { BrowserRouter } from 'react-router-dom';
 import { Route, Routes } from "react-router-dom";
 
-// An object for each page is declared here to use in
-// the individual routes
+// An object for each page is declared here to use in the individual routes.
 import Landing from './pages/Landing';
 import SignIn from "./pages/SignIn";
 import ResetPassword from "./pages/ResetPassword";
 import Registration from "./pages/Registration";
 import More from "./pages/More";
 import Home from "./pages/Home";
-import Today from "./pages/Today";
 import MyBlockSchedule from "./pages/MyBlockSchedule";
 import MyProgress from "./pages/MyProgress";
-import MyMessages from "./pages/MyMessages";
 import EditMyProfile from "./pages/EditMyProfile";
 
-const version = 1.5;
+const version = 1.6;
 //
 // Router
 // ======
 // This controls the routing for all pages.The code in index.html
 // calls this router component directly which simplifies the
 // structure significantly.
-//
-// <Route path="/Today" element={<Today />} /> RA_BRD
-// <Route path="/MyProgress" element={<MyProgress />} />
-// <Route path="/MyMessages" element={<MyMessages />} />
-// <Route path="/More" element={<More />} />
 //
 const root = ReactDOM.createRoot(document.getElementById('root'));
 

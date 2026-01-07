@@ -17,6 +17,7 @@ import './Main.css';
 
 import TopNav from "./components/TopNav";
 import Modal from "./components/Modal";
+import TextareaAutosize from "react-textarea-autosize";
 
 import { useEffect, useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
@@ -227,7 +228,7 @@ function MyBlockSchedule() {
             if (FindWeek(index + 1)) {
                 keyIndex++; 
                 items.push(
-                     <div key={keyIndex}>
+                    <div key={keyIndex}>
                         <button className="bg-gray-400 text-black text-sm py-1
                                            px-1 border mb-0 mt-0 ml-0"                                                                
                                 id={"TabWeek_" + (index + 1)} 
@@ -816,14 +817,16 @@ function ScheduleLine(params) {
                         {reps}
                     </p>
 
-                    <textarea
-                        className="bg-gray-800 text-white text-base text-center text-wrap border scrollbar-hide w-10 h-auto"
-                        id="ActualReps"
-                        type="text"
-                        placeholder=""
-                        value={actual_reps}
-                        onChange={(e) => {}}
-                    />
+                    <div className="border">
+                        <TextareaAutosize
+                            className="bg-gray-800 text-white text-base text-center text-wrap scrollbar-hide w-10"
+                            id="ActualReps"
+                            type="text"
+                            placeholder=""
+                            value={actual_reps}
+                            onChange={(e) => {}}
+                        />
+                    </div>
 
                     <p className = "bg-gray-800 text-white text-base text-center border mb-0 mt-0 ml-0 w-10 h-auto">
                         {params.rpe}
