@@ -501,13 +501,13 @@ function Page_Day(params) {
             </p>                   
             
             <div className="flex flex.row text-white">                        
-                <p className="text-center border mb-0 mt-5 ml-0 w-40">
+                <p className="text-center border mb-0 mt-5 ml-0 w-[161px]">
                     Exercises 
                 </p>
                 <p className="text-center border mb-0 mt-5 ml-0 w-20">
                     Sets 
                 </p>
-                <p className="text-base text-center border mb-0 mt-5 ml-0 w-[90px]">
+                <p className="text-base text-center border mb-0 mt-5 ml-0 w-[92px]">
                     Reps 
                 </p>    
                 <p className="text-base text-center border mb-0 mt-5 ml-0 w-20">
@@ -516,10 +516,10 @@ function Page_Day(params) {
                 <p className="text-base text-center border mb-0 mt-5 ml-0 w-20">
                     Weights 
                 </p>
-                <p className="text-base text-center border mb-0 mt-5 ml-0 w-32">
+                <p className="text-base text-center border mb-0 mt-5 ml-0 w-[100px]">
                     My Weights 
                 </p>
-                <p className="text-base text-center border mb-0 mt-5 ml-0 w-48">
+                <p className="text-base text-center border mb-0 mt-5 ml-0 w-[191px]">
                     Velocity-Based Metrics 
                 </p>
                 <p className="text-base text-center border mb-0 mt-5 ml-0 w-48">
@@ -769,6 +769,7 @@ function Page_Exercise(params){
 // <p className = "bg-gray-800 text-white text-base text-center border mb-0 mt-0 ml-0 h- w-10">
 //   {actual_reps}
 // </p>
+//  // <p className = "bg-gray-800 text-white text-base text-center border mb-0 mt-0 ml-0 w-[100px] h-auto">
 //
 function ScheduleLine(params) { 
     if ((params.activeWeek === params.week) && (params.activeDay === params.day)) {
@@ -781,10 +782,18 @@ function ScheduleLine(params) {
             weights = weights + "-" + params.upper_weight;
         } 
         
-        console.log("actual_reps " + params.actual_reps + " [" + params.actual_reps[1] + "] " + params.actual_reps.length);
+        // Unpack the actual reps array so it can be edited as text.
+        console.log("actual_reps " + params.actual_reps + " [" + params.actual_reps.length + "]");
         var actual_reps = params.actual_reps[0];
         for (var ptr = 1; ptr < params.actual_reps.length; ptr++) {
             actual_reps = actual_reps + ",\n" + params.actual_reps[ptr];
+        }
+
+        // Unpack the actual weight array so it can be edited as text.
+        // RA_BRD - this needs to be refactored as "actual_weights"
+        var actual_weight = params.actual_weight[0];
+        for (var ptr = 1; ptr < params.actual_weight.length; ptr++) {
+            actual_weight = actual_weight + ",\n" + params.actual_weight[ptr];
         }
 
         return (
@@ -837,9 +846,18 @@ function ScheduleLine(params) {
                     <p className = "bg-gray-800 text-white text-base text-center border mb-0 mt-0 ml-0 w-20 h-auto">
                         {weights}
                     </p>
-                    <p className = "bg-gray-800 text-white text-base text-center border mb-0 mt-0 ml-0 w-32 h-auto">
-                        {params.actual_weight}
-                    </p>
+
+                    <div className="border">
+                        <TextareaAutosize
+                            className="bg-gray-800 text-white text-base text-center text-wrap scrollbar-hide w-[100px]"
+                            id="ActualWeights"
+                            type="text"
+                            placeholder=""
+                            value={actual_weight}
+                            onChange={(e) => {}}
+                        />
+                    </div>
+
                     <p className = "bg-gray-800 text-white text-base text-center border mb-0 mt-0 ml-0 w-48 h-auto">
                         {params.velocity_based_metrics}
                     </p>
