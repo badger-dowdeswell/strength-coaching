@@ -797,7 +797,7 @@ app.get('/api/getSchedule', async(request, response) => {
         const sqlSelectCmd = 'SELECT "schedule_ID", "seq_ID", "user_ID", "block", "week", "day", ' +  
                              '"Exercise"."name" AS "exercise_name", "Exercise"."exercise_ID", ' +
                              '"sets", "actual_sets", "min_reps", "max_reps", "actual_reps", "rpe", ' +
-                             '"actual_rpe", "lower_weight", "upper_weight", "actual_weight", ' +
+                             '"actual_rpe", "lower_weight", "upper_weight", "actual_weights", ' +
                              '"velocity_based_metrics", "notes", "E1RM", ' +
                              '"Exercise"."video_link" AS "video_link" ' +        
                              'FROM "Schedule" ' +
@@ -866,7 +866,7 @@ app.put('/api/updateSchedule', async(request, response) => {
                 ' "actual_rpe" = ' + "'" + request.body.actual_rpe + "' , " +
                 ' "lower_weight" = ' + "'" + request.body.lower_weight + "' , " +
                 ' "upper_weight" = ' + "'" + request.body.upper_weight + "' , " +
-                ' "actual_weight" = ' + "'{" + request.body.actual_weight + "}' , " +
+                ' "actual_weights" = ' + "'{" + request.body.actual_weights + "}' , " +
                 ' "velocity_based_metrics" = ' + "'" + request.body.velocity_based_metrics + "' , " +
                 ' "notes" = ' + "'" + request.body.notes + "', " +
                 ' "E1RM" = ' + "'" + request.body.E1RM + "' " +

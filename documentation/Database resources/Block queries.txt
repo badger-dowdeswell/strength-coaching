@@ -118,7 +118,7 @@ Latest:
 
 SELECT "schedule_ID", "seq_ID", "user_ID", "block",  "week", "day", "Exercise"."exercise_ID", "Exercise"."name" AS "exercise_name", 
        "sets", "actual_sets", "min_reps", "max_reps", "actual_reps", "rpe", 
-       "actual_rpe", "lower_weight", "upper_weight", "actual_weight", "velocity_based_metrics", "notes", "E1RM",
+       "actual_rpe", "lower_weight", "upper_weight", "actual_weights", "velocity_based_metrics", "notes", "E1RM",
 	   "Exercise"."video_link" AS "video_link"	   
 FROM "Schedule"
 LEFT JOIN "Exercise" AS "Exercise" ON "Exercise"."exercise_ID" = "Schedule"."exercise_ID"
@@ -129,7 +129,7 @@ WHERE "block" = '1' AND "user_ID" = '1' ORDER BY "week" ASC, "day" ASC, "seq_ID"
 
 SELECT "schedule_ID", "Exercise"."name" AS "exercise_name", "Exercise"."video_link" AS "video_link", 
        "sets", "actual_sets", "reps", "actual_reps", "rpe" 
-       "actual_rpe", "lower_weight", "upper_weight", "actual_weight", "velocity_based_metrics", "notes", "E1RM" 
+       "actual_rpe", "lower_weight", "upper_weight", "actual_weights", "velocity_based_metrics", "notes", "E1RM" 
 FROM "Schedule"
 
 LEFT JOIN "Exercise" AS "Exercise" ON "Exercise"."exercise_ID" = "Schedule"."exercise_ID"
@@ -156,7 +156,7 @@ WHERE "user_ID" = '1' AND "block" = '1' AND "week" = '1' ORDER BY "day" ASC, "se
 ==========================================================================================
 SELECT "schedule_ID", "user_ID", "week", "day", "Exercise"."name" AS "exercise_name", 
        "sets", "actual_sets", "reps", "actual_reps", "rpe" 
-       "actual_rpe", "lower_weight", "upper_weight", "actual_weight", "velocity_based_metrics", "notes", "E1RM" 
+       "actual_rpe", "lower_weight", "upper_weight", "actual_weights", "velocity_based_metrics", "notes", "E1RM" 
 FROM "Schedule"
 LEFT JOIN "Exercise" AS "Exercise" ON "Exercise"."exercise_ID" = "Schedule"."exercise_ID"
 WHERE "block" = '1' AND "user_ID" = '1' ORDER BY "week" ASC, "day" ASC, "seq_ID" ASC;
@@ -168,7 +168,7 @@ Week 1 - Day 1
 INSERT INTO "Schedule"(
    "seq_ID", "user_ID", "block", "week", "day", "exercise_ID",
    "sets", "actual_sets", "reps", "actual_reps",
-   "rpe", "actual_rpe", "lower_weight", "upper_weight", "actual_weight", 
+   "rpe", "actual_rpe", "lower_weight", "upper_weight", "actual_weights", 
    "velocity_based_metrics", "notes", "E1RM") 
 VALUES (
    '1', '1', '1', '1', '1', '1',
@@ -180,7 +180,7 @@ VALUES (
 INSERT INTO "Schedule"(
    "seq_ID", "user_ID", "block", "week", "day", "exercise_ID",
    "sets", "actual_sets", "reps", "actual_reps",
-   "rpe", "actual_rpe", "lower_weight", "upper_weight", "actual_weight", 
+   "rpe", "actual_rpe", "lower_weight", "upper_weight", "actual_weights", 
    "velocity_based_metrics", "notes", "E1RM") 
 VALUES (
    '2', '1', '1', '1', '1', '2',
@@ -191,7 +191,7 @@ VALUES (
 INSERT INTO "Schedule"(
    "seq_ID", "user_ID", "block", "week", "day", "exercise_ID",
    "sets", "actual_sets", "reps", "actual_reps",
-   "rpe", "actual_rpe", "lower_weight", "upper_weight", "actual_weight", 
+   "rpe", "actual_rpe", "lower_weight", "upper_weight", "actual_weights", 
    "velocity_based_metrics", "notes", "E1RM") 
 VALUES (
    '1', '3', '1', '1', '1', '3',
@@ -204,7 +204,7 @@ Week 1 - Day 2
 INSERT INTO "Schedule"(
    "seq_ID", "user_ID", "block", "week", "day", "exercise_ID",
    "sets", "actual_sets", "reps", "actual_reps",
-   "rpe", "actual_rpe", "lower_weight", "upper_weight", "actual_weight", 
+   "rpe", "actual_rpe", "lower_weight", "upper_weight", "actual_weights", 
    "velocity_based_metrics", "notes", "E1RM") 
 VALUES (
    '1', '3', '1', '1', '1', '3',
@@ -220,7 +220,7 @@ Week 2 - Day 1
 INSERT INTO "Schedule"(
    "seq_ID", "user_ID", "block", "week", "day", "exercise_ID",
    "sets", "actual_sets", "reps", "actual_reps",
-   "rpe", "actual_rpe", "lower_weight", "upper_weight", "actual_weight", 
+   "rpe", "actual_rpe", "lower_weight", "upper_weight", "actual_weights", 
    "velocity_based_metrics", "notes", "E1RM") 
 VALUES (
    '1', '3', '1', '2', '1', '7',
@@ -231,7 +231,7 @@ VALUES (
 INSERT INTO "Schedule"(
    "seq_ID", "user_ID", "block", "week", "day", "exercise_ID",
    "sets", "actual_sets", "reps", "actual_reps",
-   "rpe", "actual_rpe", "lower_weight", "upper_weight", "actual_weight", 
+   "rpe", "actual_rpe", "lower_weight", "upper_weight", "actual_weights", 
    "velocity_based_metrics", "notes", "E1RM") 
 VALUES (
    '2', '3', '1', '2', '1', '8',
@@ -242,7 +242,7 @@ VALUES (
 INSERT INTO "Schedule"(
    "seq_ID", "user_ID", "block", "week", "day", "exercise_ID",
    "sets", "actual_sets", "reps", "actual_reps",
-   "rpe", "actual_rpe", "lower_weight", "upper_weight", "actual_weight", 
+   "rpe", "actual_rpe", "lower_weight", "upper_weight", "actual_weights", 
    "velocity_based_metrics", "notes", "E1RM") 
 VALUES (
    '3', '3', '1', '2', '1', '10',

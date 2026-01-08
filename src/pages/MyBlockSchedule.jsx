@@ -57,7 +57,7 @@ function MyBlockSchedule() {
     const [ExerciseName, setExerciseName] = useState("");    
     const [ActualSets, setActualSets] = useState(0);    
     const [ActualReps, setActualReps] = useState(0);
-    const [ActualWeight, setActualWeight] = useState(0);
+    const [ActualWeights, setActualWeights] = useState(0);
     const [ActualRPE, setActualRPE] = useState(0);
     const [Notes, setNotes] = useState("");
 
@@ -199,7 +199,7 @@ function MyBlockSchedule() {
             actual_rpe: Schedule[Index].rpe,
             lower_weight: Schedule[Index].lower_weight,
             upper_weight: Schedule[Index].upper_weight,
-            actual_weight: Schedule[Index].actual_weight,
+            actual_weights: Schedule[Index].actual_weights,
             velocity_based_metrics: Schedule[Index].velocity_based_metrics,
             notes: Schedule[Index].notes,
             E1RM: Schedule[Index].E1RM
@@ -220,6 +220,10 @@ function MyBlockSchedule() {
     // This function creates a dynamic list of clickable tabs for the tabbed-dialog
     // that displays the set of pages for the weeks in this schedule. Only weeks
     // where activities have been scheduled are visible.
+    //
+    // This function also sets the current day to the first day scheduled in this week.
+    // The client may not have training scheduled for "Monday" so it cannot be assumed
+    // that the day list for any week is contigueous. RA_BRD
     // 
     function WeekTabBar() {         
         const items = []; 
@@ -285,7 +289,7 @@ function MyBlockSchedule() {
     function DayTabBar() {         
         const days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", 
                       "Saturday", "Sunday"];             
-        const items = []; 
+        const items = [];
         var keyIndex = -1;        
         for (let index = 0; index < 7; index++) { 
             if (FindDay(CurrentWeek, index + 1)) {
@@ -370,7 +374,7 @@ function MyBlockSchedule() {
         setExerciseName(params.exercise_name);
         setActualSets(params.actual_sets);
         setActualReps(params.actual_reps);     
-        setActualWeight(params.actual_weight);
+        setActualWeights(params.actual_weights);
         setActualRPE(params.actual_rpe);
         setNotes(params.notes);   
     }
@@ -384,7 +388,7 @@ function MyBlockSchedule() {
     function updateParams(params) {   
         Schedule[Index].actual_sets = ActualSets;
         Schedule[Index].actual_reps = ActualReps;
-        Schedule[Index].actual_weight = ActualWeight;
+        Schedule[Index].actual_weights = ActualWeights;
         Schedule[Index].actual_rpe = ActualRPE;
         Schedule[Index].notes = Notes.trim();
         if (IsChanged) {
@@ -475,7 +479,7 @@ function MyBlockSchedule() {
                             actualSets = {ActualSets} setActualSets = {setActualSets}
                             actualReps = {ActualReps} setActualReps = {setActualReps}
                             actual_rpe = {ActualRPE} setActualRPE = {setActualRPE}
-                            actualWeight = {ActualWeight} setActualWeight = {setActualWeight}
+                            actualWeights = {ActualWeights} setActualWeights = {setActualWeights}
                             notes = {Notes} setNotes = {setNotes}
                             setEditParams = {setEditParams} 
                             setIsChanged = {setIsChanged} 
@@ -551,7 +555,7 @@ function Page_Day(params) {
                         actual_rpe = {line.actual_rpe}
                         lower_weight = {line.lower_weight}
                         upper_weight = {line.upper_weight}
-                        actual_weight = {line.actual_weight}
+                        actual_weights = {line.actual_weights}
                         velocity_based_metrics = {line.velocity_based_metrics}
                         notes = {line.notes}
                         E1RM = {line.E1RM} 
@@ -585,7 +589,24 @@ function Page_Day(params) {
 // ===============
 // Displays the exercise selected from the current day and allows the fields to be edited.
 //
-function Page_Exercise(params){    
+function Page_Exercise(params){
+    var reps = params.Schedule[params.index].min_reps;
+    if (params.Schedule[params.index].max_reps > 0) {
+        reps = reps + "-" + params.Schedule[params.index].max_reps;
+    }
+    //console.log("reps " + reps);
+    var weights = params.Schedule[params.index].lower_weight;
+    if (params.Schedule[params.index].upper_weight > 0) {
+        weights = weights + "-" + params.Schedule[params.index].upper_weight;
+    }
+
+    // Unpack the actual reps array so it can be edited as text.
+    var actual_reps = params.Schedule[params.index].actual_reps[0];
+    for (var ptr = 1; ptr < params.Schedule[params.index].actual_reps.length; ptr++) {
+        actual_reps = actual_reps + "\n" + params.Schedule[params.index].actual_reps[ptr];
+    }
+    //console.log("actual_reps " + params.actual_reps + " [" + params.actual_reps.length + "]");
+
     return (
         <div>                       
             <p className="text-white text-center font-bold text-xl mt-0">
@@ -593,33 +614,33 @@ function Page_Exercise(params){
             </p>                   
             
             <div className="flex flex.row text-white">                        
-                <p className="text-center border mb-0 mt-5 ml-0 w-40">
-                    Exercise 
+                <p className="text-center border mb-0 mt-5 ml-0 w-[161px]">
+                    Exercises
                 </p>
                 <p className="text-center border mb-0 mt-5 ml-0 w-20">
-                    Sets 
+                    Sets
                 </p>
-                <p className="text-base text-center border mb-0 mt-5 ml-0 w-20">
-                    Reps 
+                <p className="text-base text-center border mb-0 mt-5 ml-0 w-[92px]">
+                    Reps
                 </p>
                 <p className="text-base text-center border mb-0 mt-5 ml-0 w-20">
                     RPE
-                </p>    
-                <p className="text-base text-center border mb-0 mt-5 ml-0 w-32">
-                    Weights 
                 </p>
-                <p className="text-base text-center border mb-0 mt-5 ml-0 w-32">
-                    My Weights 
+                <p className="text-base text-center border mb-0 mt-5 ml-0 w-20">
+                    Weights
                 </p>
-                <p className="text-base text-center border mb-0 mt-5 ml-0 w-48">
-                    Velocity-Based Metrics 
+                <p className="text-base text-center border mb-0 mt-5 ml-0 w-[100px]">
+                    My Weights
+                </p>
+                <p className="text-base text-center border mb-0 mt-5 ml-0 w-[191px]">
+                    Velocity-Based Metrics
                 </p>
                 <p className="text-base text-center border mb-0 mt-5 ml-0 w-48">
                     Notes
-                </p>  
+                </p>
                 <p className="text-base text-center border mb-0 mt-5 ml-0 w-14">
                     E1RM
-                </p>     
+                </p>
             </div> 
 
             <div className="flex flex.row">
@@ -638,36 +659,37 @@ function Page_Exercise(params){
                     {params.Schedule[params.index].sets} 
                 </p> 
 
-                <div className="flex flex-col">                    
+                <div className="border bg-white">
                     <input
-                        className="bg-white text-black text-center w-10 h-[27px]"
+                        className="bg-white text-black text-base text-center text-wrap w-10"
                         id="ActualSets"
                         type="number"
                         placeholder=""
                         value={params.actualSets}
                         onChange={(e) => {
-                            params.setActualSets(e.target.value);
-                            params.setIsChanged(true);            
-                        }} 
-                    />                     
-                    <p className="bg-white text-black w-10 h-[60px]"></p>                    
-                </div>  
+                            params.setActualSets(e.target.value.slice(0,3));
+                            params.setIsChanged(true);
+                        }}
+                    />
+                </div>
 
-                <p className="bg-gray-800 text-white  text-base text-center border mb-0 mt-0 ml-0 w-10">                            
-                    {params.Schedule[params.index].min_reps} 
+                <p className="bg-gray-800 text-white text-base text-center border mb-0 mt-0 ml-0 w-[50px] h-auto">
+                    {reps}
                 </p> 
                 
-                <textarea
-                    className="bg-white text-black border text-center text-wrap w-10 h-auto"
-                    id="ActualReps"
-                    type="number"
-                    placeholder=""
-                    value={params.actualReps}
-                    onChange={(e) => {
-                        params.setActualReps(e.target.value);
-                        params.setIsChanged(true);            
-                    }} 
-                /> 
+                <div className="border bg-white">
+                    <TextareaAutosize
+                        className="bg-white text-black text-base text-center text-wrap scrollbar-hide h-10 w-10"
+                        id="ActualReps"
+                        type="text"
+                        placeholder=""
+                        value={actual_reps}
+                        onChange={(e) => {
+                            //params.setActualReps(e.target.value);
+                            params.setIsChanged(true);
+                        }}
+                    />
+                </div>
 
                 <p className="bg-gray-800 text-white  text-base text-center border mb-0 mt-0 ml-0 w-10">
                     {params.Schedule[params.index].rpe} 
@@ -789,11 +811,10 @@ function ScheduleLine(params) {
             actual_reps = actual_reps + ",\n" + params.actual_reps[ptr];
         }
 
-        // Unpack the actual weight array so it can be edited as text.
-        // RA_BRD - this needs to be refactored as "actual_weights"
-        var actual_weight = params.actual_weight[0];
-        for (var ptr = 1; ptr < params.actual_weight.length; ptr++) {
-            actual_weight = actual_weight + ",\n" + params.actual_weight[ptr];
+        // Unpack the actual weights array so it can be edited as text.
+        var actual_weights = params.actual_weights[0];
+        for (var ptr = 1; ptr < params.actual_weights.length; ptr++) {
+            actual_weights = actual_weights + ",\n" + params.actual_weights[ptr];
         }
 
         return (
@@ -853,7 +874,7 @@ function ScheduleLine(params) {
                             id="ActualWeights"
                             type="text"
                             placeholder=""
-                            value={actual_weight}
+                            value={actual_weights}
                             onChange={(e) => {}}
                         />
                     </div>
@@ -920,7 +941,7 @@ function SchedulDay(params) {
                             {params.weights}
                         </p>
                         <p className="bg-white text-black text-base text-center border mb-0 mt-0 ml-0 w-32">
-                            {params.actual_weight} 
+                            {params.actual_weights}
                         </p>
                         <p className="text-white text-base text-center border mb-0 mt-0 ml-0 w-48">
                             {params.velocity_based_metrics} 
