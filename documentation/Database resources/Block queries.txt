@@ -90,9 +90,9 @@ CREATE TABLE IF NOT EXISTS public."Schedule" (
     actual_rpe numeric,
     lower_weight numeric,
     upper_weight numeric,
-    actual_weight numeric[],
-    velocity_based_metrics character varying(200) COLLATE pg_catalog."default",
-    notes character varying(200) COLLATE pg_catalog."default",
+    actual_weights numeric[],
+    velocity_based_metrics character varying(500) COLLATE pg_catalog."default",
+    notes character varying(500) COLLATE pg_catalog."default",
     "E1RM" numeric,
     CONSTRAINT "Schedule_pkey" PRIMARY KEY ("schedule_ID")
 )
