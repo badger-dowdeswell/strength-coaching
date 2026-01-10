@@ -364,7 +364,7 @@ function MyBlockSchedule() {
     //
     // setEditParams()
     // ===============
-    // This function saves each editable value for an exercise to usState() variables when
+    // This function saves each editable value for an exercise to useState() variables when
     // a exercise line is clicked in the list of exercises for the day. This allows normal
     // editing text boxes to be used to change values. The function updateParams function 
     // is used later to save changed values back into the ScheduleLine array.
@@ -373,8 +373,19 @@ function MyBlockSchedule() {
         setIndex(params.index);
         setExerciseName(params.exercise_name);
         setActualSets(params.actual_sets);
-        setActualReps(params.actual_reps);     
-        setActualWeights(params.actual_weights);
+
+        var actual_reps = params.Schedule[params.index].actual_reps[0];
+        for (var ptr = 1; ptr < params.Schedule[params.index].actual_reps.length; ptr++) {
+            actual_reps = actual_reps + "\n" + params.Schedule[params.index].actual_reps[ptr];
+        }
+        setActualReps(actual_reps);
+
+        var actual_weights = params.Schedule[params.index].actual_weights[0];
+        for (var ptr = 1; ptr < params.Schedule[params.index].actual_weights.length; ptr++) {
+            actual_weights = actual_weights + "\n" + params.Schedule[params.index].actual_weights[ptr];
+        }
+        setActualWeights(actual_weights);
+
         setActualRPE(params.actual_rpe);
         setNotes(params.notes);   
     }
@@ -594,17 +605,24 @@ function Page_Exercise(params){
     if (params.Schedule[params.index].max_reps > 0) {
         reps = reps + "-" + params.Schedule[params.index].max_reps;
     }
-    //console.log("reps " + reps);
-    var weights = params.Schedule[params.index].lower_weight;
-    if (params.Schedule[params.index].upper_weight > 0) {
-        weights = weights + "-" + params.Schedule[params.index].upper_weight;
-    }
 
     // Unpack the actual reps array so it can be edited as text.
-    var actual_reps = params.Schedule[params.index].actual_reps[0];
-    for (var ptr = 1; ptr < params.Schedule[params.index].actual_reps.length; ptr++) {
-        actual_reps = actual_reps + "\n" + params.Schedule[params.index].actual_reps[ptr];
-    }
+   // var actual_reps = params.Schedule[params.index].actual_reps[0];
+   // for (var ptr = 1; ptr < params.Schedule[params.index].actual_reps.length; ptr++) {
+   //     actual_reps = actual_reps + "\n" + params.Schedule[params.index].actual_reps[ptr];
+   // }
+
+   // var weights = params.Schedule[params.index].lower_weight;
+   // if (params.Schedule[params.index].upper_weight > 0) {
+   //     weights = weights + "-" + params.Schedule[params.index].upper_weight;
+   // }
+
+    // Unpack the actual weights array so it can be edited as text.
+  //  var actual_weights = params.Schedule[params.index].actual_weights[0];
+  //  for (var ptr = 1; ptr < params.Schedule[params.index].actual_weights.length; ptr++) {
+  //      actual_weights = actual_weights + "\n" + params.Schedule[params.index].actual_weights[ptr];
+   // }
+
     //console.log("actual_reps " + params.actual_reps + " [" + params.actual_reps.length + "]");
 
     return (
@@ -683,9 +701,9 @@ function Page_Exercise(params){
                         id="ActualReps"
                         type="text"
                         placeholder=""
-                        value={actual_reps}
+                        value={params.ActualReps}
                         onChange={(e) => {
-                            //params.setActualReps(e.target.value);
+                            params.setActualReps(e.target.value.trim());
                             params.setIsChanged(true);
                         }}
                     />
@@ -695,7 +713,7 @@ function Page_Exercise(params){
                     {params.Schedule[params.index].rpe} 
                 </p>                
 
-                <div className="flex flex-col">                    
+                <div className="border bg-white">
                     <input
                         className="bg-white text-black text-center w-10 h-[27px]"
                         id="ActualRPE"
@@ -716,25 +734,22 @@ function Page_Exercise(params){
                     <p className="bg-white text-black w-10 h-[60px]"></p>                    
                 </div> 
 
-                <p className = "bg-gray-800 text-white  text-base text-center border mb-0 mt-0 ml-0 w-32">
-                    {params.Schedule[params.index].lower_weight + " - " + params.Schedule[params.index].upper_weight}
+                <p className = "bg-gray-800 text-white  text-base text-center border mb-0 mt-0 ml-0 w-20">
+                    {weights}
                 </p>
 
-                <div className="flex flex-col">                    
-                    <input
-                        className="bg-white text-black text-center w-32 h-[27px]"
-                        id="ActualWeight"
+                <div className="border bg-white">
+                    <TextareaAutosize
+                        className="bg-white text-black text-center w-32 scrollbar-hide"
+                        id="ActualWeights"
                         type="number"
                         placeholder=""
-                        value={params.actualWeight}
+                        value={params.ActualWeights}
                         onChange={(e) => {
-                            params.setActualWeight(e.target.value);
+                            params.setActualWeights(e.target.value.trim());
                             params.setIsChanged(true);            
                         }} 
-                    />                     
-                    <p className="bg-white text-black w-32 h-[60px]">
-                        
-                    </p>                    
+                    />
                 </div> 
                 
                 <p className = "bg-gray-800 text-white text-base text-center border mb-0 mt-0 ml-0 w-48">
