@@ -51,8 +51,9 @@ function MyBlockSchedule() {
     // for this block.   
     const [Schedule, setSchedule] = useState([]);
 
-    // Editing fields. These are set by the function setEditingParams() and used
-    // by the function updateParams() to update the Schedule array during editing.
+    // Editing fields. These are set by the function setEditingParams() and used later
+    // by the function updateEditParams() to update the Schedule array fields during
+    // editing.
     const [Index, setIndex] = useState();    
     const [ExerciseName, setExerciseName] = useState("");    
     const [ActualSets, setActualSets] = useState(0);    
@@ -186,6 +187,7 @@ function MyBlockSchedule() {
         axios.put(baseURL + "updateSchedule?JWT=" + JWT, {
             schedule_ID: Schedule[Index].schedule_ID,
             seq_ID: Schedule[Index].seq_ID,
+            user_ID: Schedule[Index].user_ID,
             block: Schedule[Index].block,
             week: Schedule[Index].week,
             day: Schedule[Index].day,
@@ -209,9 +211,36 @@ function MyBlockSchedule() {
             console.log("updated...");
         })
         .catch(err => {            
-            // RA_Badger  
-            console.log("schedule not updated...");          
+            // RA_BRD - figure out how to report the error to the user gracefully.
+            console.log("schedule NOT updated...");
         })
+    };
+
+    //
+    // debugSchedule()
+    // ===============
+    // RA_BRD
+    //
+    function debugSchedule() {
+        let line = "";
+        console.log("\ndebugSchedule()\n");
+        console.log("Line count " + Schedule.length + "\n");
+        for (var ptr = 0; ptr <Schedule.length; ptr++ ) {
+
+            line = Schedule[ptr].schedule_ID + " " +
+            Schedule[ptr].seq_ID + " " +
+            Schedule[ptr].user_ID + " " +
+            Schedule[ptr].block + " " +
+            Schedule[ptr].exercise_name + " " +
+            Schedule[ptr].sets + " " +
+            Schedule[ptr].actual_sets + " " +
+            Schedule[ptr].min_reps + " " +
+            Schedule[ptr].max_reps + " " +
+            Schedule[ptr].actual_reps + " " +
+            Schedule[ptr].velocity_based_metrics;
+
+            console.log(line);
+        }
     };
 
     //
@@ -369,20 +398,23 @@ function MyBlockSchedule() {
     // editing text boxes to be used to change values. The function updateParams function 
     // is used later to save changed values back into the ScheduleLine array.
     // 
-    function setEditParams(params) {        
+    function setEditParams(params) {
         setIndex(params.index);
         setExerciseName(params.exercise_name);
         setActualSets(params.actual_sets);
 
-        var actual_reps = params.Schedule[params.index].actual_reps[0];
-        for (var ptr = 1; ptr < params.Schedule[params.index].actual_reps.length; ptr++) {
-            actual_reps = actual_reps + "\n" + params.Schedule[params.index].actual_reps[ptr];
+        console.log("set EditParams: actual_reps " + params.actual_reps.length);
+
+        var actual_reps = params.actual_reps[0];
+        for (var ptr = 1; ptr < params.actual_reps.length; ptr++) {
+            actual_reps = actual_reps + "\n" + params.actual_reps[ptr];
         }
+        console.log("actual reps [" + actual_reps + "]");
         setActualReps(actual_reps);
 
-        var actual_weights = params.Schedule[params.index].actual_weights[0];
-        for (var ptr = 1; ptr < params.Schedule[params.index].actual_weights.length; ptr++) {
-            actual_weights = actual_weights + "\n" + params.Schedule[params.index].actual_weights[ptr];
+        var actual_weights = params.actual_weights[0];
+        for (var ptr = 1; ptr < params.actual_weights.length; ptr++) {
+            actual_weights = actual_weights + "\n" + params.actual_weights[ptr];
         }
         setActualWeights(actual_weights);
 
@@ -391,49 +423,24 @@ function MyBlockSchedule() {
     }
 
     //
-    // updateParams()
-    // ==============
+    // updateEditParams()
+    // ==================
     // This function updates the Schedule array entry for the line that is currently being
     // edited.
     //
-    function updateParams(params) {   
+    function updateEditParams(params) {
         Schedule[Index].actual_sets = ActualSets;
         Schedule[Index].actual_reps = ActualReps;
         Schedule[Index].actual_weights = ActualWeights;
         Schedule[Index].actual_rpe = ActualRPE;
         Schedule[Index].notes = Notes.trim();
         if (IsChanged) {
-            updateSchedule();
+           // updateSchedule();
         }
         setIsChanged(false);    
     }
 
-    //
-    // debugSchedule()
-    // ===============
-    // RA_BRD
-    //
-    function debugSchedule() {
-        let line = "";
-        console.log("\ndebugSchedule()\n");
-        console.log("Line count " + Schedule.length + "\n");
-        for (var ptr = 0; ptr <Schedule.length; ptr++ ) {
 
-            line = Schedule[ptr].schedule_ID + " " +
-            Schedule[ptr].seq_ID + " " +
-            Schedule[ptr].user_ID + " " +
-            Schedule[ptr].block + " " +
-            Schedule[ptr].exercise_name + " " +
-            Schedule[ptr].sets + " " +
-            Schedule[ptr].actual_sets + " " +
-            Schedule[ptr].min_reps + " " +
-            Schedule[ptr].max_reps + " " +
-            Schedule[ptr].actual_reps + " " +
-            Schedule[ptr].velocity_based_metrics;
-
-            console.log(line);
-        }
-    };
 
     //
     // MyBlockSchedule
@@ -466,9 +473,9 @@ function MyBlockSchedule() {
                     {(CurrentPage === pages.PAGE_DAY) && (
                         <Page_Day
                             Schedule = {Schedule}
-                            activeWeek = {CurrentWeek}
-                            activeDay = {CurrentDay} 
                             activeBlock = {CurrentBlock}
+                            activeWeek = {CurrentWeek}
+                            activeDay = {CurrentDay}
                             setVideoVisible = {setVideoVisible} 
                             setVideoLink = {setVideoLink}
                             CurrentPage = {CurrentPage} setCurrentPage = {setCurrentPage}
@@ -486,15 +493,15 @@ function MyBlockSchedule() {
                             setVideoVisible = {setVideoVisible} 
                             setVideoLink = {setVideoLink}
                             CurrentPage = {CurrentPage} setCurrentPage = {setCurrentPage}
-                            navigate = {navigate} 
                             actualSets = {ActualSets} setActualSets = {setActualSets}
                             actualReps = {ActualReps} setActualReps = {setActualReps}
                             actual_rpe = {ActualRPE} setActualRPE = {setActualRPE}
                             actualWeights = {ActualWeights} setActualWeights = {setActualWeights}
                             notes = {Notes} setNotes = {setNotes}
-                            setEditParams = {setEditParams} 
-                            setIsChanged = {setIsChanged} 
-                            updateParams = {updateParams}                                                               
+                            setEditParams = {setEditParams}
+                            updateEditParams = {updateEditParams}
+                            setIsChanged = {setIsChanged}
+                            navigate = {navigate}
                         />                   
                     )};
                 </div> 
@@ -574,7 +581,7 @@ function Page_Day(params) {
                         CurrentPage = {params.CurrentPage} setCurrentPage = {params.setCurrentPage}
                         setVideoLink = {params.setVideoLink}  
                         setEditParams = {params.setEditParams}
-                        updateParams = {params.updateParams}                                                               
+                        updateEditParams = {params.updateEditParams}
                     />                        
                 ))}
             </div>
@@ -603,19 +610,21 @@ function Page_Day(params) {
 function Page_Exercise(params){
     var reps = params.Schedule[params.index].min_reps;
     if (params.Schedule[params.index].max_reps > 0) {
-        reps = reps + "-" + params.Schedule[params.index].max_reps;
-    }
+        reps = reps + "-" + params.Schedule[params.index].max_reps;    }
+
+    var actual_weights = 100;
 
     // Unpack the actual reps array so it can be edited as text.
-   // var actual_reps = params.Schedule[params.index].actual_reps[0];
-   // for (var ptr = 1; ptr < params.Schedule[params.index].actual_reps.length; ptr++) {
-   //     actual_reps = actual_reps + "\n" + params.Schedule[params.index].actual_reps[ptr];
-   // }
+  //  var actual_reps = params.Schedule[params.index].actual_reps[0];
 
-   // var weights = params.Schedule[params.index].lower_weight;
-   // if (params.Schedule[params.index].upper_weight > 0) {
-   //     weights = weights + "-" + params.Schedule[params.index].upper_weight;
-   // }
+ //   for (var ptr = 1; ptr < params.Schedule[params.index].actual_reps.length; ptr++) {
+  //      actual_reps = actual_reps + "\n" + params.Schedule[params.index].actual_reps[ptr];
+ //   }
+
+    var weights = params.lower_weight;
+    if (params.upper_weight > 0) {
+        weights = weights + "-" + params.upper_weight;
+    }
 
     // Unpack the actual weights array so it can be edited as text.
   //  var actual_weights = params.Schedule[params.index].actual_weights[0];
@@ -623,7 +632,6 @@ function Page_Exercise(params){
   //      actual_weights = actual_weights + "\n" + params.Schedule[params.index].actual_weights[ptr];
    // }
 
-    //console.log("actual_reps " + params.actual_reps + " [" + params.actual_reps.length + "]");
 
     return (
         <div>                       
@@ -699,15 +707,16 @@ function Page_Exercise(params){
                     <TextareaAutosize
                         className="bg-white text-black text-base text-center text-wrap scrollbar-hide h-10 w-10"
                         id="ActualReps"
-                        type="text"
+                        type="number"
                         placeholder=""
-                        value={params.ActualReps}
+                        value={params.actualReps}
                         onChange={(e) => {
-                            params.setActualReps(e.target.value.trim());
+                            params.setActualReps(e.target.value);
                             params.setIsChanged(true);
                         }}
                     />
                 </div>
+
 
                 <p className="bg-gray-800 text-white  text-base text-center border mb-0 mt-0 ml-0 w-10">
                     {params.Schedule[params.index].rpe} 
@@ -744,7 +753,7 @@ function Page_Exercise(params){
                         id="ActualWeights"
                         type="number"
                         placeholder=""
-                        value={params.ActualWeights}
+                        value={actual_weights}
                         onChange={(e) => {
                             params.setActualWeights(e.target.value.trim());
                             params.setIsChanged(true);            
@@ -780,7 +789,7 @@ function Page_Exercise(params){
                     id="Back"
                     style={{ width: "100px" }}
                     onClick={() => { 
-                        params.updateParams();                                
+                        params.updateEditParams();
                         params.setCurrentPage(pages.PAGE_DAY); 
                     }}>
                     Back
@@ -808,7 +817,7 @@ function Page_Exercise(params){
 // </p>
 //  // <p className = "bg-gray-800 text-white text-base text-center border mb-0 mt-0 ml-0 w-[100px] h-auto">
 //
-function ScheduleLine(params) { 
+function ScheduleLine(params) {
     if ((params.activeWeek === params.week) && (params.activeDay === params.day)) {
         var reps = params.min_reps;  
         if (params.max_reps > 0) {
@@ -820,16 +829,16 @@ function ScheduleLine(params) {
         } 
         
         // Unpack the actual reps array so it can be edited as text.
-        console.log("actual_reps " + params.actual_reps + " [" + params.actual_reps.length + "]");
+        //console.log("actual_reps " + params.actual_reps + " [" + params.actual_reps.length + "]");
         var actual_reps = params.actual_reps[0];
         for (var ptr = 1; ptr < params.actual_reps.length; ptr++) {
-            actual_reps = actual_reps + ",\n" + params.actual_reps[ptr];
+            actual_reps = actual_reps + "\n" + params.actual_reps[ptr];
         }
 
         // Unpack the actual weights array so it can be edited as text.
         var actual_weights = params.actual_weights[0];
         for (var ptr = 1; ptr < params.actual_weights.length; ptr++) {
-            actual_weights = actual_weights + ",\n" + params.actual_weights[ptr];
+            actual_weights = actual_weights + "\n" + params.actual_weights[ptr];
         }
 
         return (

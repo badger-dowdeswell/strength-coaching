@@ -852,7 +852,8 @@ app.put('/api/updateSchedule', async(request, response) => {
             //'BEGIN \n' +
         var sqlUpdateCmd =    
                 'UPDATE "Schedule" SET ' +
-                ' "seq_ID" = ' + "'" + request.body.seq_ID + "', " +               
+                ' "seq_ID" = ' + "'" + request.body.seq_ID + "', " +
+                ' "user_ID" = ' + "'" + request.body.user_ID + "'," +
                 ' "block" = ' + "'" + request.body.block + "', " +
                 ' "week" = ' + "'" + request.body.week + "' , " +
                 ' "day" = ' + "'" + request.body.day + "' , " +
