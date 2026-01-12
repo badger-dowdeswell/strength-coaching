@@ -403,13 +403,13 @@ function MyBlockSchedule() {
         setExerciseName(params.exercise_name);
         setActualSets(params.actual_sets);
 
-        console.log("set EditParams: actual_reps " + params.actual_reps.length);
+        // console.log("set EditParams: actual_reps " + params.actual_reps.length);
 
         var actual_reps = params.actual_reps[0];
         for (var ptr = 1; ptr < params.actual_reps.length; ptr++) {
             actual_reps = actual_reps + "\n" + params.actual_reps[ptr];
         }
-        console.log("actual reps [" + actual_reps + "]");
+        //console.log("actual reps [" + actual_reps + "]");
         setActualReps(actual_reps);
 
         var actual_weights = params.actual_weights[0];
@@ -436,11 +436,9 @@ function MyBlockSchedule() {
         Schedule[Index].notes = Notes.trim();
         if (IsChanged) {
            // updateSchedule();
+           setIsChanged(false);
         }
-        setIsChanged(false);    
     }
-
-
 
     //
     // MyBlockSchedule
@@ -487,17 +485,17 @@ function MyBlockSchedule() {
                     {(CurrentPage === pages.PAGE_EXERCISE) && (
                         <Page_Exercise
                             Schedule = {Schedule}
-                            index = {Index}
-                            activeWeek = {CurrentWeek}
-                            activeDay = {CurrentDay} 
+                            Index = {Index}
+                            CurrentWeek = {CurrentWeek}
+                            CurrentDay = {CurrentDay}
                             setVideoVisible = {setVideoVisible} 
                             setVideoLink = {setVideoLink}
                             CurrentPage = {CurrentPage} setCurrentPage = {setCurrentPage}
-                            actualSets = {ActualSets} setActualSets = {setActualSets}
-                            actualReps = {ActualReps} setActualReps = {setActualReps}
-                            actual_rpe = {ActualRPE} setActualRPE = {setActualRPE}
-                            actualWeights = {ActualWeights} setActualWeights = {setActualWeights}
-                            notes = {Notes} setNotes = {setNotes}
+                            ActualSets = {ActualSets} setActualSets = {setActualSets}
+                            ActualReps = {ActualReps} setActualReps = {setActualReps}
+                            ActualRPE = {ActualRPE}   setActualRPE = {setActualRPE}
+                            ActualWeights = {ActualWeights} setActualWeights = {setActualWeights}
+                            Notes = {Notes} setNotes = {setNotes}
                             setEditParams = {setEditParams}
                             updateEditParams = {updateEditParams}
                             setIsChanged = {setIsChanged}
@@ -608,35 +606,21 @@ function Page_Day(params) {
 // Displays the exercise selected from the current day and allows the fields to be edited.
 //
 function Page_Exercise(params){
-    var reps = params.Schedule[params.index].min_reps;
-    if (params.Schedule[params.index].max_reps > 0) {
-        reps = reps + "-" + params.Schedule[params.index].max_reps;    }
-
-    var actual_weights = 100;
-
-    // Unpack the actual reps array so it can be edited as text.
-  //  var actual_reps = params.Schedule[params.index].actual_reps[0];
-
- //   for (var ptr = 1; ptr < params.Schedule[params.index].actual_reps.length; ptr++) {
-  //      actual_reps = actual_reps + "\n" + params.Schedule[params.index].actual_reps[ptr];
- //   }
-
-    var weights = params.lower_weight;
-    if (params.upper_weight > 0) {
-        weights = weights + "-" + params.upper_weight;
+    // Format the fields that have a range by joining them with a minus symbol.
+    var reps = params.Schedule[params.Index].min_reps;
+    if (params.Schedule[params.Index].max_reps > 0) {
+        reps = reps + "-" + params.Schedule[params.Index].max_reps;
     }
 
-    // Unpack the actual weights array so it can be edited as text.
-  //  var actual_weights = params.Schedule[params.index].actual_weights[0];
-  //  for (var ptr = 1; ptr < params.Schedule[params.index].actual_weights.length; ptr++) {
-  //      actual_weights = actual_weights + "\n" + params.Schedule[params.index].actual_weights[ptr];
-   // }
-
+    var weights = params.Schedule[params.Index].lower_weight;
+    if (params.Schedule[params.Index].upper_weight > 0) {
+        weights = weights + "-" + params.Schedule[params.Index].upper_weight;
+    }
 
     return (
         <div>                       
             <p className="text-white text-center font-bold text-xl mt-0">
-                {params.Schedule[params.index].exercise_name}
+                {params.Schedule[params.Index].exercise_name}
             </p>                   
             
             <div className="flex flex.row text-white">                        
@@ -671,7 +655,7 @@ function Page_Exercise(params){
 
             <div className="flex flex.row">
                 <p className="text-white text-base border pl-1 mb-0 mt-0 ml-0 w-40">                                               
-                    {params.Schedule[params.index].exercise_name} 
+                    {params.Schedule[params.Index].exercise_name}
                     <img
                         className="ml-auto"
                         src={training_video_image}
@@ -682,7 +666,7 @@ function Page_Exercise(params){
                 </p> 
 
                 <p className="bg-gray-800 text-white  text-base text-center border mb-0 mt-0 ml-0 w-10">                            
-                    {params.Schedule[params.index].sets} 
+                    {params.Schedule[params.Index].sets}
                 </p> 
 
                 <div className="border bg-white">
@@ -691,7 +675,7 @@ function Page_Exercise(params){
                         id="ActualSets"
                         type="number"
                         placeholder=""
-                        value={params.actualSets}
+                        value={params.ActualSets}
                         onChange={(e) => {
                             params.setActualSets(e.target.value.slice(0,3));
                             params.setIsChanged(true);
@@ -709,7 +693,7 @@ function Page_Exercise(params){
                         id="ActualReps"
                         type="number"
                         placeholder=""
-                        value={params.actualReps}
+                        value={params.ActualReps}
                         onChange={(e) => {
                             params.setActualReps(e.target.value);
                             params.setIsChanged(true);
@@ -717,9 +701,8 @@ function Page_Exercise(params){
                     />
                 </div>
 
-
                 <p className="bg-gray-800 text-white  text-base text-center border mb-0 mt-0 ml-0 w-10">
-                    {params.Schedule[params.index].rpe} 
+                    {params.Schedule[params.Index].rpe}
                 </p>                
 
                 <div className="border bg-white">
@@ -728,7 +711,7 @@ function Page_Exercise(params){
                         id="ActualRPE"
                         type="number"
                         placeholder=""
-                        value={params.actual_rpe}
+                        value={params.ActualRPE}
                         onChange={(e) => {
                             var val = e.target.value;
                             if (val < 0) {
@@ -753,7 +736,7 @@ function Page_Exercise(params){
                         id="ActualWeights"
                         type="number"
                         placeholder=""
-                        value={actual_weights}
+                        value={params.ActualWeights}
                         onChange={(e) => {
                             params.setActualWeights(e.target.value.trim());
                             params.setIsChanged(true);            
@@ -762,7 +745,7 @@ function Page_Exercise(params){
                 </div> 
                 
                 <p className = "bg-gray-800 text-white text-base text-center border mb-0 mt-0 ml-0 w-48">
-                    {params.Schedule[params.index].velocity_based_metrics} 
+                    {params.Schedule[params.Index].velocity_based_metrics}
                 </p>
 
                 <textarea 
@@ -770,7 +753,7 @@ function Page_Exercise(params){
                     id="Notes"
                     type="text"
                     placeholder=""
-                    value={params.notes}
+                    value={params.Notes}
                     onChange={(e) => {
                         params.setNotes(e.target.value);
                         params.setIsChanged(true);            
@@ -778,7 +761,7 @@ function Page_Exercise(params){
                 /> 
 
                 <p className = "bg-gray-800 text-white text-base text-center border mb-0 mt-0 ml-0 w-14">
-                    {params.Schedule[params.index].E1RM} 
+                    {params.Schedule[params.Index].E1RM}
                 </p>
             </div>
 
