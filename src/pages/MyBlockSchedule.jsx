@@ -601,188 +601,6 @@ function Page_Day(params) {
 }
 
 //
-// Page_Exercise()
-// ===============
-// Displays the exercise selected from the current day and allows the fields to be edited.
-//
-function Page_Exercise(params){
-    // Format the fields that have a range by joining them with a minus symbol.
-    var reps = params.Schedule[params.Index].min_reps;
-    if (params.Schedule[params.Index].max_reps > 0) {
-        reps = reps + "-" + params.Schedule[params.Index].max_reps;
-    }
-
-    var weights = params.Schedule[params.Index].lower_weight;
-    if (params.Schedule[params.Index].upper_weight > 0) {
-        weights = weights + "-" + params.Schedule[params.Index].upper_weight;
-    }
-
-    return (
-        <div>                       
-            <p className="text-white text-center font-bold text-xl mt-0">
-                {params.Schedule[params.Index].exercise_name}
-            </p>                   
-            
-            <div className="flex flex.row text-white">                        
-                <p className="text-center border mb-0 mt-5 ml-0 w-[161px]">
-                    Exercises
-                </p>
-                <p className="text-center border mb-0 mt-5 ml-0 w-20">
-                    Sets
-                </p>
-                <p className="text-base text-center border mb-0 mt-5 ml-0 w-[92px]">
-                    Reps
-                </p>
-                <p className="text-base text-center border mb-0 mt-5 ml-0 w-20">
-                    RPE
-                </p>
-                <p className="text-base text-center border mb-0 mt-5 ml-0 w-20">
-                    Weights
-                </p>
-                <p className="text-base text-center border mb-0 mt-5 ml-0 w-[100px]">
-                    My Weights
-                </p>
-                <p className="text-base text-center border mb-0 mt-5 ml-0 w-[191px]">
-                    Velocity-Based Metrics
-                </p>
-                <p className="text-base text-center border mb-0 mt-5 ml-0 w-48">
-                    Notes
-                </p>
-                <p className="text-base text-center border mb-0 mt-5 ml-0 w-14">
-                    E1RM
-                </p>
-            </div> 
-
-            <div className="flex flex.row">
-                <p className="text-white text-base border pl-1 mb-0 mt-0 ml-0 w-40">                                               
-                    {params.Schedule[params.Index].exercise_name}
-                    <img
-                        className="ml-auto"
-                        src={training_video_image}
-                        title="The training video for this exercise" 
-                        draggable={false} 
-                        height={30} width={30}                             
-                    />                            
-                </p> 
-
-                <p className="bg-gray-800 text-white  text-base text-center border mb-0 mt-0 ml-0 w-10">                            
-                    {params.Schedule[params.Index].sets}
-                </p> 
-
-                <div className="border bg-white">
-                    <input
-                        className="bg-white text-black text-base text-center text-wrap w-10"
-                        id="ActualSets"
-                        type="number"
-                        placeholder=""
-                        value={params.ActualSets}
-                        onChange={(e) => {
-                            params.setActualSets(e.target.value.slice(0,3));
-                            params.setIsChanged(true);
-                        }}
-                    />
-                </div>
-
-                <p className="bg-gray-800 text-white text-base text-center border mb-0 mt-0 ml-0 w-[50px] h-auto">
-                    {reps}
-                </p> 
-                
-                <div className="border bg-white">
-                    <TextareaAutosize
-                        className="bg-white text-black text-base text-center text-wrap scrollbar-hide h-10 w-10"
-                        id="ActualReps"
-                        type="number"
-                        placeholder=""
-                        value={params.ActualReps}
-                        onChange={(e) => {
-                            params.setActualReps(e.target.value);
-                            params.setIsChanged(true);
-                        }}
-                    />
-                </div>
-
-                <p className="bg-gray-800 text-white  text-base text-center border mb-0 mt-0 ml-0 w-10">
-                    {params.Schedule[params.Index].rpe}
-                </p>                
-
-                <div className="border bg-white">
-                    <input
-                        className="bg-white text-black text-center w-10 h-[27px]"
-                        id="ActualRPE"
-                        type="number"
-                        placeholder=""
-                        value={params.ActualRPE}
-                        onChange={(e) => {
-                            var val = e.target.value;
-                            if (val < 0) {
-                                val = 0;
-                            } else if (val > 10) {
-                                val = 10;
-                            }
-                            params.setActualRPE(val);
-                            params.setIsChanged(true);            
-                        }} 
-                    />                     
-                    <p className="bg-white text-black w-10 h-[60px]"></p>                    
-                </div> 
-
-                <p className = "bg-gray-800 text-white  text-base text-center border mb-0 mt-0 ml-0 w-20">
-                    {weights}
-                </p>
-
-                <div className="border bg-white">
-                    <TextareaAutosize
-                        className="bg-white text-black text-center w-32 scrollbar-hide"
-                        id="ActualWeights"
-                        type="number"
-                        placeholder=""
-                        value={params.ActualWeights}
-                        onChange={(e) => {
-                            params.setActualWeights(e.target.value.trim());
-                            params.setIsChanged(true);            
-                        }} 
-                    />
-                </div> 
-                
-                <p className = "bg-gray-800 text-white text-base text-center border mb-0 mt-0 ml-0 w-48">
-                    {params.Schedule[params.Index].velocity_based_metrics}
-                </p>
-
-                <textarea 
-                    className="bg-white text-black border text-center text-wrap w-48 h-auto" 
-                    id="Notes"
-                    type="text"
-                    placeholder=""
-                    value={params.Notes}
-                    onChange={(e) => {
-                        params.setNotes(e.target.value);
-                        params.setIsChanged(true);            
-                    }} 
-                /> 
-
-                <p className = "bg-gray-800 text-white text-base text-center border mb-0 mt-0 ml-0 w-14">
-                    {params.Schedule[params.Index].E1RM}
-                </p>
-            </div>
-
-            <div className="flex flex-col items-center mt-auto">  
-                <button
-                    className="bg-cyan-600 text-white font-bold text-sm py-2 px-2
-                               rounded mb-6 mt-10 ml-8"
-                    id="Back"
-                    style={{ width: "100px" }}
-                    onClick={() => { 
-                        params.updateEditParams();
-                        params.setCurrentPage(pages.PAGE_DAY); 
-                    }}>
-                    Back
-                </button> 
-            </div> 
-        </div>
-    ) 
-}
-
-//
 // ScheduleLine()
 // ==============
 // This component is able to receive one line as an object from a block schedule
@@ -792,7 +610,7 @@ function Page_Exercise(params){
 // exercise.
 //
 // The component processes and formats the schedule one line at a time. If the
-// data does not belong to the specified week, or the specific day, a null 
+// data does not belong to the specified week, or the specific day, a null
 // element is returned so that line is not displayed on the wrong page.
 //
 // <p className = "bg-gray-800 text-white text-base text-center border mb-0 mt-0 ml-0 h- w-10">
@@ -802,15 +620,15 @@ function Page_Exercise(params){
 //
 function ScheduleLine(params) {
     if ((params.activeWeek === params.week) && (params.activeDay === params.day)) {
-        var reps = params.min_reps;  
+        var reps = params.min_reps;
         if (params.max_reps > 0) {
             reps = reps + "-" + params.max_reps;
-        } 
+        }
         var weights = params.lower_weight;
         if (params.upper_weight > 0) {
             weights = weights + "-" + params.upper_weight;
-        } 
-        
+        }
+
         // Unpack the actual reps array so it can be edited as text.
         //console.log("actual_reps " + params.actual_reps + " [" + params.actual_reps.length + "]");
         var actual_reps = params.actual_reps[0];
@@ -900,8 +718,192 @@ function ScheduleLine(params) {
         )
     } else {
         return null;
-    }      
+    }
 };
+
+//
+// Page_Exercise()
+// ===============
+// Displays the exercise selected from the current day and allows the fields to be edited.
+//
+function Page_Exercise(params){
+    // Format the fields that have a range by joining them with a minus symbol.
+    var reps = params.Schedule[params.Index].min_reps;
+    if (params.Schedule[params.Index].max_reps > 0) {
+        reps = reps + "-" + params.Schedule[params.Index].max_reps;
+    }
+
+    var weights = params.Schedule[params.Index].lower_weight;
+    if (params.Schedule[params.Index].upper_weight > 0) {
+        weights = weights + "-" + params.Schedule[params.Index].upper_weight;
+    }
+
+    return (
+        <div>                       
+            <p className="text-white text-center font-bold text-xl mt-0">
+                {params.Schedule[params.Index].exercise_name}
+            </p>                   
+            
+            <div className="flex flex.row text-white">                        
+                <p className="text-center border mb-0 mt-5 ml-0 w-[161px]">
+                    Exercises
+                </p>
+                <p className="text-center border mb-0 mt-5 ml-0 w-20">
+                    Sets
+                </p>
+                <p className="text-base text-center border mb-0 mt-5 ml-0 w-[92px]">
+                    Reps
+                </p>
+                <p className="text-base text-center border mb-0 mt-5 ml-0 w-20">
+                    RPE
+                </p>
+                <p className="text-base text-center border mb-0 mt-5 ml-0 w-20">
+                    Weights
+                </p>
+                <p className="text-base text-center border mb-0 mt-5 ml-0 w-[100px]">
+                    My Weights
+                </p>
+                <p className="text-base text-center border mb-0 mt-5 ml-0 w-[191px]">
+                    Velocity-Based Metrics
+                </p>
+                <p className="text-base text-center border mb-0 mt-5 ml-0 w-[186px]">
+                    Notes
+                </p>
+                <p className="text-base text-center border mb-0 mt-5 ml-0 w-14">
+                    E1RM
+                </p>
+            </div> 
+
+            <div className="flex flex.row">
+                <p className="text-white text-base border pl-1 mb-0 mt-0 ml-0 w-40">                                               
+                    {params.Schedule[params.Index].exercise_name}
+                    <img
+                        className="ml-auto"
+                        src={training_video_image}
+                        title="The training video for this exercise" 
+                        draggable={false} 
+                        height={30} width={30}                             
+                    />                            
+                </p> 
+
+                <p className="bg-gray-800 text-white  text-base text-center border mb-0 mt-0 ml-0 w-10">                            
+                    {params.Schedule[params.Index].sets}
+                </p> 
+
+                <div className="border bg-white">
+                    <input
+                        className="bg-white text-black text-base text-center text-wrap w-10"
+                        id="ActualSets"
+                        type="number"
+                        placeholder=""
+                        value={params.ActualSets}
+                        onChange={(e) => {
+                            params.setActualSets(e.target.value.slice(0,3));
+                            params.setIsChanged(true);
+                        }}
+                    />
+                </div>
+
+                <p className="bg-gray-800 text-white text-base text-center border mb-0 mt-0 ml-0 w-[50px] h-auto">
+                    {reps}
+                </p> 
+                
+                <div className="border bg-white">
+                    <TextareaAutosize
+                        className="bg-white text-black text-base text-center text-wrap scrollbar-hide h-10 w-10"
+                        id="ActualReps"
+                        type="number"
+                        placeholder=""
+                        value={params.ActualReps}
+                        onChange={(e) => {
+                            params.setActualReps(e.target.value);
+                            params.setIsChanged(true);
+                        }}
+                    />
+                </div>
+
+                <p className="bg-gray-800 text-white  text-base text-center border mb-0 mt-0 ml-0 w-10">
+                    {params.Schedule[params.Index].rpe}
+                </p>
+
+                <div className="bg-white">
+                    <input
+                        className="bg-white text-black text-center w-10 h-[27px]"
+                        id="ActualRPE"
+                        type="number"
+                        placeholder=""
+                        value={params.ActualRPE}
+                        onChange={(e) => {
+                            var val = e.target.value;
+                            if (val < 0) {
+                                val = 0;
+                            } else if (val > 10) {
+                                val = 10;
+                            }
+                            params.setActualRPE(val);
+                            params.setIsChanged(true);            
+                        }} 
+                    />                     
+                    <p className="bg-white text-black w-10 h-[60px]"></p>                    
+                </div> 
+
+                <p className = "bg-gray-800 text-white  text-base text-center border mb-0 mt-0 ml-0 w-20">
+                    {weights}
+                </p>
+
+                <div className="bg-white">
+                    <TextareaAutosize
+                        className="bg-white text-black text-center text-wrap scrollbar-hide w-[100px]"
+                        id="ActualWeights"
+                        type="text"
+                        placeholder=""
+                        value={params.ActualWeights}
+                        onChange={(e) => {
+                            params.setActualWeights(e.target.value);
+                            params.setIsChanged(true);            
+                        }} 
+                    />
+                </div> 
+                
+                <p className = "bg-gray-800 text-white text-base text-center border mb-0 mt-0 ml-0 w-[190px]">
+                    {params.Schedule[params.Index].velocity_based_metrics}
+                </p>
+
+                <div className="bg-white">
+                    <TextareaAutosize
+                        className="bg-white text-black text-center text-wrap scrollbar-hide w-[186px]"
+                        id="Notes"
+                        type="text"
+                        placeholder=""
+                        value={params.Notes}
+                        onChange={(e) => {
+                            params.setNotes(e.target.value);
+                            params.setIsChanged(true);
+                        }}
+                    />
+                </div>
+
+                <p className = "bg-gray-800 text-white text-base text-center border mb-0 mt-0 ml-0 w-14">
+                    {params.Schedule[params.Index].E1RM}
+                </p>
+            </div>
+
+            <div className="flex flex-col items-center mt-auto">  
+                <button
+                    className="bg-cyan-600 text-white font-bold text-sm py-2 px-2
+                               rounded mb-6 mt-10 ml-8"
+                    id="Back"
+                    style={{ width: "100px" }}
+                    onClick={() => { 
+                        params.updateEditParams();
+                        params.setCurrentPage(pages.PAGE_DAY); 
+                    }}>
+                    Back
+                </button> 
+            </div> 
+        </div>
+    ) 
+}
 
 //
 // ScheduleDay()
@@ -909,64 +911,64 @@ function ScheduleLine(params) {
 // This component is only displays one day that the client has selected. Here,
 // they can report their training progress on the specified exercise.
 //
-function SchedulDay(params) { 
-    if ((params.activeWeek === params.week) && (params.activeDay === params.day)) { 
-        return (
-            <div>                
-                <div className="flex flex.row"> 
-                    <p className="text-white text-base border pl-1 mb-0 mt-0 ml-0 w-40">                        
-                        {params.exercise_name}
-                       
-                        <img
-                            className="ml-auto"
-                            src={training_video_image}
-                            title="The training video for this exercise" 
-                            draggable={false} 
-                            height={30} width={30}
-                            onClick={() => {  
-                                //console.log("Video link " + params.video_link);
-                                params.setVideoLink(params.video_link);                             
-                                params.setVideoVisible(true);
-                            }}
-                        />                            
-                    </p>  
-
-                    <div className="flex flex.col">
-                        <p className="text-white text-base text-center border mb-0 mt-0 ml-0 w-10">
-                            {params.sets} 
-                        </p> 
-                        <p className="bg-white text-black text-base text-center border mb-0 mt-0 ml-0 w-10">
-                            {params.actual_sets} 
-                        </p> 
-                        <p className="text-white text-base text-center border mb-0 mt-0 ml-0 w-10">
-                            {params.reps} 
-                        </p>
-                        <p className="bg-white text-black text-base text-center border mb-0 mt-0 ml-0 w-10">
-                            {params.actual_reps} 
-                        </p>
-                        <p className="text-white text-base text-center border mb-0 mt-0 ml-0 w-20">
-                            {params.weights}
-                        </p>
-                        <p className="bg-white text-black text-base text-center border mb-0 mt-0 ml-0 w-32">
-                            {params.actual_weights}
-                        </p>
-                        <p className="text-white text-base text-center border mb-0 mt-0 ml-0 w-48">
-                            {params.velocity_based_metrics} 
-                        </p>
-                        <p className="bg-white text-black text-base text-center border mb-0 mt-0 ml-0 w-48">
-                            {params.notes} 
-                        </p>
-                        <p className="text-white text-base text-center border mb-0 mt-0 ml-0 w-14">
-                            {params.E1RM} 
-                        </p>
-                    </div> 
-                </div>           
-            </div>
-        )
-    } else {
-        return null;
-    } 
-}  
+// function SchedulDay(params) {
+//     if ((params.activeWeek === params.week) && (params.activeDay === params.day)) {
+//         return (
+//             <div>
+//                 <div className="flex flex.row">
+//                     <p className="text-white text-base border pl-1 mb-0 mt-0 ml-0 w-40">
+//                         {params.exercise_name}
+//
+//                         <img
+//                             className="ml-auto"
+//                             src={training_video_image}
+//                             title="The training video for this exercise"
+//                             draggable={false}
+//                             height={30} width={30}
+//                             onClick={() => {
+//                                 //console.log("Video link " + params.video_link);
+//                                 params.setVideoLink(params.video_link);
+//                                 params.setVideoVisible(true);
+//                             }}
+//                         />
+//                     </p>
+//
+//                     <div className="flex flex.col">
+//                         <p className="text-white text-base text-center border mb-0 mt-0 ml-0 w-10">
+//                             {params.sets}
+//                         </p>
+//                         <p className="bg-white text-black text-base text-center border mb-0 mt-0 ml-0 w-10">
+//                             {params.actual_sets}
+//                         </p>
+//                         <p className="text-white text-base text-center border mb-0 mt-0 ml-0 w-10">
+//                             {params.reps}
+//                         </p>
+//                         <p className="bg-white text-black text-base text-center border mb-0 mt-0 ml-0 w-10">
+//                             {params.actual_reps}
+//                         </p>
+//                         <p className="text-white text-base text-center border mb-0 mt-0 ml-0 w-20">
+//                             {params.weights}
+//                         </p>
+//                         <p className="bg-white text-black text-base text-center border mb-0 mt-0 ml-0 w-32">
+//                             {params.actual_weights}
+//                         </p>
+//                         <p className="text-white text-base text-center border mb-0 mt-0 ml-0 w-48">
+//                             {params.velocity_based_metrics}
+//                         </p>
+//                         <p className="bg-white text-black text-base text-center border mb-0 mt-0 ml-0 w-48">
+//                             {params.notes}
+//                         </p>
+//                         <p className="text-white text-base text-center border mb-0 mt-0 ml-0 w-14">
+//                             {params.E1RM}
+//                         </p>
+//                     </div>
+//                 </div>
+//             </div>
+//         )
+//     } else {
+//         return null;
+//     }
+// }
 
 //
 // ShowVideo()
