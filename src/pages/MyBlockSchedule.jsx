@@ -434,7 +434,7 @@ function MyBlockSchedule() {
         Schedule[Index].actual_rpe = ActualRPE;
         Schedule[Index].notes = Notes.trim();
         if (IsChanged) {
-           // updateSchedule();
+           updateSchedule();
            setIsChanged(false);
         }
     }

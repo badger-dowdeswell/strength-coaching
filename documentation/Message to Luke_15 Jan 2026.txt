@@ -1,0 +1,17 @@
+Message to Luke Thursday January 15th 2026
+
+Hi Luke,
+
+Love to catch up with you on a call sometime soon to discuss and demonstrate the Block Training Schedule program with you. I completed an important part over the last few days: both the editing and the file update parts are working fine.
+
+The next stage is to discuss each field in-depth to make sure that the way they work aligns with either the current spreadsheet or improves on it in line with your thinking. 
+
+The live server is not up-to-date yet but if I can share my screen with you, I can show you how it works.  In a simple summary:
+
+- We can control how each field is formatted and displayed.
+
+- Each field that is editable by the client is under our control, so we can validate and re-format whatever they enter while they are entering it.
+
+- The database updates properly.
+
+

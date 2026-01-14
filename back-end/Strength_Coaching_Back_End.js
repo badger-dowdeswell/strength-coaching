@@ -877,7 +877,7 @@ app.put('/api/updateSchedule', async(request, response) => {
             //        'ROLLBACK\n; ' +
             //'END; $$\n';
 
-        //logmsg("/api/updateSchedule: \n" + sqlUpdateCmd + "\n");
+        logmsg("/api/updateSchedule: \n" + sqlUpdateCmd + "\n");
 
         db.query(
             sqlUpdateCmd, (err, result) => {                 
