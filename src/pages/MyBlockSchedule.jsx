@@ -404,13 +404,10 @@ function MyBlockSchedule() {
         setExerciseName(params.exercise_name);
         setActualSets(params.actual_sets);
 
-        // console.log("set EditParams: actual_reps " + params.actual_reps.length);
-
         var actual_reps = params.actual_reps[0];
         for (var ptr = 1; ptr < params.actual_reps.length; ptr++) {
             actual_reps = actual_reps + "\n" + params.actual_reps[ptr];
         }
-        //console.log("actual reps [" + actual_reps + "]");
         setActualReps(actual_reps);
 
         var actual_weights = params.actual_weights[0];
@@ -727,7 +724,8 @@ function ScheduleLine(params) {
 //
 // Page_Exercise()
 // ===============
-// Displays the exercise selected from the current day and allows the fields to be edited.
+// Displays the exercise selected from the current day and allows the fields to be edited. The
+// validKey() function is imported from the UtilLib library.
 //
 function Page_Exercise(params){
     // Format the fields that have a range by joining them with a minus symbol.
