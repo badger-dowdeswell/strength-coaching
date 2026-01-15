@@ -209,7 +209,7 @@ function MyBlockSchedule() {
         })
         .then((response) => {
             //setState(states.EXITING);
-            console.log("updated...");
+            //console.log("updated...");
         })
         .catch(err => {            
             // RA_BRD - figure out how to report the error to the user gracefully.
@@ -727,6 +727,7 @@ function ScheduleLine(params) {
 // Displays the exercise selected from the current day and allows the fields to be edited. The
 // validKey() function is imported from the UtilLib library.
 //
+//
 function Page_Exercise(params){
     // Format the fields that have a range by joining them with a minus symbol.
     var reps = params.Schedule[params.Index].min_reps;
@@ -740,12 +741,13 @@ function Page_Exercise(params){
     }
 
     return (
-        <div>                       
+        <div>
             <p className="text-white text-center font-bold text-xl mt-0">
                 {params.Schedule[params.Index].exercise_name}
             </p>                   
             
-            <div className="flex flex.row text-white">                        
+
+            <div className="flex flex.row text-white">
                 <p className="text-center border mb-0 mt-5 ml-0 w-[161px]">
                     Exercises
                 </p>
@@ -773,138 +775,150 @@ function Page_Exercise(params){
                 <p className="text-base text-center border mb-0 mt-5 ml-0 w-14">
                     E1RM
                 </p>
-            </div> 
-
-            <div className="flex flex.row">
-                <p className="text-white text-base border pl-1 mb-0 mt-0 ml-0 w-40">                                               
-                    {params.Schedule[params.Index].exercise_name}
-                    <img
-                        className="ml-auto"
-                        src={training_video_image}
-                        title="The training video for this exercise" 
-                        draggable={false} 
-                        height={30} width={30}                             
-                    />                            
-                </p> 
-
-                <p className="bg-gray-800 text-white  text-base text-center border mb-0 mt-0 ml-0 w-10">                            
-                    {params.Schedule[params.Index].sets}
-                </p> 
-
-                <div className="border bg-white">
-                    <input
-                        className="bg-white text-black text-base text-center text-wrap w-10"
-                        id="ActualSets"
-                        type="number"
-                        placeholder=""
-                        value={params.ActualSets}
-                        onChange={(e) => {
-                            // Restrict the value to three digits.
-                            params.setActualSets(e.target.value.slice(0,3));
-                            params.setIsChanged(true);
-                        }}
-                    />
-                </div>
-
-                <p className="bg-gray-800 text-white text-base text-center border mb-0 mt-0 ml-0 w-[50px] h-auto">
-                    {reps}
-                </p> 
-                
-                <div className="border bg-white">
-                    <TextareaAutosize
-                        className="bg-white text-black text-base text-center text-wrap scrollbar-hide h-10 w-10"
-                        id="ActualReps"
-                        type="number"
-                        placeholder=""
-                        value={params.ActualReps}
-                        onKeyDown={(e) => {
-                            if (!params.validKey(e, false)) {
-                                e.preventDefault();
-                            }
-                        }}
-                        onChange={(e) => {
-                            params.setActualReps(e.target.value);
-                            params.setIsChanged(true);
-                        }}
-                    />
-                </div>
-
-                <p className="bg-gray-800 text-white  text-base text-center border mb-0 mt-0 ml-0 w-10">
-                    {params.Schedule[params.Index].rpe}
-                </p>
-
-                <div className="bg-white">
-                    <input
-                        className="bg-white text-black text-center w-10 h-[27px]"
-                        id="ActualRPE"
-                        type="number"
-                        placeholder=""
-                        value={params.ActualRPE}
-                        onChange={(e) => {
-                            // The value must be between 0 and 10.
-                            var val = e.target.value;
-                            if (val < 0) {
-                                val = 0;
-                            } else if (val > 10) {
-                                val = 10;
-                            }
-                            params.setActualRPE(val);
-                            params.setIsChanged(true);            
-                        }} 
-                    />                     
-                    <p className="bg-white text-black w-10 h-[60px]"></p>                    
-                </div> 
-
-                <p className = "bg-gray-800 text-white  text-base text-center border mb-0 mt-0 ml-0 w-20">
-                    {weights}
-                </p>
-
-                <div className="bg-white">
-                    <TextareaAutosize
-                        className="bg-white text-black text-center text-wrap scrollbar-hide w-[100px]"
-                        id="ActualWeights"
-                        type="text"
-                        placeholder=""
-                        value={params.ActualWeights}
-                        onKeyDown={(e) => {
-                            if (!params.validKey(e, true)) {
-                                e.preventDefault();
-                            }
-                        }}
-                        onChange={(e) => {
-                            params.setActualWeights(e.target.value);
-                            params.setIsChanged(true);            
-                        }} 
-                    />
-                </div> 
-                
-                <p className = "bg-gray-800 text-white text-base text-center border mb-0 mt-0 ml-0 w-[190px]">
-                    {params.Schedule[params.Index].velocity_based_metrics}
-                </p>
-
-                <div className="bg-white">
-                    <TextareaAutosize
-                        className="bg-white text-black text-center text-wrap scrollbar-hide w-[186px]"
-                        id="Notes"
-                        type="text"
-                        placeholder=""
-                        value={params.Notes}
-                        onChange={(e) => {
-                            params.setNotes(e.target.value);
-                            params.setIsChanged(true);
-                        }}
-                    />
-                </div>
-
-                <p className = "bg-gray-800 text-white text-base text-center border mb-0 mt-0 ml-0 w-14">
-                    {params.Schedule[params.Index].E1RM}
-                </p>
             </div>
 
-            <div className="flex flex-col items-center mt-auto">  
+            <div className="h-[200px] overflow-y-scroll border">
+                <div className="flex flex.row">
+                    <p className="text-white text-base border pl-1 mb-0 mt-0 ml-0 w-40">
+                        {params.Schedule[params.Index].exercise_name}
+                        <img
+                            className="ml-auto"
+                            src={training_video_image}
+                            title="The training video for this exercise"
+                            draggable={false}
+                            height={30} width={30}
+                        />
+                    </p>
+
+                    <p className="bg-gray-800 text-white  text-base text-center border mb-0 mt-0 ml-0 w-10">
+                        {params.Schedule[params.Index].sets}
+                    </p>
+
+                    <div className="border bg-white">
+                        <input
+                            className="bg-white text-black text-base text-center text-wrap w-10"
+                            id="ActualSets"
+                            type="number"
+                            placeholder=""
+                            value={params.ActualSets}
+                            onChange={(e) => {
+                                var val = parseInt(e.target.value, 10);
+                                if (!isNaN(val)) {
+                                    if (val < 0) {
+                                        val = 0;
+                                    } else if (val > 99) {
+                                        val = 99;
+                                    }
+                                } else {
+                                    val = 0;
+                                }
+                                console.log("ActualSets ", val);
+                                params.setActualSets(val);
+                                params.setIsChanged(true);
+                            }}
+                        />
+                    </div>
+
+                    <p className="bg-gray-800 text-white text-base text-center border mb-0 mt-0 ml-0 w-[50px] h-auto">
+                        {reps}
+                    </p>
+
+                    <div className="border bg-white">
+                        <TextareaAutosize
+                            className="bg-white text-black text-base text-center text-wrap scrollbar-hide h-10 w-10"
+                            id="ActualReps"
+                            type="number"
+                            placeholder=""
+                            value={params.ActualReps}
+                            onKeyDown={(e) => {
+                                if (!params.validKey(e, false)) {
+                                    e.preventDefault();
+                                }
+                            }}
+                            onChange={(e) => {
+                                params.setActualReps(e.target.value);
+                                params.setIsChanged(true);
+                            }}
+                        />
+                    </div>
+
+                    <p className="bg-gray-800 text-white  text-base text-center border mb-0 mt-0 ml-0 w-10">
+                        {params.Schedule[params.Index].rpe}
+                    </p>
+
+                    <div className="bg-white">
+                        <input
+                            className="bg-white text-black text-center w-10 h-[27px]"
+                            id="ActualRPE"
+                            type="number"
+                            placeholder=""
+                            value={params.ActualRPE}
+                            onChange={(e) => {
+                                // The value must be between 0 and 10.
+                                var val = e.target.value;
+                                if (val < 0) {
+                                    val = 0;
+                                } else if (val > 10) {
+                                    val = 10;
+                                }
+                                params.setActualRPE(val);
+                                params.setIsChanged(true);
+                            }}
+                        />
+                        <p className="bg-white text-black w-10 h-[60px]"></p>
+                    </div>
+
+                    <p className = "bg-gray-800 text-white  text-base text-center border mb-0 mt-0 ml-0 w-20">
+                        {weights}
+                    </p>
+
+                    <div className="bg-white">
+                        <TextareaAutosize
+                            className="bg-white text-black text-center text-wrap scrollbar-hide w-[100px]"
+                            id="ActualWeights"
+                            type="text"
+                            placeholder=""
+                            value={params.ActualWeights}
+                            onKeyDown={(e) => {
+                                if (!params.validKey(e, true)) {
+                                    e.preventDefault();
+                                }
+                            }}
+                            onChange={(e) => {
+                                params.setActualWeights(e.target.value);
+                                params.setIsChanged(true);
+                            }}
+                        />
+                    </div>
+
+                    <p className = "bg-gray-800 text-white text-base text-center border mb-0 mt-0 ml-0 w-[190px]">
+                        {params.Schedule[params.Index].velocity_based_metrics}
+                    </p>
+
+                    <div className="bg-white">
+                        <TextareaAutosize
+                            className="bg-white text-black text-center text-wrap scrollbar-hide w-[186px]"
+                            id="Notes"
+                            type="text"
+                            placeholder=""
+                            value={params.Notes}
+                            onChange={(e) => {
+                                params.setNotes(e.target.value);
+                                params.setIsChanged(true);
+                            }}
+                        />
+                    </div>
+
+                    <p className = "bg-gray-800 text-white text-base text-center border mb-0 mt-0 ml-0 w-14">
+                        {params.Schedule[params.Index].E1RM}
+                    </p>
+                </div>
+            </div>
+
+            <div className="flex flex-col items-center mt-[50px]">
                 <button
                     className="bg-cyan-600 text-white font-bold text-sm py-2 px-2
-                               rounded mb-6 mt-10 ml-8"
+                               rounded mt-5 mb-0"
                     id="Back"
                     style={{ width: "100px" }}
                     onClick={() => { 
