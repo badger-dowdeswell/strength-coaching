@@ -42,7 +42,7 @@ function MyBlockSchedule() {
     const [CurrentBlock, setCurrentBlock] = useState(0);    
     const [CurrentWeek, setCurrentWeek] = useState(0);
     const [CurrentDay, setCurrentDay] = useState(0);
-    
+
     const [MaxWeek, setMaxWeek]= useState(9);  
     
     const [VideoVisible, setVideoVisible] = useState(false); 
@@ -112,7 +112,7 @@ function MyBlockSchedule() {
 
             case states.LOADED:
                 // A schedule was found for this client for this block.  
-                setCurrentPage(pages.PAGE_DAY); 
+                setCurrentPage(pages.PAGE_DAY);
                 //debugSchedule();
                 break;
                 
@@ -243,6 +243,22 @@ function MyBlockSchedule() {
             console.log(line);
         }
     };
+
+    const [Anchor, setAnchor] = useState(-1);
+    useEffect(() => {
+        if (Anchor >=0) {
+            const section = document.getElementById('5');
+            if (section) {
+                console.log("scrolling");
+                section.scrollIntoView({
+                    behavior: 'smooth', // Optional: for smooth scrolling
+                    block: 'start'      // Optional: aligns the top
+                });
+            }
+            setAnchor(-1);
+        }
+     }, [Anchor] );
+
 
     //
     // WeekTabBar()
@@ -508,14 +524,53 @@ function MyBlockSchedule() {
     )
 }
 
+// behavior: 'smooth', // Optional: for smooth scrolling
+function stest(anchor) {
+    const section = document.getElementById(anchor);
+    if (section) {
+        console.log("scrolling");
+        section.scrollIntoView({
+            behavior: 'smooth', // Optional: for smooth scrolling
+            block: 'start'      // Optional: aligns the top
+        });
+    }
+}
+
+
 //
 // Page_Day()
 // ==========
 // This displays all the exercises scheduled for the current day.
 //
 function Page_Day(params) {
+
+    useEffect(() => {
+        // Code to run after component has loaded
+        const section = document.getElementById(5);
+        if (section) {
+            console.log("scrolling");
+            section.scrollIntoView({
+                behavior: 'smooth', // Optional: for smooth scrolling
+                block: 'start'      // Optional: aligns the top
+            });
+        }
+        console.log("useEffect fired");
+    }, []);
+
+//     function tOnLoad(anchor) {
+//         console.log("onLoad");
+//         const section = document.getElementById(anchor);
+//         if (section) {
+//             console.log("scrolling");
+//             section.scrollIntoView({
+//                 behavior: 'smooth', // Optional: for smooth scrolling
+//                 block: 'start'      // Optional: aligns the top
+//             });
+//         }
+//     }
+
     return (
-        <div>            
+        <div>
             <p className="text-white text-center font-bold text-xl mt-4">
                 Training Schedule - Block {params.activeBlock}
             </p>                   
@@ -595,6 +650,17 @@ function Page_Day(params) {
                     }}>
                     Back
                 </button>
+
+                <button
+                    className="bg-cyan-600 text-white font-bold text-sm py-2 px-2
+                               rounded mt-5 mb-0"
+                    id="Scroll"
+                    style={{ width: "100px" }}
+                    onClick={() => {
+                        stest(5);
+                    }}>
+                    Scroll
+                </button>
             </div> 
         </div>
     )  
@@ -642,6 +708,7 @@ function ScheduleLine(params) {
         }
 
         return (
+            <a id={params.index}>
             <div
                 className="flex flex.row flex-auto"
                 onClick={() => {
@@ -650,7 +717,7 @@ function ScheduleLine(params) {
                     params.setCurrentPage(pages.PAGE_EXERCISE);
                 }}>
                 <p  className="text-white text-base border pl-1 mb-0 mt-0 ml-0 w-40">
-                    {params.exercise_name}
+                    {params.exercise_name} - {params.index}
                     <img
                         className="ml-auto"
                         src={training_video_image}
@@ -715,6 +782,7 @@ function ScheduleLine(params) {
                     </p>
                 </div>
             </div>
+            </a>
         )
     } else {
         return null;
