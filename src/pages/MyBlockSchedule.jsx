@@ -47,6 +47,8 @@ function MyBlockSchedule() {
     
     const [VideoVisible, setVideoVisible] = useState(false); 
     const [VideoLink, setVideoLink] = useState(""); 
+
+     const [Anchor, setAnchor] = useState(-1);
         
     // The array of objects that hold one one line for each exercise specified
     // for this block.   
@@ -244,20 +246,20 @@ function MyBlockSchedule() {
         }
     };
 
-    const [Anchor, setAnchor] = useState(-1);
-    useEffect(() => {
-        if (Anchor >=0) {
-            const section = document.getElementById('5');
-            if (section) {
-                console.log("scrolling");
-                section.scrollIntoView({
-                    behavior: 'smooth', // Optional: for smooth scrolling
-                    block: 'start'      // Optional: aligns the top
-                });
-            }
-            setAnchor(-1);
-        }
-     }, [Anchor] );
+//     const [Anchor, setAnchor] = useState(-1);
+//     useEffect(() => {
+//         if (Anchor >=0) {
+//             const section = document.getElementById('5');
+//             if (section) {
+//                 console.log("scrolling");
+//                 section.scrollIntoView({
+//                     behavior: 'smooth', // Optional: for smooth scrolling
+//                     block: 'start'      // Optional: aligns the top
+//                 });
+//             }
+//             setAnchor(-1);
+//         }
+//      }, [Anchor] );
 
 
     //
@@ -347,7 +349,10 @@ function MyBlockSchedule() {
                                 id={"TabDay_" + (index + 1)} 
                                 style={{ width: "100px" }}                                                      
                                 onClick={(e) => { 
-                                    if (CurrentPage == pages.PAGE_DAY) {                               
+                                    if (CurrentPage == pages.PAGE_DAY) {
+                                        // Clear the anchor set in the previous
+                                        // page.
+                                        setAnchor(-1);
                                         setCurrentDay(index + 1); 
                                     }                                                
                                 }}>
@@ -433,7 +438,8 @@ function MyBlockSchedule() {
         setActualWeights(actual_weights);
 
         setActualRPE(params.actual_rpe);
-        setNotes(params.notes);   
+        setNotes(params.notes);
+        setAnchor(params.seq_ID);
     }
 
     //
@@ -493,6 +499,7 @@ function MyBlockSchedule() {
                             setVideoLink = {setVideoLink}
                             CurrentPage = {CurrentPage} setCurrentPage = {setCurrentPage}
                             navigate = {navigate} 
+                            Anchor = {Anchor} setAnchor = {setAnchor}
                             setEditParams = {setEditParams}                                                                                            
                         />                   
                     )};
@@ -524,50 +531,27 @@ function MyBlockSchedule() {
     )
 }
 
-// behavior: 'smooth', // Optional: for smooth scrolling
-function stest(anchor) {
-    const section = document.getElementById(anchor);
-    if (section) {
-        console.log("scrolling");
-        section.scrollIntoView({
-            behavior: 'smooth', // Optional: for smooth scrolling
-            block: 'start'      // Optional: aligns the top
-        });
-    }
-}
-
-
 //
 // Page_Day()
 // ==========
 // This displays all the exercises scheduled for the current day.
 //
 function Page_Day(params) {
-
     useEffect(() => {
-        // Code to run after component has loaded
-        const section = document.getElementById(5);
-        if (section) {
-            console.log("scrolling");
-            section.scrollIntoView({
-                behavior: 'smooth', // Optional: for smooth scrolling
-                block: 'start'      // Optional: aligns the top
-            });
+        // This function runs after the component has loaded and
+        // the page has been fully rendered.
+        if (params.Anchor >= 0) {
+            // An anchor was set after editing an exercise so scroll
+            // the original line into view.
+            const section = document.getElementById(params.Anchor);
+            if (section) {
+                section.scrollIntoView({
+                    behavior: 'smooth', // Optional: for smooth scrolling
+                    block: 'start'      // Optional: aligns the top
+                });
+            }
         }
-        console.log("useEffect fired");
     }, []);
-
-//     function tOnLoad(anchor) {
-//         console.log("onLoad");
-//         const section = document.getElementById(anchor);
-//         if (section) {
-//             console.log("scrolling");
-//             section.scrollIntoView({
-//                 behavior: 'smooth', // Optional: for smooth scrolling
-//                 block: 'start'      // Optional: aligns the top
-//             });
-//         }
-//     }
 
     return (
         <div>
@@ -650,17 +634,6 @@ function Page_Day(params) {
                     }}>
                     Back
                 </button>
-
-                <button
-                    className="bg-cyan-600 text-white font-bold text-sm py-2 px-2
-                               rounded mt-5 mb-0"
-                    id="Scroll"
-                    style={{ width: "100px" }}
-                    onClick={() => {
-                        stest(5);
-                    }}>
-                    Scroll
-                </button>
             </div> 
         </div>
     )  
@@ -679,6 +652,10 @@ function Page_Day(params) {
 // to instantiate all its own information. Page_Day() does not allow the client to
 // modify the fields. That is done in the Page_Exercise() page, which only displays
 // one exercise that the client has selected from those displayed on Page_Day() page.
+//
+// Note the seq_ID that is set as an anchor in the <a id={params.seq_ID}> element.
+// This is used to automatically scroll to the last line that was clicked on to edit
+// an exercise.
 //
 function ScheduleLine(params) {
     if ((params.activeWeek === params.week) && (params.activeDay === params.day)) {
@@ -708,80 +685,80 @@ function ScheduleLine(params) {
         }
 
         return (
-            <a id={params.index}>
-            <div
-                className="flex flex.row flex-auto"
-                onClick={() => {
-                    // Select this page for editing in Page_Exercise().
-                    params.setEditParams(params)
-                    params.setCurrentPage(pages.PAGE_EXERCISE);
-                }}>
-                <p  className="text-white text-base border pl-1 mb-0 mt-0 ml-0 w-40">
-                    {params.exercise_name} - {params.index}
-                    <img
-                        className="ml-auto"
-                        src={training_video_image}
-                        title="The training video for this exercise"
-                        draggable={false}
-                        height={30}
-                        width={30}
-                    />
-                </p>
-
-                <div className="flex flex.col h-auto">
-                    <p className="bg-gray-800 text-white text-base text-center border mb-0 mt-0 ml-0 w-10 h-auto">
-                        {params.sets}
-                    </p>
-                    <p className = "bg-gray-800 text-white text-base text-center border mb-0 mt-0 ml-0 w-10 h-auto">
-                        {params.actual_sets}
-                    </p>
-                    <p className = "bg-gray-800 text-white text-base text-center border mb-0 mt-0 ml-0 w-[50px] h-auto">
-                        {reps}
-                    </p>
-
-                    <div className="border">
-                        <TextareaAutosize
-                            className="bg-gray-800 text-white text-base text-center text-wrap scrollbar-hide w-10"
-                            id="ActualReps"
-                            type="text"
-                            placeholder=""
-                            value={actual_reps}
-                            onChange={(e) => {}}
+            <a id={params.seq_ID}>
+                <div
+                    className="flex flex.row flex-auto"
+                    onClick={() => {
+                        // Select this page for editing in Page_Exercise().
+                        params.setEditParams(params)
+                        params.setCurrentPage(pages.PAGE_EXERCISE);
+                    }}>
+                    <p  className="text-white text-base border pl-1 mb-0 mt-0 ml-0 w-40">
+                        {params.exercise_name}
+                        <img
+                            className="ml-auto"
+                            src={training_video_image}
+                            title="The training video for this exercise"
+                            draggable={false}
+                            height={30}
+                            width={30}
                         />
+                    </p>
+
+                    <div className="flex flex.col h-auto">
+                        <p className="bg-gray-800 text-white text-base text-center border mb-0 mt-0 ml-0 w-10 h-auto">
+                            {params.sets}
+                        </p>
+                        <p className = "bg-gray-800 text-white text-base text-center border mb-0 mt-0 ml-0 w-10 h-auto">
+                            {params.actual_sets}
+                        </p>
+                        <p className = "bg-gray-800 text-white text-base text-center border mb-0 mt-0 ml-0 w-[50px] h-auto">
+                            {reps}
+                        </p>
+
+                        <div className="border">
+                            <TextareaAutosize
+                                className="bg-gray-800 text-white text-base text-center text-wrap scrollbar-hide w-10"
+                                id="ActualReps"
+                                type="text"
+                                placeholder=""
+                                value={actual_reps}
+                                onChange={(e) => {}}
+                            />
+                        </div>
+
+                        <p className = "bg-gray-800 text-white text-base text-center border mb-0 mt-0 ml-0 w-10 h-auto">
+                            {params.rpe}
+                        </p>
+                        <p className = "bg-gray-800 text-white text-base text-center border mb-0 mt-0 ml-0 w-10 h-auto">
+                            {params.actual_rpe}
+                        </p>
+                        <p className = "bg-gray-800 text-white text-base text-center border mb-0 mt-0 ml-0 w-20 h-auto">
+                            {weights}
+                        </p>
+
+                        <div className="border">
+                            <TextareaAutosize
+                                className="bg-gray-800 text-white text-base text-center text-wrap scrollbar-hide w-[100px]"
+                                id="ActualWeights"
+                                type="text"
+                                placeholder=""
+                                value={actual_weights}
+                                onChange={(e) => {}}
+                            />
+                        </div>
+
+                        <p className = "bg-gray-800 text-white text-base text-center border mb-0 mt-0 ml-0 w-48 h-auto">
+                            {params.velocity_based_metrics}
+                        </p>
+                        <p className = "bg-gray-800 text-white text-base text-center border mb-0 mt-0 ml-0 w-48 h-auto">
+                            {params.notes}
+                        </p>
+                        <p className = "bg-gray-800 text-white text-base text-center border mb-0 mt-0 ml-0 w-14 h-auto">
+                            {params.E1RM}
+                        </p>
                     </div>
-
-                    <p className = "bg-gray-800 text-white text-base text-center border mb-0 mt-0 ml-0 w-10 h-auto">
-                        {params.rpe}
-                    </p>
-                    <p className = "bg-gray-800 text-white text-base text-center border mb-0 mt-0 ml-0 w-10 h-auto">
-                        {params.actual_rpe}
-                    </p>
-                    <p className = "bg-gray-800 text-white text-base text-center border mb-0 mt-0 ml-0 w-20 h-auto">
-                        {weights}
-                    </p>
-
-                    <div className="border">
-                        <TextareaAutosize
-                            className="bg-gray-800 text-white text-base text-center text-wrap scrollbar-hide w-[100px]"
-                            id="ActualWeights"
-                            type="text"
-                            placeholder=""
-                            value={actual_weights}
-                            onChange={(e) => {}}
-                        />
-                    </div>
-
-                    <p className = "bg-gray-800 text-white text-base text-center border mb-0 mt-0 ml-0 w-48 h-auto">
-                        {params.velocity_based_metrics}
-                    </p>
-                    <p className = "bg-gray-800 text-white text-base text-center border mb-0 mt-0 ml-0 w-48 h-auto">
-                        {params.notes}
-                    </p>
-                    <p className = "bg-gray-800 text-white text-base text-center border mb-0 mt-0 ml-0 w-14 h-auto">
-                        {params.E1RM}
-                    </p>
                 </div>
-            </div>
             </a>
         )
     } else {
