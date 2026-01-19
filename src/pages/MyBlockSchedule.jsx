@@ -63,7 +63,8 @@ function MyBlockSchedule() {
     const [ActualReps, setActualReps] = useState(0);
     const [ActualWeights, setActualWeights] = useState(0);
     const [ActualRPE, setActualRPE] = useState(0);
-    const [Notes, setNotes] = useState("");
+    const [Client_Velocity_Based_Metrics, setClient_Velocity_Based_Metrics] = useState("");
+    const [ClientNotes, setClientNotes] = useState("");
 
     const [IsChanged, setIsChanged] = useState(false);  
 
@@ -205,8 +206,10 @@ function MyBlockSchedule() {
             lower_weight: Schedule[Index].lower_weight,
             upper_weight: Schedule[Index].upper_weight,
             actual_weights: Schedule[Index].actual_weights,
-            velocity_based_metrics: Schedule[Index].velocity_based_metrics,
-            notes: Schedule[Index].notes,
+            coach_velocity_based_metrics: Schedule[Index].coach_velocity_based_metrics,
+            client_velocity_based_metrics: Schedule[Index].client_velocity_based_metrics,
+            coach_notes: Schedule[Index].coach_notes,
+            client_notes: Schedule[Index].client_notes,
             E1RM: Schedule[Index].E1RM
         })
         .then((response) => {
@@ -224,7 +227,7 @@ function MyBlockSchedule() {
     // ===============
     // RA_BRD
     //
-    function debugSchedule() {
+    /*function debugSchedule() {
         let line = "";
         console.log("\ndebugSchedule()\n");
         console.log("Line count " + Schedule.length + "\n");
@@ -244,23 +247,7 @@ function MyBlockSchedule() {
 
             console.log(line);
         }
-    };
-
-//     const [Anchor, setAnchor] = useState(-1);
-//     useEffect(() => {
-//         if (Anchor >=0) {
-//             const section = document.getElementById('5');
-//             if (section) {
-//                 console.log("scrolling");
-//                 section.scrollIntoView({
-//                     behavior: 'smooth', // Optional: for smooth scrolling
-//                     block: 'start'      // Optional: aligns the top
-//                 });
-//             }
-//             setAnchor(-1);
-//         }
-//      }, [Anchor] );
-
+    };*/
 
     //
     // WeekTabBar()
@@ -431,14 +418,20 @@ function MyBlockSchedule() {
         }
         setActualReps(actual_reps);
 
+        var actual_rpe = params.actual_rpe[0];
+        for (var ptr = 1; ptr < params.actual_rpe.length; ptr++) {
+            actual_rpe = actual_rpe + "\n" + params.actual_rpe[ptr];
+        }
+        setActualRPE(actual_rpe);
+
         var actual_weights = params.actual_weights[0];
         for (var ptr = 1; ptr < params.actual_weights.length; ptr++) {
             actual_weights = actual_weights + "\n" + params.actual_weights[ptr];
         }
         setActualWeights(actual_weights);
 
-        setActualRPE(params.actual_rpe);
-        setNotes(params.notes);
+        setClientVelocity_Based_Metrics(params.client_velocity_based_metrics);
+        setClientNotes(params.client_notes);
         setAnchor(params.seq_ID);
     }
 
@@ -454,8 +447,9 @@ function MyBlockSchedule() {
         Schedule[Index].actual_reps = stringToArray(ActualReps, "\n");
         Schedule[Index].actual_weights = stringToArray(ActualWeights, "\n");
         Schedule[Index].actual_rpe = ActualRPE;
-        Schedule[Index].notes = Notes.trim();
-        if (IsChanged) {
+        Schedule[Index].client_velocity_based_metrics = Client_Velocity_Based_Metrics.trim();
+        Schedule[Index].client_notes = ClientNotes.trim();
+        if (IsChanged) {    // RA_BRD - move this up ?
            updateSchedule();
            setIsChanged(false);
         }
@@ -517,7 +511,9 @@ function MyBlockSchedule() {
                             ActualReps = {ActualReps} setActualReps = {setActualReps}
                             ActualRPE = {ActualRPE}   setActualRPE = {setActualRPE}
                             ActualWeights = {ActualWeights} setActualWeights = {setActualWeights}
-                            Notes = {Notes} setNotes = {setNotes}
+                            Client_Velocity_Based_Metrics = {Client_Velocity_Based_Metrics}
+                            setClient_Velocity_Based_Metrics = {setClient_Velocity_Based_Metrics}
+                            ClientNotes = {ClientNotes} setClientNotes = {setClientNotes}
                             setEditParams = {setEditParams}
                             updateEditParams = {updateEditParams}
                             setIsChanged = {setIsChanged}
@@ -611,8 +607,8 @@ function Page_Day(params) {
                         lower_weight = {line.lower_weight}
                         upper_weight = {line.upper_weight}
                         actual_weights = {line.actual_weights}
-                        velocity_based_metrics = {line.velocity_based_metrics}
-                        notes = {line.notes}
+                        client_velocity_based_metrics = {line.client_velocity_based_metrics}
+                        client_notes = {line.client_notes}
                         E1RM = {line.E1RM} 
                         setVideoVisible = {params.setVideoVisible} 
                         CurrentPage = {params.CurrentPage} setCurrentPage = {params.setCurrentPage}
@@ -670,13 +666,19 @@ function ScheduleLine(params) {
             weights = weights + "-" + params.upper_weight;
         }
 
-        // Unpack the actual_reps and actual_weights arrays so they can be
-        // displayed vertically as text with one entry per line, separated by
-        // a new line. This allows the grid lines to resize automatically so
+        // Unpack the actual_reps, actual_rpe, and actual_weights arrays so they
+        // can be displayed vertically as text with one entry per line, separated
+        // by a new line. This allows the grid lines to resize automatically so
         // that all entries are visible if the screen size allows it.
+        //
         var actual_reps = params.actual_reps[0];
         for (var ptr = 1; ptr < params.actual_reps.length; ptr++) {
             actual_reps = actual_reps + "\n" + params.actual_reps[ptr];
+        }
+
+        var actual_rpe = params.actual_rpe[0];
+        for (var ptr = 1; ptr < params.actual_rpe.length; ptr++) {
+            actual_rpe = actual_rpe + "\n" + params.actual_rpe[ptr];
         }
 
         var actual_weights = params.actual_weights[0];
@@ -730,9 +732,18 @@ function ScheduleLine(params) {
                         <p className = "bg-gray-800 text-white text-base text-center border mb-0 mt-0 ml-0 w-10 h-auto">
                             {params.rpe}
                         </p>
-                        <p className = "bg-gray-800 text-white text-base text-center border mb-0 mt-0 ml-0 w-10 h-auto">
-                            {params.actual_rpe}
-                        </p>
+
+                        <div className="border">
+                            <TextareaAutosize
+                                className="bg-gray-800 text-white text-base text-center text-wrap scrollbar-hide w-10"
+                                id="ActualRPE"
+                                type="text"
+                                placeholder=""
+                                value={actual_rpe}
+                                onChange={(e) => {}}
+                            />
+                        </div>
+
                         <p className = "bg-gray-800 text-white text-base text-center border mb-0 mt-0 ml-0 w-20 h-auto">
                             {weights}
                         </p>
@@ -749,10 +760,10 @@ function ScheduleLine(params) {
                         </div>
 
                         <p className = "bg-gray-800 text-white text-base text-center border mb-0 mt-0 ml-0 w-48 h-auto">
-                            {params.velocity_based_metrics}
+                            {params.coach_velocity_based_metrics}
                         </p>
                         <p className = "bg-gray-800 text-white text-base text-center border mb-0 mt-0 ml-0 w-48 h-auto">
-                            {params.notes}
+                            {params.coach_notes}
                         </p>
                         <p className = "bg-gray-800 text-white text-base text-center border mb-0 mt-0 ml-0 w-14 h-auto">
                             {params.E1RM}
@@ -771,6 +782,28 @@ function ScheduleLine(params) {
 // ===============
 // Displays the exercise selected from the current day and allows the fields to be edited. The
 // validKey() function is imported from the UtilLib library.
+
+// <div className="bg-white">
+// <input
+// className="bg-white text-black text-center w-10 h-[27px]"
+// id="ActualRPE"
+// type="number"
+// placeholder=""
+// value={params.ActualRPE}
+// onChange={(e) => {
+//     // The value must be between 0 and 10.
+//     var val = e.target.value;
+//     if (val < 0) {
+//         val = 0;
+//     } else if (val > 10) {
+//         val = 10;
+//     }
+//     params.setActualRPE(val);
+//     params.setIsChanged(true);
+// }}
+// />
+// <p className="bg-white text-black w-10 h-[60px]"></p>
+// </div>
 //
 //
 function Page_Exercise(params){
@@ -890,26 +923,23 @@ function Page_Exercise(params){
                         {params.Schedule[params.Index].rpe}
                     </p>
 
-                    <div className="bg-white">
-                        <input
-                            className="bg-white text-black text-center w-10 h-[27px]"
+                    <div className="border bg-white">
+                        <TextareaAutosize
+                            className="bg-white text-black text-base text-center text-wrap scrollbar-hide h-10 w-10"
                             id="ActualRPE"
                             type="number"
                             placeholder=""
-                            value={params.ActualRPE}
-                            onChange={(e) => {
-                                // The value must be between 0 and 10.
-                                var val = e.target.value;
-                                if (val < 0) {
-                                    val = 0;
-                                } else if (val > 10) {
-                                    val = 10;
+                            value={params.ActualReps}
+                            onKeyDown={(e) => {
+                                if (!params.validKey(e, false)) {
+                                    e.preventDefault();
                                 }
-                                params.setActualRPE(val);
+                            }}
+                            onChange={(e) => {
+                                params.setActualRPE(e.target.value);
                                 params.setIsChanged(true);
                             }}
                         />
-                        <p className="bg-white text-black w-10 h-[60px]"></p>
                     </div>
 
                     <p className = "bg-gray-800 text-white  text-base text-center border mb-0 mt-0 ml-0 w-20">
@@ -936,7 +966,7 @@ function Page_Exercise(params){
                     </div>
 
                     <p className = "bg-gray-800 text-white text-base text-center border mb-0 mt-0 ml-0 w-[190px]">
-                        {params.Schedule[params.Index].velocity_based_metrics}
+                        {params.Schedule[params.Index].coach_velocity_based_metrics}
                     </p>
 
                     <div className="bg-white">
@@ -945,9 +975,9 @@ function Page_Exercise(params){
                             id="Notes"
                             type="text"
                             placeholder=""
-                            value={params.Notes}
+                            value={params.ClientNotes}
                             onChange={(e) => {
-                                params.setNotes(e.target.value);
+                                params.setClientNotes(e.target.value);
                                 params.setIsChanged(true);
                             }}
                         />

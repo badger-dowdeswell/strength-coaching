@@ -86,13 +86,15 @@ CREATE TABLE IF NOT EXISTS public."Schedule" (
     min_reps smallint,
     max_reps smallint,
     actual_reps smallint[],
-    rpe numeric,
-    actual_rpe numeric,
+    rpe smallint,
+    actual_rpe smallint[],
     lower_weight numeric,
     upper_weight numeric,
     actual_weights numeric[],
-    velocity_based_metrics character varying(500) COLLATE pg_catalog."default",
-    notes character varying(500) COLLATE pg_catalog."default",
+    coach_velocity_based_metrics character varying(500) COLLATE pg_catalog."default",
+    client_velocity_based_metrics character varying(500) COLLATE pg_catalog."default",
+    coach_notes character varying(500) COLLATE pg_catalog."default",
+    client_notes character varying(500) COLLATE pg_catalog."default",
     "E1RM" numeric,
     CONSTRAINT "Schedule_pkey" PRIMARY KEY ("schedule_ID")
 )
@@ -116,6 +118,21 @@ ALTER SEQUENCE Schedule_schedule_ID_seq RESTART WITH 1;
 
 Latest:
 
+SELECT "schedule_ID", "seq_ID", "user_ID", "block",  "week", "day", "Exercise"."exercise_ID", 
+       "Exercise"."name" AS "exercise_name", 
+       "sets", "actual_sets", "min_reps", "max_reps", "actual_reps", "rpe", 
+       "actual_rpe", "lower_weight", "upper_weight", "actual_weights", 
+       "coach_velocity_based_metrics", "client_velocity_based_metrics",
+       "coach_notes", "client_notes", "E1RM",
+       "Exercise"."video_link" AS "video_link"	   
+FROM "Schedule"
+LEFT JOIN "Exercise" AS "Exercise" ON "Exercise"."exercise_ID" = "Schedule"."exercise_ID"
+WHERE "block" = '1' AND "user_ID" = '1' ORDER BY "week" ASC, "day" ASC, "seq_ID" ASC;
+
+==========================================================================================
+
+Obsolete - RA_BRD
+=================
 SELECT "schedule_ID", "seq_ID", "user_ID", "block",  "week", "day", "Exercise"."exercise_ID", "Exercise"."name" AS "exercise_name", 
        "sets", "actual_sets", "min_reps", "max_reps", "actual_reps", "rpe", 
        "actual_rpe", "lower_weight", "upper_weight", "actual_weights", "velocity_based_metrics", "notes", "E1RM",

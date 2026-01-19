@@ -789,7 +789,6 @@ app.get('/api/getSchedule', async(request, response) => {
     const user_ID = request.query.user_ID;
     const JWT = request.query.JWT;    
     const block = request.query.block;
-    //const week = request.query.week;
     
     if (!verifyJWT(JWT)) {
         response.status(403).send("Not authorised");        
@@ -798,7 +797,9 @@ app.get('/api/getSchedule', async(request, response) => {
                              '"Exercise"."name" AS "exercise_name", "Exercise"."exercise_ID", ' +
                              '"sets", "actual_sets", "min_reps", "max_reps", "actual_reps", "rpe", ' +
                              '"actual_rpe", "lower_weight", "upper_weight", "actual_weights", ' +
-                             '"velocity_based_metrics", "notes", "E1RM", ' +
+                             '"coach_velocity_based_metrics", ' +
+                             '"client_velocity_based_metrics", ' +
+                             '"coach_notes", "client_notes", "E1RM", ' +
                              '"Exercise"."video_link" AS "video_link" ' +        
                              'FROM "Schedule" ' +
                              'LEFT JOIN "Exercise" AS "Exercise" ON ' +
