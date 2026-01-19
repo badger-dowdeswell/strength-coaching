@@ -561,7 +561,7 @@ function Page_Day(params) {
             
             <div className="flex flex.row text-white">                        
                 <p className="text-center border mb-0 mt-5 ml-0 w-[161px]">
-                    Exercises 
+                    Exercise
                 </p>
                 <p className="text-center border mb-0 mt-5 ml-0 w-20">
                     Sets 
@@ -791,10 +791,9 @@ function Page_Exercise(params){
                 {params.Schedule[params.Index].exercise_name}
             </p>                   
             
-
             <div className="flex flex.row text-white">
                 <p className="text-center border mb-0 mt-5 ml-0 w-[161px]">
-                    Exercises
+                    Exercise
                 </p>
                 <p className="text-center border mb-0 mt-5 ml-0 w-20">
                     Sets
@@ -822,7 +821,7 @@ function Page_Exercise(params){
                 </p>
             </div>
 
-            <div className="h-[200px] overflow-y-scroll border">
+            <div className="h-[200px] overflow-y-scroll">
                 <div className="flex flex.row">
                     <p className="text-white text-base border pl-1 mb-0 mt-0 ml-0 w-40">
                         {params.Schedule[params.Index].exercise_name}
