@@ -114,6 +114,11 @@ SET DEFAULT nextval('Schedule_schedule_ID_seq');
 
 ALTER SEQUENCE Schedule_schedule_ID_seq RESTART WITH 1; 
 
+Display the current value of a sequence counter:
+SELECT last_value FROM Schedule_schedule_ID_seq;
+Documentation on sequences:
+https://www.postgresql.org/docs/current/sql-createsequence.html
+
 ==========================================================================================
 
 Latest:

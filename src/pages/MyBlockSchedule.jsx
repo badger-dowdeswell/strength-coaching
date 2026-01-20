@@ -12,6 +12,8 @@
 // 08.11.2025 BRD Merged the ScheduleLine component into this source file.
 //                This should make it easier to update fields stored in
 //                the Schedule array.
+// 21.01.2026 BRD Extensive re-write including validation of all editing
+//                functionalty to create the first beta version.
 // 
 import './Main.css';
 
@@ -116,7 +118,6 @@ function MyBlockSchedule() {
             case states.LOADED:
                 // A schedule was found for this client for this block.  
                 setCurrentPage(pages.PAGE_DAY);
-                //debugSchedule();
                 break;
                 
             case states.NOT_AUTHENTICATED:
@@ -161,10 +162,11 @@ function MyBlockSchedule() {
     //
     // loadSchedule()
     // ==============
-    // Reads the user's profile information from the database and loads it into the editing fields.
-    // Note since this method operates within an aync Promise, it is the safest place to
-    // set the editingState so that that state does not get triggered before the read is complete.
-    // Then, the block schedule lines for each day in that week are loaded. test
+    // Reads the user's profile information from the database and loads it into the
+    // editing fields. Note since this method operates within an aync Promise, it
+    // is the safest place to set the editingState so that that state does not get
+    // triggered before the read is complete. Then, the block schedule lines for each
+    // day in that week are loaded.
     //
     const loadSchedule = async (user_ID) => {        
         try {
@@ -221,33 +223,6 @@ function MyBlockSchedule() {
             console.log("schedule NOT updated...");
         })
     };
-
-    //
-    // debugSchedule()
-    // ===============
-    // RA_BRD
-    //
-    /*function debugSchedule() {
-        let line = "";
-        console.log("\ndebugSchedule()\n");
-        console.log("Line count " + Schedule.length + "\n");
-        for (var ptr = 0; ptr <Schedule.length; ptr++ ) {
-
-            line = Schedule[ptr].schedule_ID + " " +
-            Schedule[ptr].seq_ID + " " +
-            Schedule[ptr].user_ID + " " +
-            Schedule[ptr].block + " " +
-            Schedule[ptr].exercise_name + " " +
-            Schedule[ptr].sets + " " +
-            Schedule[ptr].actual_sets + " " +
-            Schedule[ptr].min_reps + " " +
-            Schedule[ptr].max_reps + " " +
-            Schedule[ptr].actual_reps + " " +
-            Schedule[ptr].velocity_based_metrics;
-
-            console.log(line);
-        }
-    };*/
 
     //
     // WeekTabBar()
@@ -379,9 +354,9 @@ function MyBlockSchedule() {
     //
     // setTabColour() 
     // ==============
-    // Switches the colour of the tab for the current week and day that is
-    // being activated. The CurrentPage is also watched since the tab colour
-    // needs to be refreshed when the page changes.
+    // Switches the colour of the tab for the current week and day that is being
+    // activated. The CurrentPage is also watched since the tab colour needs to
+    // be refreshed when the page changes.
     // 
     useEffect(() => {        
         if (CurrentWeek > 0) {
@@ -402,10 +377,11 @@ function MyBlockSchedule() {
     //
     // setEditParams()
     // ===============
-    // This function saves each editable value for an exercise to useState() variables when
-    // a exercise line is clicked in the list of exercises for the day. This allows normal
-    // editing text boxes to be used to change values. The function updateParams function 
-    // is used later to save changed values back into the ScheduleLine array.
+    // This function saves each editable value for an exercise to useState()
+    // variables when an exercise line is clicked in the list of exercises for
+    // the day. This allows normal editing text boxes to be used to change
+    // values. The function updateParams() is used later to save changed values
+    // back into the ScheduleLine array.
     // 
     function setEditParams(params) {
         setIndex(params.index);
@@ -438,18 +414,30 @@ function MyBlockSchedule() {
     //
     // updateEditParams()
     // ==================
-    // This function updates the Schedule array entry for the line that is currently being
-    // edited. Some fields are new-line delimited strings which must be converted back to
-    // proper array entries befoe being returned.
+    // This function updates the Schedule array entry for the line that is currently
+    // being edited. Some fields are new-line delimited strings which must be
+    // converted back to proper array entries befoe being returned.
     //
     function updateEditParams(params) {
         Schedule[Index].actual_sets = ActualSets;
         Schedule[Index].actual_reps = stringToArray(ActualReps, "\n");
         Schedule[Index].actual_weights = stringToArray(ActualWeights, "\n");
-        Schedule[Index].actual_rpe = stringToArray(ActualRPE, "\n");
+
+        // Check that each RPE is within the range 0 to 10. Adjust it if it is out
+        // of range.
+        var rpe = stringToArray(ActualRPE, "\n");
+        for (var ptr = 0; ptr < rpe.length; ptr++) {
+            if (rpe[ptr] < 0) {
+                rpe[ptr] = 0;
+            } else if (rpe[ptr] > 10 ) {
+                rpe[ptr] = 10;
+            }
+        }
+        Schedule[Index].actual_rpe = rpe;
+
         Schedule[Index].client_velocity_based_metrics = Client_Velocity_Based_Metrics.trim();
         Schedule[Index].client_notes = ClientNotes.trim();
-        if (IsChanged) {    // RA_BRD - move this up ?
+        if (IsChanged) {
            updateSchedule();
            setIsChanged(false);
         }
@@ -611,7 +599,6 @@ function Page_Day(params) {
                         coach_notes = {line.coach_notes}
                         client_velocity_based_metrics = {line.client_velocity_based_metrics}
                         client_notes = {line.client_notes}
-
                         E1RM = {line.E1RM} 
                         setVideoVisible = {params.setVideoVisible} 
                         CurrentPage = {params.CurrentPage} setCurrentPage = {params.setCurrentPage}
@@ -794,31 +781,8 @@ function ScheduleLine(params) {
 //
 // Page_Exercise()
 // ===============
-// Displays the exercise selected from the current day and allows the fields to be edited. The
-// validKey() function is imported from the UtilLib library.
-
-// <div className="bg-white">
-// <input
-// className="bg-white text-black text-center w-10 h-[27px]"
-// id="ActualRPE"
-// type="number"
-// placeholder=""
-// value={params.ActualRPE}
-// onChange={(e) => {
-//     // The value must be between 0 and 10.
-//     var val = e.target.value;
-//     if (val < 0) {
-//         val = 0;
-//     } else if (val > 10) {
-//         val = 10;
-//     }
-//     params.setActualRPE(val);
-//     params.setIsChanged(true);
-// }}
-// />
-// <p className="bg-white text-black w-10 h-[60px]"></p>
-// </div>
-//
+// Displays the exercise selected from the current day and allows the fields to be
+// edited. The validKey() function is imported from the UtilLib library.
 //
 function Page_Exercise(params){
     // Format the fields that have a range by joining them with a minus symbol.

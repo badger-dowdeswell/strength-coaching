@@ -167,7 +167,7 @@ const BCRYPT_SALT = 10; // This sets a ten-cycle salt for use by bcrypt when
 //
 // CORS
 // ====
-// cors is a node.js package that Express uses for Cross-Origin Resource
+// CORS is a Node.js package that Express uses for Cross-Origin Resource
 // sharing (CORS). This is a mechanism that allows restricted resources on
 // a web page to be requested from another domain outside the domain
 // from which the first resource was served.
@@ -179,8 +179,7 @@ app.use(cors());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
-// The TCP port the Back-End will listen on for HTTP requests 
-// from the front-end.
+// The TCP port the Back-End will listen on for HTTP requests from the front-end.
 const port = process.env.TCP_port;
 
 //
@@ -228,6 +227,18 @@ function logmsg(msg) {
 }
 
 //
+// esc()
+// =====
+// Used to escape the single-quote character when forming SQL sentences. This
+// uses a global regex parameter /g to replace all instances, not just the
+// first one. Note that the double-quote character can be embedded in text with
+// no issues without needing to escape it.
+//
+function esc(param) {
+    return param.replace(/'/g, "''");
+}
+
+//
 // Create connection pool
 // ======================
 // The back-end communicates with the ProgreSQL database by using a Pool object.
@@ -238,11 +249,11 @@ function logmsg(msg) {
 //
 const Pool = pg.Pool;
 const db = new Pool({
-   database: process.env.database,
-   port: process.env.port,
-   host: process.env.host,
-   user: process.env.user,
-   password: process.env.db_password,   
+    database: process.env.database,
+    port: process.env.port,
+    host: process.env.host,
+    user: process.env.user,
+    password: process.env.db_password,
 });
 
 //
@@ -867,12 +878,10 @@ app.put('/api/updateSchedule', async(request, response) => {
                 ' "lower_weight" = ' + "'" + request.body.lower_weight + "' , " +
                 ' "upper_weight" = ' + "'" + request.body.upper_weight + "' , " +
                 ' "actual_weights" = ' + "'{" + request.body.actual_weights + "}' , " +
-                ' "coach_velocity_based_metrics" = ' + "'" +
-                request.body.coach_velocity_based_metrics.replace(/'/g, "''") + "' , " +
-                ' "client_velocity_based_metrics" = ' + "'" +
-                request.body.client_velocity_based_metrics.replace(/'/g, "''") + "' , " +
-                ' "coach_notes" = ' + "'" + request.body.coach_notes.replace(/'/g, "''") + "' , " +
-                ' "client_notes" = ' + "'" + request.body.client_notes.replace(/'/g, "''") + "' , " +
+                ' "coach_velocity_based_metrics" = ' + "'" + esc(request.body.coach_velocity_based_metrics) + "' , " +
+                ' "client_velocity_based_metrics" = ' + "'" + esc(request.body.client_velocity_based_metrics) + "' , " +
+                ' "coach_notes" = ' + "'" + esc(request.body.coach_notes) + "' , " +
+                ' "client_notes" = ' + "'" + esc(request.body.client_notes) + "' , " +
                 ' "E1RM" = ' + "'" + request.body.E1RM + "' " +
                 ' WHERE "schedule_ID" = ' + "'" + request.body.schedule_ID + "';\n" // +                
 
