@@ -202,7 +202,7 @@ function MyBlockSchedule() {
             max_reps: Schedule[Index].max_reps,
             actual_reps: Schedule[Index].actual_reps,
             rpe: Schedule[Index].rpe,
-            actual_rpe: Schedule[Index].rpe,
+            actual_rpe: Schedule[Index].actual_rpe,
             lower_weight: Schedule[Index].lower_weight,
             upper_weight: Schedule[Index].upper_weight,
             actual_weights: Schedule[Index].actual_weights,

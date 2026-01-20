@@ -849,8 +849,6 @@ app.put('/api/updateSchedule', async(request, response) => {
     if (!verifyJWT(JWT)) {
         response.status(403).send("Not authorised");        
     } else {
-        //var sqlUpdateCmd = 'DO $$\n' +
-            //'BEGIN \n' +
         var sqlUpdateCmd =    
                 'UPDATE "Schedule" SET ' +
                 ' "seq_ID" = ' + "'" + request.body.seq_ID + "', " +
@@ -865,18 +863,18 @@ app.put('/api/updateSchedule', async(request, response) => {
                 ' "max_reps" = ' + "'" + request.body.max_reps + "' , " +
                 ' "actual_reps" = ' + "'{" + request.body.actual_reps + "}' , " +
                 ' "rpe" = ' + "'" + request.body.rpe + "' , " +
-                ' "actual_rpe" = ' + "'" + request.body.actual_rpe + "' , " +
+                ' "actual_rpe" = ' + "'{" + request.body.actual_rpe + "}' , " +
                 ' "lower_weight" = ' + "'" + request.body.lower_weight + "' , " +
                 ' "upper_weight" = ' + "'" + request.body.upper_weight + "' , " +
                 ' "actual_weights" = ' + "'{" + request.body.actual_weights + "}' , " +
-                ' "velocity_based_metrics" = ' + "'" + request.body.velocity_based_metrics + "' , " +
-                ' "notes" = ' + "'" + request.body.notes + "', " +
+                ' "coach_velocity_based_metrics" = ' + "'" +
+                request.body.coach_velocity_based_metrics.replace(/'/g, "''") + "' , " +
+                ' "client_velocity_based_metrics" = ' + "'" +
+                request.body.client_velocity_based_metrics.replace(/'/g, "''") + "' , " +
+                ' "coach_notes" = ' + "'" + request.body.coach_notes.replace(/'/g, "''") + "' , " +
+                ' "client_notes" = ' + "'" + request.body.client_notes.replace(/'/g, "''") + "' , " +
                 ' "E1RM" = ' + "'" + request.body.E1RM + "' " +
                 ' WHERE "schedule_ID" = ' + "'" + request.body.schedule_ID + "';\n" // +                
-            //    'EXCEPTION\n ' +
-            //    'WHEN OTHERS THEN\n' +
-            //        'ROLLBACK\n; ' +
-            //'END; $$\n';
 
         logmsg("/api/updateSchedule: \n" + sqlUpdateCmd + "\n");
 
