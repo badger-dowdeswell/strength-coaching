@@ -430,7 +430,7 @@ function MyBlockSchedule() {
         }
         setActualWeights(actual_weights);
 
-        setClientVelocity_Based_Metrics(params.client_velocity_based_metrics);
+        setClient_Velocity_Based_Metrics(params.client_velocity_based_metrics);
         setClientNotes(params.client_notes);
         setAnchor(params.seq_ID);
     }
@@ -446,7 +446,7 @@ function MyBlockSchedule() {
         Schedule[Index].actual_sets = ActualSets;
         Schedule[Index].actual_reps = stringToArray(ActualReps, "\n");
         Schedule[Index].actual_weights = stringToArray(ActualWeights, "\n");
-        Schedule[Index].actual_rpe = ActualRPE;
+        Schedule[Index].actual_rpe = stringToArray(ActualRPE, "\n");
         Schedule[Index].client_velocity_based_metrics = Client_Velocity_Based_Metrics.trim();
         Schedule[Index].client_notes = ClientNotes.trim();
         if (IsChanged) {    // RA_BRD - move this up ?
@@ -607,8 +607,11 @@ function Page_Day(params) {
                         lower_weight = {line.lower_weight}
                         upper_weight = {line.upper_weight}
                         actual_weights = {line.actual_weights}
+                        coach_velocity_based_metrics = {line.coach_velocity_based_metrics}
+                        coach_notes = {line.coach_notes}
                         client_velocity_based_metrics = {line.client_velocity_based_metrics}
                         client_notes = {line.client_notes}
+
                         E1RM = {line.E1RM} 
                         setVideoVisible = {params.setVideoVisible} 
                         CurrentPage = {params.CurrentPage} setCurrentPage = {params.setCurrentPage}
@@ -689,7 +692,7 @@ function ScheduleLine(params) {
         return (
             <a id={params.seq_ID}>
                 <div
-                    className="flex flex.row flex-auto"
+                    className="flex flex-row flex-auto"
                     onClick={() => {
                         // Select this page for editing in Page_Exercise().
                         params.setEditParams(params)
@@ -707,7 +710,7 @@ function ScheduleLine(params) {
                         />
                     </p>
 
-                    <div className="flex flex.col h-auto">
+                    <div className="flex h-auto">
                         <p className="bg-gray-800 text-white text-base text-center border mb-0 mt-0 ml-0 w-10 h-auto">
                             {params.sets}
                         </p>
@@ -750,7 +753,7 @@ function ScheduleLine(params) {
 
                         <div className="border">
                             <TextareaAutosize
-                                className="bg-gray-800 text-white text-base text-center text-wrap scrollbar-hide w-[100px]"
+                                className="bg-gray-800 text-white text-base text-center text-wrap scrollbar-hide w-[98px]"
                                 id="ActualWeights"
                                 type="text"
                                 placeholder=""
@@ -759,12 +762,23 @@ function ScheduleLine(params) {
                             />
                         </div>
 
-                        <p className = "bg-gray-800 text-white text-base text-center border mb-0 mt-0 ml-0 w-48 h-auto">
-                            {params.coach_velocity_based_metrics}
-                        </p>
-                        <p className = "bg-gray-800 text-white text-base text-center border mb-0 mt-0 ml-0 w-48 h-auto">
-                            {params.coach_notes}
-                        </p>
+                        <div className="flex flex-col flex-auto">
+                            <p className = "bg-gray-800 text-white text-base text-center border mb-0 mt-0 ml-0 w-48 h-auto">
+                                {params.coach_velocity_based_metrics}
+                            </p>
+                            <p className = "bg-gray-800 text-white text-base text-center border mb-0 mt-0 ml-0 w-48 h-auto">
+                                {params.client_velocity_based_metrics}
+                            </p>
+                        </div>
+
+                        <div className="flex flex-col flex-auto">
+                            <p className = "bg-gray-800 text-white text-base text-center border mb-0 mt-0 ml-0 w-48 h-auto">
+                                {params.coach_notes}
+                            </p>
+                            <p className = "bg-gray-800 text-white text-base text-center border mb-0 mt-0 ml-0 w-48 h-auto">
+                                {params.client_notes}
+                            </p>
+                        </div>
                         <p className = "bg-gray-800 text-white text-base text-center border mb-0 mt-0 ml-0 w-14 h-auto">
                             {params.E1RM}
                         </p>
@@ -843,7 +857,7 @@ function Page_Exercise(params){
                 <p className="text-base text-center border mb-0 mt-5 ml-0 w-[100px]">
                     My Weights
                 </p>
-                <p className="text-base text-center border mb-0 mt-5 ml-0 w-[191px]">
+                <p className="text-base text-center border mb-0 mt-5 ml-0 w-[193px]">
                     Velocity-Based Metrics
                 </p>
                 <p className="text-base text-center border mb-0 mt-5 ml-0 w-[186px]">
@@ -929,7 +943,7 @@ function Page_Exercise(params){
                             id="ActualRPE"
                             type="number"
                             placeholder=""
-                            value={params.ActualReps}
+                            value={params.ActualRPE}
                             onKeyDown={(e) => {
                                 if (!params.validKey(e, false)) {
                                     e.preventDefault();
@@ -946,9 +960,9 @@ function Page_Exercise(params){
                         {weights}
                     </p>
 
-                    <div className="bg-white">
+                    <div className="bg-white border">
                         <TextareaAutosize
-                            className="bg-white text-black text-center text-wrap scrollbar-hide w-[100px]"
+                            className="bg-white text-black text-center text-wrap scrollbar-hide w-[98px]"
                             id="ActualWeights"
                             type="text"
                             placeholder=""
@@ -965,22 +979,42 @@ function Page_Exercise(params){
                         />
                     </div>
 
-                    <p className = "bg-gray-800 text-white text-base text-center border mb-0 mt-0 ml-0 w-[190px]">
-                        {params.Schedule[params.Index].coach_velocity_based_metrics}
-                    </p>
+                    <div className="flex flex-col flex-auto">
+                        <p className = "bg-gray-800 text-white text-base text-center border mb-0 mt-0 ml-0 w-48 h-auto">
+                            {params.Schedule[params.Index].coach_velocity_based_metrics}
+                        </p>
+                        <div className="bg-white border-x-2">
+                            <TextareaAutosize
+                                className="bg-white text-black text-center text-wrap scrollbar-hide w-[188px]"
+                                id="Client_Velocity_Based_Metrics"
+                                type="text"
+                                placeholder=""
+                                value={params.Client_Velocity_Based_Metrics}
+                                onChange={(e) => {
+                                    params.setClient_Velocity_Based_Metrics(e.target.value);
+                                    params.setIsChanged(true);
+                                }}
+                            />
+                        </div>
+                    </div>
 
-                    <div className="bg-white">
-                        <TextareaAutosize
-                            className="bg-white text-black text-center text-wrap scrollbar-hide w-[186px]"
-                            id="Notes"
-                            type="text"
-                            placeholder=""
-                            value={params.ClientNotes}
-                            onChange={(e) => {
-                                params.setClientNotes(e.target.value);
-                                params.setIsChanged(true);
-                            }}
-                        />
+                    <div className="flex flex-col flex-auto">
+                        <p className = "bg-gray-800 text-white text-base text-center border mb-0 mt-0 ml-0 w-[186px]">
+                            {params.Schedule[params.Index].coach_notes}
+                        </p>
+                        <div className="bg-white">
+                            <TextareaAutosize
+                                className="bg-white text-black text-center text-wrap scrollbar-hide w-[186px]"
+                                id="ClientNotes"
+                                type="text"
+                                placeholder=""
+                                value={params.ClientNotes}
+                                onChange={(e) => {
+                                    params.setClientNotes(e.target.value);
+                                    params.setIsChanged(true);
+                                }}
+                            />
+                        </div>
                     </div>
 
                     <p className = "bg-gray-800 text-white text-base text-center border mb-0 mt-0 ml-0 w-14">
