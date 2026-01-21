@@ -9,6 +9,8 @@
 // 13.01.2024 BRD Original version.
 // 30.07.2025 BRD Cloned Strength Coaching from the Strength Research application.
 //
+// Testing Git here.
+//
 import './Main.css';
 
 import TopNav from "./components/TopNav";
