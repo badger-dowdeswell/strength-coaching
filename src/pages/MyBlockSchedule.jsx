@@ -15,6 +15,8 @@
 // 21.01.2026 BRD Extensive re-write including validation of all editing
 //                functionalty to create the first beta version.
 //
+// Playing with GitHub and Kate
+//
 // 
 import './Main.css';
 
