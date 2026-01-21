@@ -119,7 +119,7 @@ function Home() {
                                 <p
                                     className="text-center text-white text-sm font-bold"
                                     onClick={() => {navigate("/MyBlockSchedule")}}>
-                                    My Block Schedule        
+                                    My Training Schedule
                                 </p> 
                             </div>   
             
@@ -133,7 +133,7 @@ function Home() {
                                     onClick={() => {navigate("/Home")}}>
                                 </img>                                     
                                 <p className="text-center text-white text-sm font-bold">
-                                    My Block Review     
+                                    My Weekly and Block Review
                                 </p> 
                             </div>  
                         </div>                     
