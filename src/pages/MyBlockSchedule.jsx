@@ -14,7 +14,7 @@
 //                the Schedule array.
 // 21.01.2026 BRD Extensive re-write including validation of all editing
 //                functionalty to create the first beta version.
-//                Testting Github
+//                Testting Github with some more info
 // 
 import './Main.css';
 
