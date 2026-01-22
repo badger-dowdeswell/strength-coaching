@@ -460,8 +460,8 @@ function MyBlockSchedule() {
                             items-center justify-center
                             left-0 right-0 bg-gray-800 overflow-hidden">
 
-                <div className="flex flex-col box-border border-2 rounded-lg    
-                                ml-10 mr-10 h-[500px] w-auto">
+                <div className="flex flex-col box-border border-2 rounded-lg
+                                ml-10 mr-10 h-[800px] w-auto">
                     <div>
                         {(VideoVisible) && (
                             <ShowVideo
@@ -586,7 +586,7 @@ function Page_Day(params) {
                 </p>     
             </div>            
 
-            <div className="h-[260px] overflow-y-scroll border">
+            <div className="h-[400px] overflow-y-scroll border">
                 {params.Schedule.map(line => (                    
                     <ScheduleLine
                         index = {line.key}
@@ -845,7 +845,7 @@ function Page_Exercise(params){
                 </p>
             </div>
 
-            <div className="h-[200px] overflow-y-scroll">
+            <div className="h-[380px] overflow-y-scroll">
                 <div className="flex flex.row">
                     <p className="text-white text-base border pl-1 mb-0 mt-0 ml-0 w-40">
                         {params.Schedule[params.Index].exercise_name}
@@ -1003,7 +1003,7 @@ function Page_Exercise(params){
                 </div>
             </div>
 
-            <div className="flex flex-col items-center mt-[50px]">
+            <div className="flex flex-col items-center mt-[10px]">
                 <button
                     className="bg-cyan-600 text-white font-bold text-sm py-2 px-2
                                rounded mt-5 mb-0"
@@ -1024,78 +1024,31 @@ function Page_Exercise(params){
 // ShowVideo()
 // ============
 // The Modal component is used to wrap the video player in a custom dialog box.
-// https://www.npmjs.com/package/react-player
+// https://www.npmjs.com/package/react-player.
 //
-// installation:  npm i react-player
-//url={baseURL + 'streamVideo?user_ID=' + params.user_ID+"&JWT=" + params.JWT+ "&filename=" + params.VideoLink}
-//url = {baseURL + 'streamVideo?user_ID=' + params.user_ID
-//    +"&JWT=" + params.JWT + "&filename=" + params.VideoLink}
-//
-// VideoJS
-// =======
-// This may be a better option:
-//
-// https://cloudinary.com/guides/front-end-development/videojs-and-react-a-perfect-match-for-modern-video-players
+// src={"./trainingVideos/" + params.VideoLink.replace(" ", "%20")}
 //
 function ShowVideo(params) {
-    console.log("ShowVideo " + params.VideoLink);
-    const videoRef = useRef(null);
-    
-    const [videoID, setVideoID] = useState(null);
+    var video_link = baseURL + 'streamVideo?user_ID=' + params.user_ID+"&JWT=" +
+                     params.JWT+ "&filename=" + params.VideoLink.replace(" ", "%20");
 
-    //
-    // playVideo()
-    // ===========
-    function playVideo(e, videoID) {
-        e.preventDefault();
-        //setVideoID(videoID);
-    }
-    
-    useEffect(() => {
-        if (videoRef.current) {
-            videoRef.current.pause();
-            videoRef.current.removeAttribute('src');
-            videoRef.current.load();
-        }
-    })
-
-//     <ReactPlayer
-//         width="100"
-//         controls="true"
-//         url={baseURL}
-//         type='video/mp4'
-//     />
-   
     return (
         <div>
             <Modal>
-                <div className="bg-gray-800 overflow-hidden box-border border-2 rounded-lg h-[500px] w-[500px]">
-                    <div className="flex flex-col" > 
-                        <h1 className="bg-gray-800 text-white text-center text-sm ml-10 mr-10 mt-5">
-                            Video link {params.VideoLink}
-                        </h1> 
-
-                        <ReactPlayer
-                            width="100%"
-                            height="100%"
-                            controls={true}
-                            url = {"trainingVideos/How to Low Bar Squat.mp4"}
-                            type = 'video/mp4'
-                        />
+                <div className="bg-gray-800 overflow-hidden box-border border-2 rounded-lg h-[640px] w-auto">
+                    <div className="flex flex-col" >
+                        <video className="text-white center"
+                             width='330'
+                             controls
+                             autoPlay
+                             src={"./trainingVideos/" + params.VideoLink}
+                             type = 'video/mp4'>
+                              Your browser does not support video
+                        </video>
                         <div className="mt-auto">    
-                            <div className="flex flex-row justify-center mt-5">
+                            <div className="flex flex-row justify-center mt-0">
                                 <button className="bg-cyan-600 text-white font-bold text-sm py-2 px-2 rounded
-                                                  mb-6 mt-2"
-                                    id="Play"
-                                    style={{ width: "100px" }}
-                                    onClick={() => {(e) => {
-                                        playVideo(e, params.VideoLink);    
-                                    }}}>
-                                    Play
-                                </button>    
-
-                                <button className="bg-cyan-600 text-white font-bold text-sm py-2 px-2 rounded
-                                                mb-6 mt-2 ml-8"
+                                                mb-1 mt-2 ml-8"
                                     id="Back"
                                     style={{ width: "100px" }}
                                     onClick={() => {                                    
@@ -1149,3 +1102,53 @@ export default MyBlockSchedule;
     //                        src = "ht
 
     //
+
+// <ReactPlayer
+// width="100%"
+// height="100%"
+// controls={true}
+// playing
+// url = {"localhost:3000/trainingVideos/How to Low Bar Squat.mp4"}
+// type = 'video/mp4'
+// />
+//     console.log("ShowVideo " + params.VideoLink);
+//     const videoRef = useRef(null);
+//
+//     const [videoID, setVideoID] = useState(null);
+//
+//     //
+//     // playVideo()
+//     // ===========
+//     function playVideo(e, videoID) {
+//         e.preventDefault();
+//         //setVideoID(videoID);
+//     }
+//
+//     useEffect(() => {
+//         if (videoRef.current) {
+//             videoRef.current.pause();
+//             videoRef.current.removeAttribute('src');
+//             videoRef.current.load();
+//         }
+//     })
+
+//     <ReactPlayer
+//         width="100"
+//         controls="true"
+//         url={baseURL}
+//         type='video/mp4'
+//     />
+// src = "http://localhost:3000/trainingVideos/How%20to%20Low%20Bar%20Squat.mp4"
+// https://www.npmjs.com/package/react-player
+//
+// installation:  npm i react-player
+//url={baseURL + 'streamVideo?user_ID=' + params.user_ID+"&JWT=" + params.JWT+ "&filename=" + params.VideoLink}
+//url = {baseURL + 'streamVideo?user_ID=' + params.user_ID
+//    +"&JWT=" + params.JWT + "&filename=" + params.VideoLink}
+//
+// VideoJS
+// =======
+// This may be a better option:
+//
+// https://cloudinary.com/guides/front-end-development/videojs-and-react-a-perfect-match-for-modern-video-players
+
