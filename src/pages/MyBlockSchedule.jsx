@@ -15,8 +15,6 @@
 // 21.01.2026 BRD Extensive re-write including validation of all editing
 //                functionalty to create the first beta version.
 //
-// Playing with GitHub and Kate
-//
 // 
 import './Main.css';
 
@@ -29,7 +27,7 @@ import { useNavigate } from "react-router-dom";
 import { states, pages } from "./Constants";
 import { stringToArray, validKey } from "./components/UtilLib";
 
-//import ReactPlayer from 'react-player';
+import ReactPlayer from 'react-player';
 
 import training_video_image from "./images/training_video.png";
 
@@ -389,6 +387,8 @@ function MyBlockSchedule() {
     function setEditParams(params) {
         setIndex(params.index);
         setExerciseName(params.exercise_name);
+        console.log("setEditParams " + params.video_link);
+        setVideoLink(params.video_link);
         setActualSets(params.actual_sets);
 
         var actual_reps = params.actual_reps[0];
@@ -462,6 +462,16 @@ function MyBlockSchedule() {
 
                 <div className="flex flex-col box-border border-2 rounded-lg    
                                 ml-10 mr-10 h-[500px] w-auto">
+                    <div>
+                        {(VideoVisible) && (
+                            <ShowVideo
+                                user_ID = {user_ID}
+                                JWT = {JWT}
+                                setVideoVisible = {setVideoVisible}
+                                VideoLink = {VideoLink}
+                            />
+                        )}
+                    </div>
                                
                     <div className="flex flex-row">
                         <WeekTabBar
@@ -496,7 +506,7 @@ function MyBlockSchedule() {
                             CurrentWeek = {CurrentWeek}
                             CurrentDay = {CurrentDay}
                             setVideoVisible = {setVideoVisible} 
-                            setVideoLink = {setVideoLink}
+                            VideoLink = {VideoLink} setVideoLink = {setVideoLink}
                             CurrentPage = {CurrentPage} setCurrentPage = {setCurrentPage}
                             ActualSets = {ActualSets} setActualSets = {setActualSets}
                             ActualReps = {ActualReps} setActualReps = {setActualReps}
@@ -845,6 +855,9 @@ function Page_Exercise(params){
                             title="The training video for this exercise"
                             draggable={false}
                             height={30} width={30}
+                            onClick={() => {
+                                params.setVideoVisible(true);
+                            }}
                         />
                     </p>
 
@@ -1014,49 +1027,61 @@ function Page_Exercise(params){
 // https://www.npmjs.com/package/react-player
 //
 // installation:  npm i react-player
+//url={baseURL + 'streamVideo?user_ID=' + params.user_ID+"&JWT=" + params.JWT+ "&filename=" + params.VideoLink}
+//url = {baseURL + 'streamVideo?user_ID=' + params.user_ID
+//    +"&JWT=" + params.JWT + "&filename=" + params.VideoLink}
+//
+// VideoJS
+// =======
+// This may be a better option:
+//
+// https://cloudinary.com/guides/front-end-development/videojs-and-react-a-perfect-match-for-modern-video-players
 //
 function ShowVideo(params) {
-    //console.log("ShowVideo " + params.VideoLink);
-    // const videoRef = useRef(null);
+    console.log("ShowVideo " + params.VideoLink);
+    const videoRef = useRef(null);
     
-    // const [videoID, setVideoID] = useState(null);
+    const [videoID, setVideoID] = useState(null);
 
     //
     // playVideo()
     // ===========
-    // function playVideo(e, videoID) {
-    //    e.preventDefault();
-    //    setVideoID(videoID);
-    // }   
+    function playVideo(e, videoID) {
+        e.preventDefault();
+        //setVideoID(videoID);
+    }
     
-    // useEffect(() => {
-    //    if (videoRef.current) {
-    //        videoRef.current.pause();
-    //        videoRef.current.removeAttribute('src');
-    //        videoRef.current.load();
-    //    }
-    //})
+    useEffect(() => {
+        if (videoRef.current) {
+            videoRef.current.pause();
+            videoRef.current.removeAttribute('src');
+            videoRef.current.load();
+        }
+    })
 
-    // <ReactPlayer
-    //                         width="100"                            
-    //                         controls="true" 
-    //                         playing  
-                                                  
-    //                         url = {baseURL + 'streamVideo?user_ID=' + params.user_ID 
-    //                                        +"&JWT=" + params.JWT
-    //                                        + "&filename=" + params.VideoLink}
-    //                         type = 'video/mp4'                  
-    //                     /> 
+//     <ReactPlayer
+//         width="100"
+//         controls="true"
+//         url={baseURL}
+//         type='video/mp4'
+//     />
    
     return (
         <div>
             <Modal>
-                <div className="bg-gray-800 overflow-hidden box-border border-2 rounded-lg">
+                <div className="bg-gray-800 overflow-hidden box-border border-2 rounded-lg h-[500px] w-[500px]">
                     <div className="flex flex-col" > 
-                        <h1 className="bg-gray-800 text-white text-center text-sm ml-10 mr-10 mt-5 w-80">
+                        <h1 className="bg-gray-800 text-white text-center text-sm ml-10 mr-10 mt-5">
                             Video link {params.VideoLink}
                         </h1> 
 
+                        <ReactPlayer
+                            width="100%"
+                            height="100%"
+                            controls={true}
+                            url = {"trainingVideos/How to Low Bar Squat.mp4"}
+                            type = 'video/mp4'
+                        />
                         <div className="mt-auto">    
                             <div className="flex flex-row justify-center mt-5">
                                 <button className="bg-cyan-600 text-white font-bold text-sm py-2 px-2 rounded
