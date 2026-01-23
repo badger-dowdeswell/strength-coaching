@@ -69,7 +69,7 @@ function MyBlockSchedule() {
     const [Client_Velocity_Based_Metrics, setClient_Velocity_Based_Metrics] = useState("");
     const [ClientNotes, setClientNotes] = useState("");
 
-    const [IsChanged, setIsChanged] = useState(false);  
+    const [IsChanged, setIsChanged] = useState(false);
 
     //
     // Authentication and Navigation()
@@ -359,7 +359,8 @@ function MyBlockSchedule() {
     // activated. The CurrentPage is also watched since the tab colour needs to
     // be refreshed when the page changes.
     // 
-    useEffect(() => {        
+    useEffect(() => {
+        console.log("setTabColour:");
         if (CurrentWeek > 0) {
             let el = document.getElementById("TabWeek_" + CurrentWeek); 
             if (el != null) {
@@ -369,6 +370,7 @@ function MyBlockSchedule() {
 
         if (CurrentDay > 0) {
             let el = document.getElementById("TabDay_" + CurrentDay); 
+            console.log("setTabColour: CurrentDay " + CurrentDay);
             if (el != null) {
                 el.style.backgroundColor = "#ffffff"; 
             }           
@@ -387,7 +389,6 @@ function MyBlockSchedule() {
     function setEditParams(params) {
         setIndex(params.index);
         setExerciseName(params.exercise_name);
-        console.log("setEditParams " + params.video_link);
         setVideoLink(params.video_link);
         setActualSets(params.actual_sets);
 
@@ -461,7 +462,7 @@ function MyBlockSchedule() {
                             left-0 right-0 bg-gray-800 overflow-hidden">
 
                 <div className="flex flex-col box-border border-2 rounded-lg
-                                ml-10 mr-10 h-[800px] w-auto">
+                                ml-10 mr-10 h-[650px] w-auto">
                     <div>
                         {(VideoVisible) && (
                             <ShowVideo
@@ -517,7 +518,7 @@ function MyBlockSchedule() {
                             ClientNotes = {ClientNotes} setClientNotes = {setClientNotes}
                             setEditParams = {setEditParams}
                             updateEditParams = {updateEditParams}
-                            setIsChanged = {setIsChanged}
+                            IsChanged = {IsChanged} setIsChanged = {setIsChanged}
                             validKey = {validKey}
                             navigate = {navigate}
                         />                   
@@ -940,7 +941,7 @@ function Page_Exercise(params){
                         {weights}
                     </p>
 
-                    <div className="bg-white border">
+                    <div className="border bg-white">
                         <TextareaAutosize
                             className="bg-white text-black text-center text-wrap scrollbar-hide w-[98px]"
                             id="ActualWeights"
@@ -959,7 +960,7 @@ function Page_Exercise(params){
                         />
                     </div>
 
-                    <div className="flex flex-col flex-auto">
+                    <div className="flex flex-col flex-auto border">
                         <p className = "bg-gray-800 text-white text-base text-center border mb-0 mt-0 ml-0 w-48 h-auto">
                             {params.Schedule[params.Index].coach_velocity_based_metrics}
                         </p>
@@ -1022,16 +1023,10 @@ function Page_Exercise(params){
 
 //
 // ShowVideo()
-// ============
+// ===========
 // The Modal component is used to wrap the video player in a custom dialog box.
-// https://www.npmjs.com/package/react-player.
-//
-// src={"./trainingVideos/" + params.VideoLink.replace(" ", "%20")}
 //
 function ShowVideo(params) {
-    var video_link = baseURL + 'streamVideo?user_ID=' + params.user_ID+"&JWT=" +
-                     params.JWT+ "&filename=" + params.VideoLink.replace(" ", "%20");
-
     return (
         <div>
             <Modal>
@@ -1041,7 +1036,7 @@ function ShowVideo(params) {
                              width='330'
                              controls
                              autoPlay
-                             src={"./trainingVideos/" + params.VideoLink}
+                             src={"./trainingVideos/" + params.VideoLink.replace(" ", "%20")}
                              type = 'video/mp4'>
                               Your browser does not support video
                         </video>
@@ -1066,89 +1061,4 @@ function ShowVideo(params) {
 }   
 
 export default MyBlockSchedule;    
-
-
-// UNUSED CPDE RA_BRD
-// ==================
-// htps://ik.imagekit.io/roadsidecoder/yt/example.mp4" 
-   
-// 
-// <p className="ml-10 mr-10 mt-[350px]">
-// </p>  
-
-//src = {baseURL + 'streamVideo?user_ID="' + params.user_ID 
- //                                          +"&JWT=" + params.JWT
-  //                                         + "&filename=" + params.VideoLink}
-// src = {baseURL + 'streamVideo?user_ID="' + params.user_ID 
- //                                          +"&JWT=" + params.JWT
- //                                          + "&filename=" + params.VideoLink}
-// {baseURL + 'streamVideo?user_ID="' + params.user_ID 
-  //                                         +"&JWT=" + params.JWT
- //  
- //                                       + "&filename=" + params.VideoLink}
-
-
-    // <video className="text-white"                               
-    //                            width = '320'
-    //                            height = '240'
-    //                            autoPlay  
-    //                            controls                                                         
-    //                            src = "https://ik.imagekit.io/roadsidecoder/yt/example.mp4"                              
-    //                            type = 'video/mp4'>                            
-    //                         Your browser does not support video   
-    //                     </video>   
-    
-    // <ReactPlayer
-    //                        src = "ht
-
-    //
-
-// <ReactPlayer
-// width="100%"
-// height="100%"
-// controls={true}
-// playing
-// url = {"localhost:3000/trainingVideos/How to Low Bar Squat.mp4"}
-// type = 'video/mp4'
-// />
-//     console.log("ShowVideo " + params.VideoLink);
-//     const videoRef = useRef(null);
-//
-//     const [videoID, setVideoID] = useState(null);
-//
-//     //
-//     // playVideo()
-//     // ===========
-//     function playVideo(e, videoID) {
-//         e.preventDefault();
-//         //setVideoID(videoID);
-//     }
-//
-//     useEffect(() => {
-//         if (videoRef.current) {
-//             videoRef.current.pause();
-//             videoRef.current.removeAttribute('src');
-//             videoRef.current.load();
-//         }
-//     })
-
-//     <ReactPlayer
-//         width="100"
-//         controls="true"
-//         url={baseURL}
-//         type='video/mp4'
-//     />
-// src = "http://localhost:3000/trainingVideos/How%20to%20Low%20Bar%20Squat.mp4"
-// https://www.npmjs.com/package/react-player
-//
-// installation:  npm i react-player
-//url={baseURL + 'streamVideo?user_ID=' + params.user_ID+"&JWT=" + params.JWT+ "&filename=" + params.VideoLink}
-//url = {baseURL + 'streamVideo?user_ID=' + params.user_ID
-//    +"&JWT=" + params.JWT + "&filename=" + params.VideoLink}
-//
-// VideoJS
-// =======
-// This may be a better option:
-//
-// https://cloudinary.com/guides/front-end-development/videojs-and-react-a-perfect-match-for-modern-video-players
 
