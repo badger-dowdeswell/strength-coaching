@@ -69,6 +69,8 @@ function MyBlockSchedule() {
     const [Client_Velocity_Based_Metrics, setClient_Velocity_Based_Metrics] = useState("");
     const [ClientNotes, setClientNotes] = useState("");
 
+    const [refreshTab, setRefreshTab] = useState(false);
+
     const [IsChanged, setIsChanged] = useState(false);
 
     //
@@ -360,22 +362,21 @@ function MyBlockSchedule() {
     // be refreshed when the page changes.
     // 
     useEffect(() => {
-        console.log("setTabColour:");
-        if (CurrentWeek > 0) {
-            let el = document.getElementById("TabWeek_" + CurrentWeek); 
+       if (CurrentWeek > 0) {
+            let el = document.getElementById("TabWeek_" + CurrentWeek);
             if (el != null) {
                 el.style.backgroundColor = "#ffffff";   
             }         
-        }
+       }
 
-        if (CurrentDay > 0) {
-            let el = document.getElementById("TabDay_" + CurrentDay); 
-            console.log("setTabColour: CurrentDay " + CurrentDay);
+       if (CurrentDay > 0) {
+            let el = document.getElementById("TabDay_" + CurrentDay);
             if (el != null) {
                 el.style.backgroundColor = "#ffffff"; 
             }           
-        }
-    }, [CurrentWeek, CurrentDay, CurrentPage] );
+       }
+       setRefreshTab(false);
+    }, [CurrentWeek, CurrentDay, CurrentPage, refreshTab] );
 
     //
     // setEditParams()
@@ -520,6 +521,7 @@ function MyBlockSchedule() {
                             updateEditParams = {updateEditParams}
                             IsChanged = {IsChanged} setIsChanged = {setIsChanged}
                             validKey = {validKey}
+                            setRefreshTab = {setRefreshTab}
                             navigate = {navigate}
                         />                   
                     )};
@@ -884,8 +886,8 @@ function Page_Exercise(params){
                                 } else {
                                     val = 0;
                                 }
-                                console.log("ActualSets ", val);
                                 params.setActualSets(val);
+                                params.setRefreshTab(true);
                                 params.setIsChanged(true);
                             }}
                         />
@@ -909,6 +911,7 @@ function Page_Exercise(params){
                             }}
                             onChange={(e) => {
                                 params.setActualReps(e.target.value);
+                                params.setRefreshTab(true);
                                 params.setIsChanged(true);
                             }}
                         />
@@ -932,6 +935,7 @@ function Page_Exercise(params){
                             }}
                             onChange={(e) => {
                                 params.setActualRPE(e.target.value);
+                                params.setRefreshTab(true);
                                 params.setIsChanged(true);
                             }}
                         />
@@ -955,6 +959,7 @@ function Page_Exercise(params){
                             }}
                             onChange={(e) => {
                                 params.setActualWeights(e.target.value);
+                                params.setRefreshTab(true);
                                 params.setIsChanged(true);
                             }}
                         />
@@ -973,13 +978,14 @@ function Page_Exercise(params){
                                 value={params.Client_Velocity_Based_Metrics}
                                 onChange={(e) => {
                                     params.setClient_Velocity_Based_Metrics(e.target.value);
+                                    params.setRefreshTab(true);
                                     params.setIsChanged(true);
                                 }}
                             />
                         </div>
                     </div>
 
-                    <div className="flex flex-col flex-auto">
+                    <div className="flex flex-col flex-auto border">
                         <p className = "bg-gray-800 text-white text-base text-center border mb-0 mt-0 ml-0 w-[186px]">
                             {params.Schedule[params.Index].coach_notes}
                         </p>
@@ -992,6 +998,7 @@ function Page_Exercise(params){
                                 value={params.ClientNotes}
                                 onChange={(e) => {
                                     params.setClientNotes(e.target.value);
+                                    params.setRefreshTab(true);
                                     params.setIsChanged(true);
                                 }}
                             />
