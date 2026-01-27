@@ -1185,39 +1185,41 @@ function ConfirmCancel(params) {
         <div>
             <Modal>
                 <div className="">
-                    <div className="flex flex-col" > 
-                        <h1 className="text-black text-center text-xl ml-10 mr-10 mt-5">
+                    <div className="flex flex-col items-center" >
+                        <h1 className="text-black text-center font-bold text-xl ml-10 mr-10 mt-5 w-[300px]">
                             Your profile has changed
                         </h1>
 
-                        <p className="text-black text-sm text-center mt-5">
+                        <p className="text-black text-xl text-center mt-5">
                             Do you want to cancel these changes? 
                         </p> 
-                        <p className="text-black text-sm text-center mt-2">
+                        <p className="text-black text-xl text-center mt-2">
                             Click Yes to exit without saving or 
                         </p> 
-                        <p className="text-black text-sm text-center mt-0 mb-5">
+                        <p className="text-black text-xl text-center mt-0 mb-5">
                             No to continue editing.
                         </p> 
 
                         <div className="flex flex-row flex-auto">
-                            <button className="bg-cyan-600 text-white font-bold text-sm py-2 px-2 rounded
-                                            mb-6 mt-2 ml-10"
-                                    id="Yes"
-                                    style={{ width: "100px" }}
-                                    onClick={() => {
-                                        params.setState(states.EXITING);
-                                    }}>
+                            <button
+                                className="bg-cyan-600 text-white font-bold text-sm py-2 px-2 rounded
+                                            mb-6 mt-2"
+                                id="Yes"
+                                style={{ width: "100px" }}
+                                onClick={() => {
+                                    params.setState(states.EXITING);
+                                }}>
                                 Yes
                             </button>    
 
-                            <button className="bg-cyan-600 text-white font-bold text-sm py-2 px-2 rounded
+                            <button
+                                className="bg-cyan-600 text-white font-bold text-sm py-2 px-2 rounded
                                             mb-6 mt-2 ml-8"
-                                    id="No"
-                                    style={{ width: "100px" }}
-                                    onClick={() => {                                    
-                                        params.setState(states.EDITING);
-                                    }}>
+                                id="No"
+                                style={{ width: "100px" }}
+                                onClick={() => {
+                                    params.setState(states.EDITING);
+                                }}>
                                 No
                             </button> 
                         </div>                                 

@@ -42,11 +42,12 @@ export const states = {
     GET_CLIENT: 3,
     LOADED_CLIENT: 4,
     LOADING: 5,
-    LOADED: 6,
-    UPLOADING: 7,
-    UPLOADED: 8,
-    NOT_FOUND: 9,
-    EXITING: 12,
+    NOT_LOADED: 6,
+    LOADED: 7,
+    UPLOADING: 8,
+    UPLOADED: 9,
+    NOT_FOUND: 10,
+    EXITING: 11,
 
     NOT_AUTHENTICATED: 15,
     AUTHENTICATING: 16,
@@ -104,6 +105,7 @@ export const pages = {
     PAGE_2: 2,
     PAGE_EXERCISE: 2,
     PAGE_3: 3,
+    PAGE_NO_SCHEDULE: 3,
     PAGE_4: 4,
     PAGE_5: 5  
 }    

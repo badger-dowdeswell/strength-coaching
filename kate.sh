@@ -11,8 +11,8 @@
 # 22.01.2026 BRD Revised the terminal launching code.
 #
 # launch Kate
-cd /home/dev/strength-coaching
-kate /home/dev/strength-coaching
+cd /home/badger/dev/strength-coaching  
+kate /home/badger/dev/strength-coaching
 
 # Launch a gnome terminal for the Strength Coaching Online back-end
 gnome-terminal -- sh -c 'cd /home/badger/dev/strength-coaching/back-end; exec bash'

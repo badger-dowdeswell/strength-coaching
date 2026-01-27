@@ -104,32 +104,36 @@ function MyBlockSchedule() {
     // page. The useState and useEffect hooks ensure that the environment is 
     // re-configured appropriately each time the state changes. 
     //
-    const [state, setState] = useState(states.UNDEFINED);
+    const [state, setState] = useState(states.GET_CLIENT);
     const [CurrentPage, setCurrentPage] = useState(pages.UNDEFINED);
 
     useEffect(() => {    
         switch (state) {            
-            case states.UNDEFINED:
+            case states.GET_CLIENT:
                 // Load the primary client information.                 
                 getUser(user_ID);
                 break; 
+
+            case states.NOT_AUTHENTICATED:
+                return navigate("/");
                 
             case states.LOADED_CLIENT:
-                // The client has been found. Load their block schedule.       
+                // The client has been found. Load their block training schedule.
                 loadSchedule(user_ID); 
-                break;             
+                break;
 
             case states.LOADED:
-                // A schedule was found for this client for this block.  
+                // A schedule was found for this client for this block and loaded.
                 setCurrentPage(pages.PAGE_DAY);
                 break;
-                
-            case states.NOT_AUTHENTICATED:
-            case states.NOT_FOUND:        
-                // Either the user record or their block schedule could not be
-                // read. Sign them out and return them to the landing page.
-                // RA_BRD - need to tell the user that a problem has occured.
-                return navigate("/");
+
+            case states.NOT_LOADED:
+                // The client does not have a current training schedule.
+                setCurrentPage(pages.PAGE_NO_SCHEDULE);
+                break;
+
+            case states.EXITING:
+                return navigate("/Home");
             
             default:
                 break;
@@ -180,13 +184,13 @@ function MyBlockSchedule() {
                 setSchedule(response.data);  
                 setState(states.LOADED); 
             } else if (response.status === 404) {
-                setState(states.NOT_FOUND);
+                setState(states.NOT_LOADED);
             }            
         } catch (err) {  
             // The client does not have a schedule specified for this period
             // RA_BRD - resolve this later to display an approprite message
             //          because it is not a failure.          
-            setState(states.NOT_FOUND);        
+            setState(states.NOT_LOADED);
         }     
     };
 
@@ -526,9 +530,98 @@ function MyBlockSchedule() {
                             navigate = {navigate}
                         />                   
                     )};
+
+                    {(CurrentPage === pages.PAGE_NO_SCHEDULE) && (
+                        <Page_No_Schedule
+                            setState = {setState}
+                        />
+                    )};
                 </div> 
             </div> 
         </div>        
+    )
+}
+
+//
+// Page_No_Schedule()
+// ==================
+// The client does not have a training schedule set up for them.
+//
+function Page_No_Schedule(params) {
+    return (
+        <div>
+            <p className="text-white text-center font-bold text-xl mt-4">
+                Training Schedule
+            </p>
+
+            <div className="flex flex.row text-white">
+                <p className="text-center border mb-0 mt-5 ml-0 w-[161px]">
+                    Exercise
+                </p>
+                <p className="text-center border mb-0 mt-5 ml-0 w-20">
+                    Sets
+                </p>
+                <p className="text-base text-center border mb-0 mt-5 ml-0 w-[92px]">
+                    Reps
+                </p>
+                <p className="text-base text-center border mb-0 mt-5 ml-0 w-20">
+                    RPE
+                </p>
+                <p className="text-base text-center border mb-0 mt-5 ml-0 w-20">
+                    Weights
+                </p>
+                <p className="text-base text-center border mb-0 mt-5 ml-0 w-[100px]">
+                    My Weights
+                </p>
+                <p className="text-base text-center border mb-0 mt-5 ml-0 w-[191px]">
+                    Velocity-Based Metrics
+                </p>
+                <p className="text-base text-center border mb-0 mt-5 ml-0 w-48">
+                    Notes
+                </p>
+                <p className="text-base text-center border mb-0 mt-5 ml-0 w-14">
+                    E1RM
+                </p>
+            </div>
+
+            <br></br>
+
+            <Modal>
+                <div className="">
+                    <div className="flex flex-col items-center" >
+                        <h1 className="text-black text-center font-bold text-xl ml-10 mr-10 mt-5">
+                            Your training schedule was not found
+                        </h1>
+
+                        <p className="text-black text-lg text-center mt-5">
+                            No training schedule was found for you.
+                        </p>
+                        <p className="text-black text-lg text-center mt-2">
+                            Please contact your coach so they can
+                            <br></br>
+                            discuss your training plan with you.
+                            <br></br>
+                            They will then create a schedule for you
+                            <br></br>
+                            that you can use on this page.
+                        </p>
+
+                        <div className="flex flex-row flex-auto">
+                            <button
+                                className="bg-cyan-600 text-white font-bold text-sm py-2 px-2 rounded
+                                           mb-6 mt-5 ml"
+                                id="Exit"
+                                style={{ width: "100px" }}
+                                onClick={() => {
+                                    params.setState(states.EXITING);
+                            }}>
+                                Exit
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </Modal>
+        </div>
     )
 }
 
